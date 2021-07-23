@@ -1,4 +1,4 @@
-package com.tmax.eTest.Contents.model;
+package com.tmax.eTest.Common.model.problem;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
