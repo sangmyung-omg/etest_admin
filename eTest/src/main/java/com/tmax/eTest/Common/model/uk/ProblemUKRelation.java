@@ -1,6 +1,4 @@
-package com.tmax.eTest.Contents.model;
-
-import java.io.Serializable;
+package com.tmax.eTest.Common.model.uk;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,7 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.tmax.eTest.Test.model.UkMaster;
+import com.tmax.eTest.Common.model.problem.Problem;
 
 import lombok.Data;
 import lombok.ToString;
@@ -29,23 +27,5 @@ public class ProblemUKRelation{
 	@ManyToOne
 	@JoinColumn(name="UK_ID")
 	private UkMaster ukId;
-	
-	
-//	@Id
-//	@Column(name="PROB_ID")
-//	private long probID;
-//	
-//	@Id
-//	@Column(name="UK_ID")
-//	private String ukID;
-	
-//	@ManyToOne
-//	@JoinColumn(name="PROB_ID")
-//	private ProblemDAO problem;
-//	
-//	@ManyToOne
-//	@JoinColumn(name="UK_ID")
-//	private UKMasterDAO uk;
-//	
 	
 }

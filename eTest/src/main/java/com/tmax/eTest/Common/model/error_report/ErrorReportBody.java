@@ -1,4 +1,4 @@
-package com.tmax.eTest.Contents.model;
+package com.tmax.eTest.Common.model.error_report;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.tmax.eTest.Contents.model;
+package com.tmax.eTest.Common.model.problem;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.tmax.eTest.Test.model.UkMaster;
+import com.tmax.eTest.Common.model.uk.UkMaster;
 
 import lombok.Data;
 @Data

@@ -1,4 +1,4 @@
-package com.tmax.eTest.Contents.model;
+package com.tmax.eTest.Common.model.problem;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.tmax.eTest.Common.model.error_report.ErrorReport;
+
+import com.tmax.eTest.Common.model.uk.ProblemUKRelation;
 
 import lombok.Data;
 
