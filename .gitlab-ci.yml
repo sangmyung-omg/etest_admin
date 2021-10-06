@@ -9,10 +9,10 @@ before_script:
 # gitlab-ci에서 사용될 변수 설정
 variables:
   # 레지스트리에 푸시될 이미지 이름 설정
-  IMAGE_NAME: "kofia-backend"
+  IMAGE_NAME: "kofia-adminpage-backend"
   # 컨테이너 이름 설정 (ex. wapl-math-backend)
   # ('${NAME}-dep', '${NAME}-service' 이름으로 디플로이먼트와 서비스 배포 예정)
-  NAME: "kofia-backend"
+  NAME: "kofia-adminpage-backend"
   # 레지스트리 호스트 입력
   REGISTRY_HOST: "kofia-registry.220.90.208.8.nip.io:443"
   REGISTRY_ID: "admin"
