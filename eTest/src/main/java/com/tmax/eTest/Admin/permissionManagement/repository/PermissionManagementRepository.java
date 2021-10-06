@@ -22,27 +22,25 @@ public class PermissionManagementRepository {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    private BooleanExpression masterFilter(Role role) {
+    private BooleanExpression masterListSelectByRole(Role role) {
         if (role == null)
-            return userMaster.role.eq(Role.MASTER).or
-                    (userMaster.role.eq(Role.SUB_MASTER));
+            return userMaster.role.eq(Role.MASTER).or(userMaster.role.eq(Role.SUB_MASTER));
         return userMaster.role.eq(role);
     }
 
-    private BooleanExpression masterSearchFilter(String search) {
+    private BooleanExpression masterListSearchByNameAndEmail(String search) {
         if (search == null)
             return null;
-        return userMaster.name.contains(search)
-                .or(userMaster.email.contains(search));
+        return userMaster.name.contains(search).or(userMaster.email.contains(search));
     }
 
-    private BooleanExpression userSearchFilter(String search) {
+    private BooleanExpression userSearchByName(String search) {
         if (search == null)
             return null;
-        return userMaster.name.contains(search);
+        return userMaster.name.startsWith(search);
     }
 
-    public List<PermissionManagementDTO> searchMaster(Role role, String search){
+    public List<PermissionManagementDTO> masterList(Role role, String search){
         return query.select(Projections.constructor(PermissionManagementDTO.class,
                     userMaster.userUuid,
                     userMaster.role,
@@ -51,18 +49,19 @@ public class PermissionManagementRepository {
                     userMaster.ip,
                     userMaster.createDate))
                 .from(userMaster)
-                .where(masterFilter(role).and(masterSearchFilter(search)))
+                .where(masterListSelectByRole(role).and(masterListSearchByNameAndEmail(search)))
                 .fetch();
     }
 
-    public List<PermissionUserMasterSearchDTO> addMasterSearch(String search) {
+    public List<PermissionUserMasterSearchDTO> userSearch(String search) {
         return query.select(Projections.constructor(PermissionUserMasterSearchDTO.class,
                     userMaster.userUuid,
                     userMaster.role,
                     userMaster.name))
                 .from(userMaster)
                 .where(userMaster.role.eq(Role.MASTER).or(userMaster.role.eq(Role.SUB_MASTER))
-                        .and(userSearchFilter(search)))
+                        .and(userSearchByName(search)))
+                .orderBy(userMaster.name.asc())
                 .fetch();
     }
 

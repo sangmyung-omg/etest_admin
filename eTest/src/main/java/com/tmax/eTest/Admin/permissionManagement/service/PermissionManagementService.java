@@ -15,12 +15,12 @@ import java.util.List;
 public class PermissionManagementService {
     private final PermissionManagementRepository permissionManagementRepository;
 
-    public List<PermissionManagementDTO> searchMaster(Role role, String search){
-        return permissionManagementRepository.searchMaster(role, search);
+    public List<PermissionManagementDTO> masterList(Role role, String search){
+        return permissionManagementRepository.masterList(role, search);
     }
 
-    public List<PermissionUserMasterSearchDTO> addMasterSearch(String search) {
-        return permissionManagementRepository.addMasterSearch(search);
+    public List<PermissionUserMasterSearchDTO> userSearch(String search) {
+        return permissionManagementRepository.userSearch(search);
     }
 
     public void updatePermission(PermissionUpdateDTO permissionUpdateDTO){
