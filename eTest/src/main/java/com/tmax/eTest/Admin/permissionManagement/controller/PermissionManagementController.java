@@ -20,31 +20,32 @@ public class PermissionManagementController {
     /**
      * 관리자 조회
      * @param role      권한 필터 (MASTER, SUB_MASTER)
-     * @param search    이름, 이메일 검색 조건
+     * @param search    검색할 이름 또는 이메일
      */
     @GetMapping()
-    public ResponseEntity<List<PermissionManagementDTO>> searchMaster
-            (@RequestParam(required = false) String role, @RequestParam(required = false) String search){
+    public ResponseEntity<List<PermissionManagementDTO>> masterList
+            (@RequestParam(required = false) String role, @RequestParam(required = false) String search) {
         if (role == null)
-            return ResponseEntity.ok(permissionManagementService.searchMaster(null, search));
-        return ResponseEntity.ok(permissionManagementService.searchMaster(Role.valueOf(role), search));
+            return ResponseEntity.ok(permissionManagementService.masterList(null, search));
+        return ResponseEntity.ok(permissionManagementService.masterList(Role.valueOf(role), search));
     }
 
     /**
      * 관리자 생성에서 이름 검색
-     * @param search    이름 검색 조건
+     * @param search    검색할 이름
      */
     @GetMapping("user_search")
-    public ResponseEntity<List<PermissionUserMasterSearchDTO>> addMasterSearch(@RequestParam(required = false) String search){
-        return ResponseEntity.ok(permissionManagementService.addMasterSearch(search));
+    public ResponseEntity<List<PermissionUserMasterSearchDTO>> userSearch (@RequestParam(required = false) String search) {
+        return ResponseEntity.ok(permissionManagementService.userSearch(search));
     }
 
     /**
      * 관리자 권한 여러개 삭제 / 관리자 권한 변경
-     * @param permissionUpdateDTO   권한을 변경할 관리자 리스트, 변경할 권한, 변경할 IP
+     * @param permissionUpdateDTO   권한을 변경할 관리자 uuid 리스트, 변경할 권한, 변경할 IP
      */
     @PostMapping()
-    public void updatePermission(@RequestBody PermissionUpdateDTO permissionUpdateDTO){
+    public String updatePermission(@RequestBody PermissionUpdateDTO permissionUpdateDTO){
         permissionManagementService.updatePermission(permissionUpdateDTO);
+        return "Permission update successful";
     }
 }
