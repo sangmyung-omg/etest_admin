@@ -1,6 +1,6 @@
-package com.tmax.eTest.Admin.Notice.controller;
+package com.tmax.eTest.Admin.notice.controller;
 
-import com.tmax.eTest.Admin.Notice.service.AdminNoticeService;
+import com.tmax.eTest.Admin.notice.service.AdminNoticeService;
 import com.tmax.eTest.Common.model.support.Notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
