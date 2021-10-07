@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tmax.eTest.Common.model.user.UserMaster;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +43,8 @@ public class Inquiry {
 
     @JsonIgnoreProperties({ "inquiry" })
     @JoinColumn(name = "USER_UUID")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
     private UserMaster userMaster;
 
     @JsonIgnoreProperties({"inquiry"})
