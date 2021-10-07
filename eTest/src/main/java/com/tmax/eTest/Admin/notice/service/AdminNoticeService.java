@@ -1,6 +1,6 @@
-package com.tmax.eTest.Admin.Notice.service;
+package com.tmax.eTest.Admin.notice.service;
 
-import com.tmax.eTest.Admin.Notice.repository.AdminNoticeRepository;
+import com.tmax.eTest.Admin.notice.repository.AdminNoticeRepository;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Common.model.support.Notice;
 import lombok.RequiredArgsConstructor;

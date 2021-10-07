@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.Notice.repository;
+package com.tmax.eTest.Admin.notice.repository;
 
 import com.tmax.eTest.Common.model.support.Notice;
 import org.springframework.data.jpa.repository.JpaRepository;
