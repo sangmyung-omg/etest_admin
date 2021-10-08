@@ -3973,3 +3973,38 @@ insert into "ETEST"."VIDEO_HASHTAG" ("VIDEO_ID", "HASHTAG_ID") values ('CV202120
 ------- End of ETEST.VIDEO-------
 ------- End of ETEST.VIDEO_HIT-------
 ------- End of ETEST.VIDEO_HASHTAG-------
+
+------- Begin of ETEST.REQUEST_MAPPER-------
+
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (10, '로그인 성공', '로그인 기록', 'POST', '/login', '203');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (11, '로그인 실패', '로그인 기록', 'POST', '/login', '202');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (20, '컨텐츠 생성(미니진단)', 'eTest 스튜디오 관리', 'POST', '/test-studio/TestProblems', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (21, '컨텐츠 수정(미니진단)', 'eTest 스튜디오 관리', 'PUT', '/test-studio/TestProblems', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (22, '컨텐츠 수정(자가진단)', 'eTest 스튜디오 관리', 'PUT', '/test-studio/DiagProblems', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (30, '컨텐츠 생성', '영상 컨텐츠 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (31, '컨텐츠 수정', '영상 컨텐츠 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (32, '컨텐츠 삭제', '영상 컨텐츠 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (40, '컨텐츠 생성', '문서 컨텐츠 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (41, '컨텐츠 수정', '문서 컨텐츠 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (42, '컨텐츠 삭제', '문서 컨텐츠 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (50, '컨텐츠 생성', 'KDB 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (51, '컨텐츠 수정', 'KDB 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (52, '컨텐츠 삭제', 'KDB 스튜디오 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (60, '공지사항 등록', '공지사항 관리', 'POST', '/master/notice', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (61, '공지사항 수정', '공지사항 관리', 'PUT', '/master/notice', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (62, '공지사항 삭제', '공지사항 관리', 'DELETE', '/master/notice', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (63, '공지사항 임시저장', '공지사항 관리', 'POST', '/master/notice/draft', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (70, '자주 묻는 질문 등록', '자주 묻는 질문 관리', 'POST', '/master/faq', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (71, '자주 묻는 질문 수정', '자주 묻는 질문 관리', 'PUT', '/master/faq', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (72, '자주 묻는 질문 삭제', '자주 묻는 질문 관리', 'DELETE', '/master/faq', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (73, '자주 묻는 질문 임시저장', '자주 묻는 질문 관리', 'POST', '/master/faq/draft', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (80, '답변 등록', '1:1 문의 관리', 'PUT', '/submaster/customerSupport/inquiry', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (81, '답변 수정', '1:1 문의 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (82, '게시글 삭제', '1:1 문의 관리', 'DELETE', '/submaster/customerSupport/inquiry', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (83, '답변 임시저장', '1:1 문의 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (84, '게시글 삭제', '1:1 문의 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (90, '회원정보 다운로드', '회원 관리', null, null, null);
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (91, '상세 페이지 조회', '회원 관리', 'GET', '/master/manageUser/user/profilePopup', '0');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (92, '상세 페이지 삭제', '회원 관리', 'DELETE', '/master/manageUser/user/delete', '0');
+
+------- End of ETEST.REQUEST_MAPPER -------
