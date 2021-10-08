@@ -59,4 +59,13 @@ public class AdminNoticeController {
         adminNoticeService.deleteNotice(id);
         return "notice deleted";
     }
+
+    /**
+     * 공지사항 임시저장
+     * @param notice    공지사항 정보
+     */
+    @PostMapping("notice/draft")
+    public ResponseEntity<Notice> draftNotice(@RequestBody Notice notice) {
+        return ResponseEntity.ok(adminNoticeService.draftNotice(notice));
+    }
 }

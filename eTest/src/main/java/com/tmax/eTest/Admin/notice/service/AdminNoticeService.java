@@ -18,8 +18,13 @@ public class AdminNoticeService {
 
     public Notice createNotice(Notice notice) {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
-        if (notice.getDraft() == 0)
-            notice.setDateAdd(currentDateTime);
+        notice.setDraft(0);
+        notice.setDateAdd(currentDateTime);
+        return adminNoticeRepository.save(notice);
+    }
+
+    public Notice draftNotice(Notice notice) {
+        notice.setDraft(1);
         return adminNoticeRepository.save(notice);
     }
 

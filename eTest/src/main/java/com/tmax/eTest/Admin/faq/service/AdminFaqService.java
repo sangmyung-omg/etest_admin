@@ -18,8 +18,13 @@ public class AdminFaqService {
 
     public FAQ createFaq(FAQ faq) {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
-        if (faq.getDraft() == 0)
-            faq.setDateAdd(currentDateTime);
+        faq.setDraft(0);
+        faq.setDateAdd(currentDateTime);
+        return adminFaqRepository.save(faq);
+    }
+
+    public FAQ draftFaq(FAQ faq) {
+        faq.setDraft(1);
         return adminFaqRepository.save(faq);
     }
 

@@ -60,4 +60,13 @@ public class AdminFaqController {
         adminFaqService.deleteFaq(id);
         return "faq deleted";
     }
+
+    /**
+     * 자주 묻는 질문 임시저장
+     * @param faq   자주 묻는 질문 정보
+     */
+    @PostMapping("faq/draft")
+    public ResponseEntity<FAQ> draftFaq(@RequestBody FAQ faq) {
+        return ResponseEntity.ok(adminFaqService.draftFaq(faq));
+    }
 }
