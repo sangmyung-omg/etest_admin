@@ -1,6 +1,7 @@
 package com.tmax.eTest.Admin.notice.service;
 
 import com.tmax.eTest.Admin.notice.repository.AdminNoticeRepository;
+import com.tmax.eTest.Admin.notice.repository.AdminNoticeRepositorySupport;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Common.model.support.Notice;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminNoticeService {
     private final AdminNoticeRepository adminNoticeRepository;
+    private final AdminNoticeRepositorySupport adminNoticeRepositorySupport;
 
     public Notice createNotice(Notice notice) {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
@@ -27,8 +29,8 @@ public class AdminNoticeService {
         return null;
     }
 
-    public List<Notice> getAllNotice() {
-        return adminNoticeRepository.findAll();
+    public List<Notice> getAllNotice(String search) {
+        return adminNoticeRepositorySupport.noticeList(search);
     }
 
     public Notice editNotice(Long id, Notice newNotice) {

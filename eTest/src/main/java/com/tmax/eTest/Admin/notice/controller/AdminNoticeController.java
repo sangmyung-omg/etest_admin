@@ -36,8 +36,8 @@ public class AdminNoticeController {
      * 공지사항 전체 조회
      */
     @GetMapping("notice/all")
-    public ResponseEntity<List<Notice>> getAllNotice() {
-        return ResponseEntity.ok(adminNoticeService.getAllNotice());
+    public ResponseEntity<List<Notice>> getAllNotice(String search) {
+        return ResponseEntity.ok(adminNoticeService.getAllNotice(search));
     }
 
     /**
