@@ -3976,8 +3976,8 @@ insert into "ETEST"."VIDEO_HASHTAG" ("VIDEO_ID", "HASHTAG_ID") values ('CV202120
 
 ------- Begin of ETEST.REQUEST_MAPPER-------
 
-insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (10, '로그인 성공', '로그인 기록', 'POST', '/login', '203');
-insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (11, '로그인 실패', '로그인 기록', 'POST', '/login', '202');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (10, '로그인 성공', '로그인 기록', 'POST', '/login', '200');
+insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (11, '로그인 실패', '로그인 기록', 'POST', '/login', '201');
 insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (20, '컨텐츠 생성(미니진단)', 'eTest 스튜디오 관리', 'POST', '/test-studio/TestProblems', '0');
 insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (21, '컨텐츠 수정(미니진단)', 'eTest 스튜디오 관리', 'PUT', '/test-studio/TestProblems', '0');
 insert into "ETEST"."REQUEST_MAPPER" ("ID", "CONTENT", "MENU", "POST_METHOD", "REQUEST_URL", "PARAMETER" ) values (22, '컨텐츠 수정(자가진단)', 'eTest 스튜디오 관리', 'PUT', '/test-studio/DiagProblems', '0');

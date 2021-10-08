@@ -52,10 +52,16 @@ public class ManagementHistoryFilter extends OncePerRequestFilter {
             if (requestUrl.equals("/login")) {
                 JsonNode responseJson = mapper.readTree(wrappingResponse.getContentAsByteArray());
                 parameter = responseJson.get("code").toString();
-                if (parameter.equals("203")) {
+                if (parameter.equals("200")) {
                     adminName = responseJson.get("data").get("name").toString();
                     adminName = adminName.substring(1, adminName.length() - 1);
                     adminId = responseJson.get("data").get("email").toString();
+                    adminId = adminId.substring(1, adminId.length() - 1);
+                }
+                else if (parameter.equals("201")){
+                    JsonNode requestJson = mapper.readTree(wrappingRequest.getContentAsByteArray());
+                    adminName = null;
+                    adminId = requestJson.get("email").toString();
                     adminId = adminId.substring(1, adminId.length() - 1);
                 }
             } else if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
