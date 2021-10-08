@@ -89,11 +89,12 @@ public class ManagementHistoryFilter extends OncePerRequestFilter {
                             "============================================================",
                     postMethod, requestUrl, parameter, adminName);
         } catch (NullPointerException e) {
-            logger.debug("Request mapper not found.\n" +
-                            "============================================================" +
-                            "\npost: {}\nurl: {}\nparameter: {}\nadmin_name: {}\n" +
-                            "============================================================",
-                    postMethod, requestUrl, parameter, adminName);
+            if (!postMethod.equals("HEAD"))
+                logger.debug("Request mapper not found.\n" +
+                                "============================================================" +
+                                "\npost: {}\nurl: {}\nparameter: {}\nadmin_name: {}\n" +
+                                "============================================================",
+                        postMethod, requestUrl, parameter, adminName);
         } finally {
             wrappingResponse.copyBodyToResponse();
         }
