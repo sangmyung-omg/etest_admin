@@ -38,12 +38,8 @@ public class UserMaster {
 	private String providerId;
 
 	@Enumerated(EnumType.STRING)
-	private Gender gender;
-
-	@Enumerated(EnumType.STRING)
 	private AuthProvider provider;
 
-	@Email
 	@Column(nullable = false)
 	private String email;
 
@@ -61,10 +57,6 @@ public class UserMaster {
 
 	private String name;
 
-	// 이벤트 알람 동의 (선택)
-	private Boolean event_sms_agreement;
-	// 장기 미 접속시 계정 활성화 (선택)
-	private Boolean account_active;
 	// 만 14세 이상 (필수)
 	private Boolean older_than_14 ;
 	// 서비스 이용약관에 동의합니다(필수)
