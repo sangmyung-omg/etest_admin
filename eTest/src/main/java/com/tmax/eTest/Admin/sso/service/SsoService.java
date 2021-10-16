@@ -42,6 +42,10 @@ public class SsoService {
             tmp = (String) enumeration.nextElement();
             logger.info(" key : value -> " + tmp + " : " + httpSession.getAttribute(tmp));
         }
+        /***
+         * 기존에 sso로그인 한 유저라면 바로 로그인
+         * 처음 sso로그인 했다면 강제회원가입 후 로그인
+         */
         if (!(httpSession.getAttribute("user_id") == null)) {
             try {
                 String user_id = (String) httpSession.getAttribute("user_id");
@@ -65,11 +69,11 @@ public class SsoService {
                     userRepository.save(userMaster);
                     PrincipalDetails principal = PrincipalDetails.create(userMaster);
                     String jwtToken = jwtTokenUtil.generateAccessToken(principal);
-                    return new CMRespDto<>(200, "200", jwtToken);
+                    return new CMRespDto<>(200, "exist user", jwtToken);
                 } else {
                     PrincipalDetails principal = PrincipalDetails.create(userMasterOptional.get());
                     String jwtToken = jwtTokenUtil.generateAccessToken(principal);
-                    return new CMRespDto<>(200, "200", jwtToken);
+                    return new CMRespDto<>(201, "first login", jwtToken);
                 }
             } catch (IllegalArgumentException e) {
                 logger.info("IllegalArgumentException");
