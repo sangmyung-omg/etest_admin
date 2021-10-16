@@ -34,11 +34,12 @@ public class StatementRepository extends UserFilterRepository {
     public List<Statement> filter(FilterQueryDTO filterQueryDTO) {
         return query.select(statement)
                 .from(statement)
-                .innerJoin(userMaster).on(statement.userId.eq(userMaster.userUuid))
                 .where(
                         investmentExperienceFilter(filterQueryDTO.getInvestmentExperience()),
                         dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
-                        ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound())
+                        ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound()),
+                        statement.actionType.eq("enter"),
+                        statement.sourceType.eq("application")
                 )
                 .fetch();
     }
