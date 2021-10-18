@@ -1,6 +1,7 @@
 package com.tmax.eTest.Admin.sso.controller;
 
 import com.tmax.eTest.Admin.managementHistory.filter.ManagementHistoryFilter;
+import com.tmax.eTest.Admin.sso.dto.SessionTestDto;
 import com.tmax.eTest.Admin.sso.service.SsoService;
 import com.tmax.eTest.Auth.dto.AuthProvider;
 import com.tmax.eTest.Auth.dto.CMRespDto;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +37,10 @@ public class SsoController {
     public CMRespDto<?> getToken(HttpServletRequest request) {
         return ssoService.getToken(request);
     }
-    @GetMapping("/sso/setToken")
-    public CMRespDto<?> setToken(HttpServletRequest request) {
-        HttpSession httpSession = request.getSession();
-        httpSession.setAttribute("user_id","minjoon");
+    @PostMapping("/sso/setTestSession")
+    public CMRespDto<?> setToken(HttpServletRequest request,@RequestBody SessionTestDto sessionTestDto) {
+        HttpSession httpSession = request.getSession(true);
+        httpSession.setAttribute("user_id",sessionTestDto.getUser_id());
         logger.info("httpSession : "+ httpSession.getAttribute("user_id"));
         return new CMRespDto<>(200, "200", 200);
     }
