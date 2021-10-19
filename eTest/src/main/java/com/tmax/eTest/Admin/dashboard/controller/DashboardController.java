@@ -1,24 +1,20 @@
 package com.tmax.eTest.Admin.dashboard.controller;
 
 import com.tmax.eTest.Admin.dashboard.dto.DashboardOverallDTO;
+import com.tmax.eTest.Admin.dashboard.dto.DiagnosisStatusDTO;
 import com.tmax.eTest.Admin.dashboard.dto.FilterDTO;
-import com.tmax.eTest.Admin.dashboard.dto.SignUpCreateDateDTO;
 import com.tmax.eTest.Admin.dashboard.service.DashboardService;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Auth.repository.UserRepository;
-import com.tmax.eTest.Common.repository.user.UserMasterRepo;
-import com.tmax.eTest.LRS.dto.StatementDTO;
 import com.tmax.eTest.LRS.repository.StatementRepository;
 import com.tmax.eTest.LRS.util.LRSAPIManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
 
 @RestController
-@RequestMapping("submaster")
+@RequestMapping("submaster/dashboard")
 public class DashboardController {
     @Autowired
     private DashboardService dashboardService;
@@ -30,7 +26,12 @@ public class DashboardController {
     @Autowired
     private LRSAPIManager lrsapiManager;
 
-    @PostMapping("/dashboard/overall")
+    @GetMapping("diagnosis")
+    public ResponseEntity<DiagnosisStatusDTO> getDiagnosisStatus(@RequestBody FilterDTO filterDTO){
+        return ResponseEntity.ok(dashboardService.getDiagnosisStatus(filterDTO));
+    }
+
+    @PostMapping("overall")
     public ResponseEntity<DashboardOverallDTO> getOverallCards
             (@RequestBody FilterDTO filterDTO){
         Integer diagnosis = dashboardService.getDiagnosis(filterDTO).size();
@@ -48,18 +49,18 @@ public class DashboardController {
                 .build());
     }
 
-    @PostMapping("/dashboard/accessor")
+    @PostMapping("accessor")
     public CMRespDto<?> getAccessor (@RequestBody FilterDTO filterDTO){
         int result = dashboardService.getAccessor(filterDTO).size();
         return new CMRespDto<>(200, "success", result);
     }
-    @PostMapping("/dashboard/user/register")
+    @PostMapping("user/register")
     public CMRespDto<?> getUserRegister (@RequestBody FilterDTO filterDTO){
         int result = dashboardService.getUserRegister(filterDTO).size();
         return new CMRespDto<>(200, "success", result);
     }
 
-    @GetMapping("/dashboard/user/all")
+    @GetMapping("user/all")
     public CMRespDto<?> getUserAll (){
         int result = dashboardService.getUserAll();
         return new CMRespDto<>(200, "success", result);

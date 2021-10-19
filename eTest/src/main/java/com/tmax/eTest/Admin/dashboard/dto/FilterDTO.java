@@ -1,10 +1,12 @@
 package com.tmax.eTest.Admin.dashboard.dto;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Data
+@Getter
 public class FilterDTO {
     private LocalDateTime dateFrom;
     private LocalDateTime dateTo;

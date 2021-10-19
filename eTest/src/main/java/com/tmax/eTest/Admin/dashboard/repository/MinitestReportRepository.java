@@ -1,18 +1,18 @@
 package com.tmax.eTest.Admin.dashboard.repository;
 
-import static com.tmax.eTest.Common.model.report.QDiagnosisReport.diagnosisReport;
-import static com.tmax.eTest.Common.model.report.QMinitestReport.minitestReport;
-import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
-
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tmax.eTest.Admin.dashboard.dto.FilterQueryDTO;
-import com.tmax.eTest.Common.model.report.MinitestReport;
+import com.tmax.eTest.Admin.dashboard.dto.MinitestDashboardDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.util.List;
+
+import static com.tmax.eTest.Common.model.report.QMinitestReport.minitestReport;
+import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
 
 @Repository
 public class MinitestReportRepository extends UserFilterRepository {
@@ -22,8 +22,11 @@ public class MinitestReportRepository extends UserFilterRepository {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    public List<MinitestReport> filter(FilterQueryDTO filterQueryDTO) {
-        return query.select(minitestReport)
+    public List<MinitestDashboardDTO> filter(FilterQueryDTO filterQueryDTO) {
+        return query.select(Projections.constructor(MinitestDashboardDTO.class,
+                    minitestReport.minitestDate,
+                    minitestReport.avgUkMastery,
+                    minitestReport.minitestUkMastery))
                 .from(minitestReport)
                 .join(userMaster).on(userMaster.userUuid.eq(minitestReport.userUuid))
                 .where(
@@ -31,6 +34,7 @@ public class MinitestReportRepository extends UserFilterRepository {
                         dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
                         ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound())
                 )
+                .orderBy(minitestReport.minitestDate.asc())
                 .fetch();
     }
 

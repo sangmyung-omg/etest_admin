@@ -1,18 +1,17 @@
 package com.tmax.eTest.Admin.dashboard.repository;
 
-import static com.tmax.eTest.Common.model.report.QDiagnosisReport.diagnosisReport;
-import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
-
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
+import com.tmax.eTest.Admin.dashboard.dto.DiagnosisDashboardDTO;
 import com.tmax.eTest.Admin.dashboard.dto.FilterQueryDTO;
-import com.tmax.eTest.Common.model.report.DiagnosisReport;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.util.List;
+
+import static com.tmax.eTest.Common.model.report.QDiagnosisReport.diagnosisReport;
 
 @Repository("AD-DiagnosisReportRepository")
 public class DiagnosisReportRepository extends UserFilterRepository {
@@ -22,15 +21,21 @@ public class DiagnosisReportRepository extends UserFilterRepository {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    public List<DiagnosisReport> filter(FilterQueryDTO filterQueryDTO){
-        return query.select(diagnosisReport)
-                .from(diagnosisReport).join(userMaster)
-                .on(userMaster.userUuid.eq(diagnosisReport.userUuid))
+    public List<DiagnosisDashboardDTO> filter(FilterQueryDTO filterQueryDTO){
+        return query.select(Projections.constructor(DiagnosisDashboardDTO.class,
+                    diagnosisReport.diagnosisDate,
+                    diagnosisReport.userUuid,
+                    diagnosisReport.giScore,
+                    diagnosisReport.riskScore,
+                    diagnosisReport.investScore,
+                    diagnosisReport.knowledgeScore))
+                .from(diagnosisReport)
                 .where(
                         investmentExperienceFilter(filterQueryDTO.getInvestmentExperience()),
                         dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
                         ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound())
                 )
+                .orderBy(diagnosisReport.diagnosisDate.asc())
                 .fetch();
     }
 
