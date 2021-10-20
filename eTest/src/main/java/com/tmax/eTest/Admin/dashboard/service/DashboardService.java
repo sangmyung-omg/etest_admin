@@ -39,14 +39,24 @@ public class DashboardService {
     /** variables **/
     private List<DiagnosisDashboardDTO> diagnosisReports;
     private List<MinitestDashboardDTO> minitestReports;
+    private List<StatementDashboardDTO> statements;
+    private int diagnosisCollectBase;
+    private int accessorCollectBase;
 
     private int hourLowerBound;
+    private int accessorAtom;
+    private int memberRegisteredAtom;
+    private int memberWithdrawnAtom;
     private int diagnosisMemberAtom;
     private int diagnosisNotMemberAtom;
     private int minitestAtom;
 
     private String[] time;
-    private int diagnosisCollectBase;
+    private int[] accessorCollect;
+    private int[] memberTotal;
+    private int[] memberRegistered;
+    private int[] memberWithdrawn;
+
     private int[] diagnosisCollect;
     private int[] diagnosisAndMinitest;
     private int[] diagnosisTotal;
@@ -118,11 +128,11 @@ public class DashboardService {
         return minitestReportRepository.filter(filterQueryBuilder(filterDTO));
     }
 
-    public List<Statement> getAccessor(FilterDTO filterDTO) {
-        return statementRepository.filter(filterQueryBuilder(filterDTO));
+    public List<StatementDashboardDTO> getStatements(FilterDTO filterDTO) {
+        return statementRepository.filter(filterQueryBuilder(filterDTO), null);
     }
 
-    public List<Statement> getUserRegister(FilterDTO filterDTO) {
+    public List<Statement> getUserRegister(FilterDTO filterDTO) { // 등록 회원 수
         return userCreateTimeRepository.filter(filterQueryBuilder(filterDTO));
     }
 
@@ -133,6 +143,10 @@ public class DashboardService {
     private void initialize(int arraySize) {
         hourLowerBound = 0;
         time = new String[arraySize];
+        accessorCollect = new int[arraySize];
+        memberTotal = new int[arraySize];
+        memberRegistered = new int[arraySize];
+        memberWithdrawn = new int[arraySize];
         diagnosisCollect = new int[arraySize];
         diagnosisAndMinitest = new int[arraySize];
         diagnosisTotal = new int[arraySize];
@@ -186,6 +200,19 @@ public class DashboardService {
         }
     }
 
+    private int getaccessorCollectBase(FilterDTO filterDTO) {
+        FilterQueryDTO filterQueryDTO = filterQueryBuilder(filterDTO);
+        Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
+        Timestamp dateBound = filterQueryDTO.getDateFrom();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateBound);
+        calendar.set(Calendar.MILLISECOND, -1);
+        dateBound = new Timestamp(calendar.getTimeInMillis());
+        filterQueryDTO.setDateFrom(bigbang);
+        filterQueryDTO.setDateTo(dateBound);
+        return statementRepository.filter(filterQueryDTO, "enter").size();
+    }
+
     private int getDiagnosisCollectBase(FilterDTO filterDTO) {
         FilterQueryDTO filterQueryDTO = filterQueryBuilder(filterDTO);
         Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
@@ -198,6 +225,24 @@ public class DashboardService {
         filterQueryDTO.setDateTo(dateBound);
         return diagnosisReportRepository.filter(filterQueryDTO).size()
                 + minitestReportRepository.filter(filterQueryDTO).size();
+    }
+
+    private void checkMember() {
+        if (statements.size() > 0) {
+            for (StatementDashboardDTO statement : statements) {
+                if (statement.getStatementDate().after(timeLowerBound)
+                        & statement.getStatementDate().before(timeUpperBound)) {
+                    if (statement.getActionType().equals("enter"))
+                        accessorAtom++;
+                    else if (statement.getActionType().equals("register"))
+                        memberRegisteredAtom++;
+                    else if (statement.getActionType().equals("withdrawl"))
+                        memberWithdrawnAtom++;
+                }
+                else
+                    break;
+            }
+        }
     }
 
     private void checkDiagnosisReport() {
@@ -273,6 +318,38 @@ public class DashboardService {
         }
     }
 
+    private void calculateMemberInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        int index;
+        if (dateFrom.equals(dateTo)) {
+            index = hourLowerBound;
+            time[index] = index + 1 + ":00";
+        } else {
+            index = timeIndex;
+            time[index] = (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+        }
+        accessorCollectBase += accessorAtom;
+        accessorCollect[index] = accessorCollectBase;
+        memberRegistered[index] = memberRegisteredAtom;
+        memberWithdrawn[index] = memberWithdrawnAtom;
+
+        if (dateFrom.equals(dateTo)) {
+            hourLowerBound++;
+            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+        }
+        else {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.set(Calendar.HOUR_OF_DAY, 47);
+        }
+        timeUpperBound = new Timestamp(cal.getTimeInMillis());
+
+        statements = statements.subList(accessorAtom + memberRegisteredAtom + memberWithdrawnAtom, statements.size());
+        accessorAtom = 0;
+        memberRegisteredAtom = 0;
+        memberWithdrawnAtom = 0;
+    }
+
     private void calculateDiagnosisInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
         int index;
         if (dateFrom.equals(dateTo)) {
@@ -327,6 +404,15 @@ public class DashboardService {
         minitestAtom = 0;
     }
 
+    private void calculateMemberStatus() {
+        memberTotal[memberTotal.length - 1] = getUserAll();
+        for (int i = 1; i < memberTotal.length; i++)
+            memberTotal[memberTotal.length - 1 - i]
+                    = memberTotal[memberTotal.length - i]
+                    - memberRegistered[memberTotal.length - i]
+                    + memberWithdrawn[memberTotal.length - i];
+    }
+
     private void calculateDiagnosisStatus() {
         for (int ds = 0; ds < diagnosisScore.length; ds++)
             diagnosisScore[ds] /= diagnosisCount;
@@ -347,6 +433,40 @@ public class DashboardService {
         for (String s : minitestCategory)
             minitestCategoryAverage.add(minitestCategoryScoreSum.get(s) / minitestCategoryCount.get(s));
         diagnosisCollectBase = 0;
+    }
+
+    public MemberStatusDTO getMemberStatus(FilterDTO filterDTO) {
+        statements = getStatements(filterDTO);
+        LocalDateTime dateFrom = filterDTO.getDateFrom();
+        LocalDateTime dateTo = filterDTO.getDateTo();
+        accessorCollectBase = getaccessorCollectBase(filterDTO);
+
+        if (dateFrom.equals(dateTo)) { // 필터: 오늘
+            initialize(23);
+            setTimeBound(dateFrom, dateTo);
+            while (hourLowerBound < 23){
+                checkMember();
+                calculateMemberInfo(0, dateFrom, dateTo);
+            }
+        }
+        else { // 필터: 그 외
+            int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
+            initialize(daysBetweenTwoDates);
+            setTimeBound(dateFrom, dateTo);
+            for (int timeIndex = 0; timeIndex < daysBetweenTwoDates; timeIndex++) {
+                checkMember();
+                calculateMemberInfo(timeIndex, dateFrom, dateTo);
+            }
+        }
+        calculateMemberStatus();
+
+        return MemberStatusDTO.builder()
+                .time(time)
+                .accessorCollect(accessorCollect)
+                .memberTotal(memberTotal)
+                .memberRegistered(memberRegistered)
+                .memberWithdrawn(memberWithdrawn)
+                .build();
     }
 
     public DiagnosisStatusDTO getDiagnosisStatus(FilterDTO filterDTO) {
