@@ -1,9 +1,6 @@
 package com.tmax.eTest.Admin.dashboard.controller;
 
-import com.tmax.eTest.Admin.dashboard.dto.DashboardOverallDTO;
-import com.tmax.eTest.Admin.dashboard.dto.DiagnosisStatusDTO;
-import com.tmax.eTest.Admin.dashboard.dto.FilterDTO;
-import com.tmax.eTest.Admin.dashboard.dto.MemberStatusDTO;
+import com.tmax.eTest.Admin.dashboard.dto.*;
 import com.tmax.eTest.Admin.dashboard.service.DashboardService;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Auth.repository.UserRepository;
@@ -33,7 +30,7 @@ public class DashboardController {
         int diagnosis = dashboardService.getDiagnosis(filterDTO).size();
         int minitest = dashboardService.getMinitest(filterDTO).size();
         int userRegister = dashboardService.getUserRegister(filterDTO).size();
-        int totalAccessUser = dashboardService.getStatements(filterDTO).size();
+        int totalAccessUser = dashboardService.getStatements(filterDTO, null, null).size();
         int userTotal = dashboardService.getUserAll();
         return ResponseEntity.ok(DashboardOverallDTO.builder()
                 .totalAccessUser(totalAccessUser)
@@ -47,7 +44,7 @@ public class DashboardController {
 
     @PostMapping("accessor")
     public CMRespDto<?> getAccessor (@RequestBody FilterDTO filterDTO){
-        int result = dashboardService.getStatements(filterDTO).size();
+        int result = dashboardService.getStatements(filterDTO, null, null).size();
         return new CMRespDto<>(200, "success", result);
     }
     @PostMapping("user/register")
@@ -71,5 +68,11 @@ public class DashboardController {
     @GetMapping("diagnosis")
     public ResponseEntity<DiagnosisStatusDTO> getDiagnosisStatus(@RequestBody FilterDTO filterDTO){
         return ResponseEntity.ok(dashboardService.getDiagnosisStatus(filterDTO));
+    }
+
+
+    @GetMapping("content")
+    public ResponseEntity<ContentViewsStatusDTO> getContentViewsStatus(@RequestBody FilterDTO filterDTO){
+        return ResponseEntity.ok(dashboardService.getContentViewsStatus(filterDTO));
     }
 }

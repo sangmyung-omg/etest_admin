@@ -14,4 +14,5 @@ import java.sql.Timestamp;
 public class StatementDashboardDTO {
     private Timestamp statementDate;
     private String actionType;
+    private String sourceType;
 }

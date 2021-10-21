@@ -22,18 +22,19 @@ public class StatementRepository extends UserFilterRepository {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    public List<StatementDashboardDTO> filter(FilterQueryDTO filterQueryDTO, String actionType) {
+    public List<StatementDashboardDTO> filter(FilterQueryDTO filterQueryDTO, String sourceType, String actionType) {
         return query.select(Projections.constructor(StatementDashboardDTO.class,
                     statement.statementDate,
-                    statement.actionType))
+                    statement.actionType,
+                    statement.sourceType))
                 .from(statement)
                 .innerJoin(userMaster).on(statement.userId.eq(userMaster.userUuid))
                 .where(
                         investmentExperienceFilter(filterQueryDTO.getInvestmentExperience()),
                         dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
                         ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound()),
-                        statement.sourceType.eq("application"),
-                        actionTypeFilter(actionType)
+                        actionTypeFilter(actionType),
+                        sourceTypeFilter(sourceType)
                 )
                 .orderBy(statement.statementDate.asc())
                 .fetch();
@@ -44,6 +45,16 @@ public class StatementRepository extends UserFilterRepository {
             return null;
         return statement.statementDate.between(dateFrom, dateTo);
     }
+
+    private BooleanExpression sourceTypeFilter(String sourceType){
+        if (sourceType == null)
+            return null;
+        else if (sourceType.equals("content"))
+            return statement.sourceType.eq("video").or(statement.sourceType.eq("article"))
+                    .or(statement.sourceType.eq("textbook")).or(statement.sourceType.eq("wiki"));
+        return statement.sourceType.eq(sourceType);
+    }
+
     private BooleanExpression actionTypeFilter(String actionType){
         if (actionType == null)
             return null;

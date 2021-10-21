@@ -50,6 +50,10 @@ public class DashboardService {
     private int diagnosisMemberAtom;
     private int diagnosisNotMemberAtom;
     private int minitestAtom;
+    private int viewsVideoAtom;
+    private int viewsArticleAtom;
+    private int viewsTextbookAtom;
+    private int viewsWikiAtom;
 
     private String[] time;
     private int[] accessorCollect;
@@ -67,6 +71,16 @@ public class DashboardService {
     private double[] diagnosisNotMemberRatio;
     private int[] minitest;
     private double[] minitestRatio;
+
+    private int[] viewsTotal;
+    private int[] viewsVideo;
+    private double[] viewsVideoRatio;
+    private int[] viewsArticle;
+    private double[] viewsArticleRatio;
+    private int[] viewsTextbook;
+    private double[] viewsTextbookRatio;
+    private int[] viewsWiki;
+    private double[] viewsWikiRatio;
 
     private int diagnosisCount;
     private String[] diagnosisScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
@@ -128,8 +142,8 @@ public class DashboardService {
         return minitestReportRepository.filter(filterQueryBuilder(filterDTO));
     }
 
-    public List<StatementDashboardDTO> getStatements(FilterDTO filterDTO) {
-        return statementRepository.filter(filterQueryBuilder(filterDTO), null);
+    public List<StatementDashboardDTO> getStatements(FilterDTO filterDTO, String sourceType, String actionType) {
+        return statementRepository.filter(filterQueryBuilder(filterDTO), sourceType, actionType);
     }
 
     public List<Statement> getUserRegister(FilterDTO filterDTO) { // 등록 회원 수
@@ -157,6 +171,15 @@ public class DashboardService {
         diagnosisNotMemberRatio = new double[arraySize];
         minitest = new int[arraySize];
         minitestRatio = new double[arraySize];
+        viewsTotal = new int[arraySize];
+        viewsVideo = new int[arraySize];
+        viewsVideoRatio = new double[arraySize];
+        viewsArticle = new int[arraySize];
+        viewsArticleRatio = new double[arraySize];
+        viewsTextbook = new int[arraySize];
+        viewsTextbookRatio = new double[arraySize];
+        viewsWiki = new int[arraySize];
+        viewsWikiRatio = new double[arraySize];
         diagnosisScore = new double[diagnosisScoreLegend.length];
         minitestScore = new double[minitestScoreLegend.length];
         minitestCategoryScoreSum = new HashMap<>();
@@ -200,7 +223,7 @@ public class DashboardService {
         }
     }
 
-    private int getaccessorCollectBase(FilterDTO filterDTO) {
+    private int getAccessorCollectBase(FilterDTO filterDTO) {
         FilterQueryDTO filterQueryDTO = filterQueryBuilder(filterDTO);
         Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
         Timestamp dateBound = filterQueryDTO.getDateFrom();
@@ -210,7 +233,7 @@ public class DashboardService {
         dateBound = new Timestamp(calendar.getTimeInMillis());
         filterQueryDTO.setDateFrom(bigbang);
         filterQueryDTO.setDateTo(dateBound);
-        return statementRepository.filter(filterQueryDTO, "enter").size();
+        return statementRepository.filter(filterQueryDTO, "application", "enter").size();
     }
 
     private int getDiagnosisCollectBase(FilterDTO filterDTO) {
@@ -318,6 +341,26 @@ public class DashboardService {
         }
     }
 
+    private void checkContentViews() {
+        if (statements.size() > 0) {
+            for (StatementDashboardDTO statement : statements) {
+                if (statement.getStatementDate().after(timeLowerBound)
+                        & statement.getStatementDate().before(timeUpperBound)) {
+                    if (statement.getSourceType().equals("video"))
+                        viewsVideoAtom++;
+                    else if (statement.getSourceType().equals("article"))
+                        viewsArticleAtom++;
+                    else if (statement.getSourceType().equals("textbook"))
+                        viewsTextbookAtom++;
+                    else if (statement.getSourceType().equals("wiki"))
+                        viewsWikiAtom++;
+                }
+                else
+                    break;
+            }
+        }
+    }
+
     private void calculateMemberInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
         int index;
         if (dateFrom.equals(dateTo)) {
@@ -404,6 +447,52 @@ public class DashboardService {
         minitestAtom = 0;
     }
 
+    private void calculateContentViewsInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        int index;
+        if (dateFrom.equals(dateTo)) {
+            index = hourLowerBound;
+            time[index] = index + 1 + ":00";
+        } else {
+            index = timeIndex;
+            time[index] = (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+        }
+        viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom;
+        viewsVideo[index] = viewsVideoAtom;
+        viewsVideoRatio[index] = (double) viewsVideoAtom / (double) viewsTotal[index];
+        if (Double.isNaN(viewsVideoRatio[index]))
+            viewsVideoRatio[index] = 0;
+        viewsArticle[index] = viewsArticleAtom;
+        viewsArticleRatio[index] = (double) viewsArticleAtom / (double) viewsTotal[index];
+        if (Double.isNaN(viewsArticleRatio[index]))
+            viewsArticleRatio[index] = 0;
+        viewsTextbook[index] = viewsTextbookAtom;
+        viewsTextbookRatio[index] = (double) viewsTextbookAtom / (double) viewsTotal[index];
+        if (Double.isNaN(viewsTextbookRatio[index]))
+            viewsTextbookRatio[index] = 0;
+        viewsWiki[index] = viewsWikiAtom;
+        viewsWikiRatio[index] = (double) viewsWikiAtom / (double) viewsTotal[index];
+        if (Double.isNaN(viewsWikiRatio[index]))
+            viewsWikiRatio[index] = 0;
+
+        if (dateFrom.equals(dateTo)) {
+            hourLowerBound++;
+            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+        }
+        else {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.set(Calendar.HOUR_OF_DAY, 47);
+        }
+        timeUpperBound = new Timestamp(cal.getTimeInMillis());
+
+        statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom, statements.size());
+        viewsVideoAtom = 0;
+        viewsArticleAtom = 0;
+        viewsTextbookAtom = 0;
+        viewsWikiAtom = 0;
+    }
+
     private void calculateMemberStatus() {
         memberTotal[memberTotal.length - 1] = getUserAll();
         for (int i = 1; i < memberTotal.length; i++)
@@ -436,10 +525,10 @@ public class DashboardService {
     }
 
     public MemberStatusDTO getMemberStatus(FilterDTO filterDTO) {
-        statements = getStatements(filterDTO);
+        statements = getStatements(filterDTO, "application", null);
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
-        accessorCollectBase = getaccessorCollectBase(filterDTO);
+        accessorCollectBase = getAccessorCollectBase(filterDTO);
 
         if (dateFrom.equals(dateTo)) { // 필터: 오늘
             initialize(23);
@@ -522,6 +611,42 @@ public class DashboardService {
                 .averageMinitest(averageMinitest)
                 .minitestCategory(minitestCategory)
                 .minitestCategoryAverage(minitestCategoryAverage)
+                .build();
+    }
+
+    public ContentViewsStatusDTO getContentViewsStatus(FilterDTO filterDTO) {
+        statements = getStatements(filterDTO, "content", "enter");
+        LocalDateTime dateFrom = filterDTO.getDateFrom();
+        LocalDateTime dateTo = filterDTO.getDateTo();
+
+        if (dateFrom.equals(dateTo)) { // 필터: 오늘
+            initialize(23);
+            setTimeBound(dateFrom, dateTo);
+            while (hourLowerBound < 23){
+                checkContentViews();
+                calculateContentViewsInfo(0, dateFrom, dateTo);
+            }
+        }
+        else { // 필터: 그 외
+            int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
+            initialize(daysBetweenTwoDates);
+            setTimeBound(dateFrom, dateTo);
+            for (int timeIndex = 0; timeIndex < daysBetweenTwoDates; timeIndex++) {
+                checkContentViews();
+                calculateContentViewsInfo(timeIndex, dateFrom, dateTo);
+            }
+        }
+        return ContentViewsStatusDTO.builder()
+                .time(time)
+                .viewsTotal(viewsTotal)
+                .viewsVideo(viewsVideo)
+                .viewsVideoRatio(viewsVideoRatio)
+                .viewsArticle(viewsArticle)
+                .viewsArticleRatio(viewsArticleRatio)
+                .viewsTextbook(viewsTextbook)
+                .viewsTextbookRatio(viewsTextbookRatio)
+                .viewsWiki(viewsWiki)
+                .viewsWikiRatio(viewsWikiRatio)
                 .build();
     }
 }
