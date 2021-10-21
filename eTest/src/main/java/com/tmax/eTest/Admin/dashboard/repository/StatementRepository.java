@@ -1,53 +1,64 @@
 package com.tmax.eTest.Admin.dashboard.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import static com.tmax.eTest.Common.model.report.QDiagnosisReport.diagnosisReport;
-
-import static com.tmax.eTest.LRS.model.QStatement.statement;
-import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
-
-import com.tmax.eTest.Admin.dashboard.dto.FilterQueryDTO;
-import com.tmax.eTest.LRS.model.Statement;
+import com.tmax.eTest.Admin.dashboard.dto.FilterRepoQueryDTO;
+import com.tmax.eTest.Admin.dashboard.dto.StatementDashboardDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+
+import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
+import static com.tmax.eTest.LRS.model.QStatement.statement;
 
 @Repository("AD-StatementRepository")
 public class StatementRepository extends UserFilterRepository {
     private final JPAQueryFactory query;
-    LocalDate currentDate = LocalDate.now();
-    SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd");
-    Date time = new Date();
-    String time1 = format1.format(time);
-    String time2 = time1.substring(10);
 
     public StatementRepository(EntityManager entityManager) {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    public List<Statement> filter(FilterQueryDTO filterQueryDTO) {
-        return query.select(statement)
+    public List<StatementDashboardDTO> filter(FilterRepoQueryDTO filterRepoQueryDTO, String sourceType, String actionType) {
+        return query.select(Projections.constructor(StatementDashboardDTO.class,
+                    statement.statementDate,
+                    statement.actionType,
+                    statement.sourceType))
                 .from(statement)
+                .innerJoin(userMaster).on(statement.userId.eq(userMaster.userUuid))
                 .where(
-                        investmentExperienceFilter(filterQueryDTO.getInvestmentExperience()),
-                        dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
-                        ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound()),
-                        statement.actionType.eq("enter"),
-                        statement.sourceType.eq("application")
+                        investmentExperienceFilter(filterRepoQueryDTO.getInvestmentExperience()),
+                        dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()),
+                        ageGroupFilter(filterRepoQueryDTO.getAgeGroupLowerBound(), filterRepoQueryDTO.getAgeGroupUpperBound()),
+                        actionTypeFilter(actionType),
+                        sourceTypeFilter(sourceType)
                 )
+                .orderBy(statement.statementDate.asc())
                 .fetch();
     }
+
     private BooleanExpression dateFilter(Timestamp dateFrom, Timestamp dateTo){
-        if (dateFrom == null & dateTo == null){
+        if (dateFrom == null & dateTo == null)
             return null;
-        }
         return statement.statementDate.between(dateFrom, dateTo);
+    }
+
+    private BooleanExpression sourceTypeFilter(String sourceType){
+        if (sourceType == null)
+            return null;
+        else if (sourceType.equals("content"))
+            return statement.sourceType.eq("video").or(statement.sourceType.eq("article"))
+                    .or(statement.sourceType.eq("textbook")).or(statement.sourceType.eq("wiki"));
+        return statement.sourceType.eq(sourceType);
+    }
+
+    private BooleanExpression actionTypeFilter(String actionType){
+        if (actionType == null)
+            return null;
+        return statement.actionType.eq(actionType);
     }
 }
 

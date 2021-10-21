@@ -1,67 +1,54 @@
 package com.tmax.eTest.Admin.dashboard.controller;
 
-import com.tmax.eTest.Admin.dashboard.dto.DashboardOverallDTO;
-import com.tmax.eTest.Admin.dashboard.dto.FilterDTO;
-import com.tmax.eTest.Admin.dashboard.dto.SignUpCreateDateDTO;
+import com.tmax.eTest.Admin.dashboard.dto.*;
 import com.tmax.eTest.Admin.dashboard.service.DashboardService;
-import com.tmax.eTest.Auth.dto.CMRespDto;
-import com.tmax.eTest.Auth.repository.UserRepository;
-import com.tmax.eTest.Common.repository.user.UserMasterRepo;
-import com.tmax.eTest.LRS.dto.StatementDTO;
-import com.tmax.eTest.LRS.repository.StatementRepository;
-import com.tmax.eTest.LRS.util.LRSAPIManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("submaster")
+@RequiredArgsConstructor
+@RequestMapping("submaster/dashboard")
 public class DashboardController {
-    @Autowired
-    private DashboardService dashboardService;
-    @Autowired
-    private StatementRepository statementRepository;
-    @Autowired
-    @Qualifier("AU-UserRepository")
-    private UserRepository userRepository;
-    @Autowired
-    private LRSAPIManager lrsapiManager;
+    private final DashboardService dashboardService;
 
-    @PostMapping("/dashboard/overall")
-    public ResponseEntity<DashboardOverallDTO> getOverallCards
-            (@RequestBody FilterDTO filterDTO){
-        Integer diagnosis = dashboardService.getDiagnosis(filterDTO).size();
-        Integer minitest = dashboardService.getMinitest(filterDTO).size();
-        Integer userRegister = dashboardService.getUserRegister(filterDTO).size();
-        Integer totalAccessUser = dashboardService.getAccessor(filterDTO).size();
-        Integer userTotal = dashboardService.getUserAll();
-        return ResponseEntity.ok(DashboardOverallDTO.builder()
-                .totalAccessUser(totalAccessUser)
-                .userRegistered(userRegister)
-                .userTotal(userTotal)
-                .diagnosisTotal(diagnosis + minitest)
-                .diagnosis(diagnosis)
-                .minitest(minitest)
-                .build());
+    /**
+     * 대시보드 전체 현황
+     * @param filterDTO
+     */
+    @GetMapping("overall")
+    public ResponseEntity<OverallStatusDTO> getOverallStatus(@RequestBody FilterDTO filterDTO){
+        return ResponseEntity.ok(dashboardService.getOverallStatus(filterDTO));
     }
 
-    @PostMapping("/dashboard/accessor")
-    public CMRespDto<?> getAccessor (@RequestBody FilterDTO filterDTO){
-        int result = dashboardService.getAccessor(filterDTO).size();
-        return new CMRespDto<>(200, "success", result);
-    }
-    @PostMapping("/dashboard/user/register")
-    public CMRespDto<?> getUserRegister (@RequestBody FilterDTO filterDTO){
-        int result = dashboardService.getUserRegister(filterDTO).size();
-        return new CMRespDto<>(200, "success", result);
+    /**
+     * 대시보드 회원 현황
+     * @param filterDTO
+     */
+    @GetMapping("member")
+    public ResponseEntity<MemberStatusDTO> getMemberStatus(@RequestBody FilterDTO filterDTO){
+        return ResponseEntity.ok(dashboardService.getMemberStatus(filterDTO));
     }
 
-    @GetMapping("/dashboard/user/all")
-    public CMRespDto<?> getUserAll (){
-        int result = dashboardService.getUserAll();
-        return new CMRespDto<>(200, "success", result);
+    /**
+     * 대시보드 진단 현황
+     * @param filterDTO
+     */
+    @GetMapping("diagnosis")
+    public ResponseEntity<DiagnosisStatusDTO> getDiagnosisStatus(@RequestBody FilterDTO filterDTO){
+        return ResponseEntity.ok(dashboardService.getDiagnosisStatus(filterDTO));
+    }
+
+
+    /**
+     * 대시보드 컨텐츠 조회 현황
+     * @param filterDTO
+     */
+    @GetMapping("content")
+    public ResponseEntity<ContentViewsStatusDTO> getContentViewsStatus(@RequestBody FilterDTO filterDTO){
+        return ResponseEntity.ok(dashboardService.getContentViewsStatus(filterDTO));
     }
 }
