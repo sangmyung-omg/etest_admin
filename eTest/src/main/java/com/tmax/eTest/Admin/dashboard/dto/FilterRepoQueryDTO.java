@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class FilterQueryDTO {
+public class FilterRepoQueryDTO {
     private Timestamp dateFrom;
     private Timestamp dateTo;
     private String gender;

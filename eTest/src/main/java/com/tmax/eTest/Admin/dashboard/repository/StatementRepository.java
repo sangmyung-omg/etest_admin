@@ -3,7 +3,7 @@ package com.tmax.eTest.Admin.dashboard.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.tmax.eTest.Admin.dashboard.dto.FilterQueryDTO;
+import com.tmax.eTest.Admin.dashboard.dto.FilterRepoQueryDTO;
 import com.tmax.eTest.Admin.dashboard.dto.StatementDashboardDTO;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +22,7 @@ public class StatementRepository extends UserFilterRepository {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    public List<StatementDashboardDTO> filter(FilterQueryDTO filterQueryDTO, String sourceType, String actionType) {
+    public List<StatementDashboardDTO> filter(FilterRepoQueryDTO filterRepoQueryDTO, String sourceType, String actionType) {
         return query.select(Projections.constructor(StatementDashboardDTO.class,
                     statement.statementDate,
                     statement.actionType,
@@ -30,9 +30,9 @@ public class StatementRepository extends UserFilterRepository {
                 .from(statement)
                 .innerJoin(userMaster).on(statement.userId.eq(userMaster.userUuid))
                 .where(
-                        investmentExperienceFilter(filterQueryDTO.getInvestmentExperience()),
-                        dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
-                        ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound()),
+                        investmentExperienceFilter(filterRepoQueryDTO.getInvestmentExperience()),
+                        dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()),
+                        ageGroupFilter(filterRepoQueryDTO.getAgeGroupLowerBound(), filterRepoQueryDTO.getAgeGroupUpperBound()),
                         actionTypeFilter(actionType),
                         sourceTypeFilter(sourceType)
                 )

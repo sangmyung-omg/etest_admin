@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tmax.eTest.Admin.dashboard.dto.DiagnosisDashboardDTO;
-import com.tmax.eTest.Admin.dashboard.dto.FilterQueryDTO;
+import com.tmax.eTest.Admin.dashboard.dto.FilterRepoQueryDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,7 +21,7 @@ public class DiagnosisReportRepository extends UserFilterRepository {
         this.query = new JPAQueryFactory(entityManager);
     }
 
-    public List<DiagnosisDashboardDTO> filter(FilterQueryDTO filterQueryDTO){
+    public List<DiagnosisDashboardDTO> filter(FilterRepoQueryDTO filterRepoQueryDTO){
         return query.select(Projections.constructor(DiagnosisDashboardDTO.class,
                     diagnosisReport.diagnosisDate,
                     diagnosisReport.userUuid,
@@ -31,25 +31,22 @@ public class DiagnosisReportRepository extends UserFilterRepository {
                     diagnosisReport.knowledgeScore))
                 .from(diagnosisReport)
                 .where(
-                        investmentExperienceFilter(filterQueryDTO.getInvestmentExperience()),
-                        dateFilter(filterQueryDTO.getDateFrom(), filterQueryDTO.getDateTo()),
-                        ageGroupFilter(filterQueryDTO.getAgeGroupLowerBound(), filterQueryDTO.getAgeGroupUpperBound())
+                        investmentExperienceFilter(filterRepoQueryDTO.getInvestmentExperience()),
+                        dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()),
+                        ageGroupFilter(filterRepoQueryDTO.getAgeGroupLowerBound(), filterRepoQueryDTO.getAgeGroupUpperBound())
                 )
                 .orderBy(diagnosisReport.diagnosisDate.asc())
                 .fetch();
     }
 
-    // user가 아니라 Diagnosis의 invest period로 filter
     public BooleanExpression investmentExperienceFilter(int investmentExperience) {
-        if (investmentExperience == 0) {
+        if (investmentExperience == 0)
             return null;
-        }
         return diagnosisReport.investPeriod.eq(investmentExperience);
     }
     private BooleanExpression dateFilter(Timestamp dateFrom, Timestamp dateTo){
-        if (dateFrom == null & dateTo == null){
+        if (dateFrom == null & dateTo == null)
             return null;
-        }
         return diagnosisReport.diagnosisDate.between(dateFrom, dateTo);
     }
 }

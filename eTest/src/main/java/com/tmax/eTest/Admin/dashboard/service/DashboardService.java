@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tmax.eTest.Admin.dashboard.dto.*;
-import com.tmax.eTest.Admin.dashboard.repository.*;
+import com.tmax.eTest.Admin.dashboard.repository.DiagnosisReportRepository;
+import com.tmax.eTest.Admin.dashboard.repository.MinitestReportRepository;
+import com.tmax.eTest.Admin.dashboard.repository.StatementRepository;
 import com.tmax.eTest.Auth.repository.UserRepository;
-import com.tmax.eTest.LRS.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-//@RequiredArgsConstructor
 public class DashboardService {
     @Autowired
     @Qualifier("AU-UserRepository")
@@ -32,7 +32,6 @@ public class DashboardService {
     @Qualifier(value = "AD-DiagnosisReportRepository")
     private final DiagnosisReportRepository diagnosisReportRepository;
     private final MinitestReportRepository minitestReportRepository;
-    private final UserCreateTimeRepository userCreateTimeRepository;
     private static final Logger logger = LoggerFactory.getLogger(DashboardService.class);
     private final ObjectMapper mapper;
 
@@ -103,51 +102,45 @@ public class DashboardService {
     private Timestamp timeUpperBound;
     private Timestamp diagnosisDate;
     private Calendar cal;
-    /** variables **/
+    /** end of variables **/
 
     public DashboardService(ObjectMapper mapper,
                             StatementRepository statementRepository,
                             DiagnosisReportRepository diagnosisReportRepository,
-                            MinitestReportRepository minitestReportRepository,
-                            UserCreateTimeRepository userCreateTimeRepository){
+                            MinitestReportRepository minitestReportRepository){
         this.mapper = mapper;
         this.statementRepository = statementRepository;
         this.diagnosisReportRepository = diagnosisReportRepository;
         this.minitestReportRepository = minitestReportRepository;
-        this.userCreateTimeRepository = userCreateTimeRepository;
     }
 
-    public FilterQueryDTO filterQueryBuilder(FilterDTO filterDTO) {
-        FilterQueryDTO filterQueryDTO = FilterQueryDTO.builder()
+    public FilterRepoQueryDTO filterRepoQueryBuilder(FilterDTO filterDTO) {
+        FilterRepoQueryDTO filterRepoQueryDTO = FilterRepoQueryDTO.builder()
                 .gender(filterDTO.getGender())
                 .investmentExperience(filterDTO.getInvestmentExperience())
                 .build();
         if (filterDTO.getDateFrom() != null & filterDTO.getDateTo() != null){
-            filterQueryDTO.setDateFrom(Timestamp.valueOf(filterDTO.getDateFrom()));
-            filterQueryDTO.setDateTo(Timestamp.valueOf(filterDTO.getDateTo().plusDays(1)));
+            filterRepoQueryDTO.setDateFrom(Timestamp.valueOf(filterDTO.getDateFrom()));
+            filterRepoQueryDTO.setDateTo(Timestamp.valueOf(filterDTO.getDateTo().plusDays(1)));
         }
         if (filterDTO.getAgeGroup() != null){
             LocalDate currentDateTime = LocalDate.now();
-            filterQueryDTO.setAgeGroupLowerBound(currentDateTime.minusYears(filterDTO.getAgeGroup() + 10));
-            filterQueryDTO.setAgeGroupUpperBound(currentDateTime.minusYears(filterDTO.getAgeGroup()));
+            filterRepoQueryDTO.setAgeGroupLowerBound(currentDateTime.minusYears(filterDTO.getAgeGroup() + 10));
+            filterRepoQueryDTO.setAgeGroupUpperBound(currentDateTime.minusYears(filterDTO.getAgeGroup()));
         }
-        return filterQueryDTO;
+        return filterRepoQueryDTO;
     }
 
     public List<DiagnosisDashboardDTO> getDiagnosis(FilterDTO filterDTO) {
-        return diagnosisReportRepository.filter(filterQueryBuilder(filterDTO));
+        return diagnosisReportRepository.filter(filterRepoQueryBuilder(filterDTO));
     }
 
     public List<MinitestDashboardDTO> getMinitest(FilterDTO filterDTO) {
-        return minitestReportRepository.filter(filterQueryBuilder(filterDTO));
+        return minitestReportRepository.filter(filterRepoQueryBuilder(filterDTO));
     }
 
     public List<StatementDashboardDTO> getStatements(FilterDTO filterDTO, String sourceType, String actionType) {
-        return statementRepository.filter(filterQueryBuilder(filterDTO), sourceType, actionType);
-    }
-
-    public List<Statement> getUserRegister(FilterDTO filterDTO) { // 등록 회원 수
-        return userCreateTimeRepository.filter(filterQueryBuilder(filterDTO));
+        return statementRepository.filter(filterRepoQueryBuilder(filterDTO), sourceType, actionType);
     }
 
     public int getUserAll() {
@@ -195,6 +188,19 @@ public class DashboardService {
         averageMinitest = 0.0;
     }
 
+    private void initializeAtom() {
+        accessorAtom = 0;
+        memberRegisteredAtom = 0;
+        memberWithdrawnAtom = 0;
+        diagnosisMemberAtom = 0;
+        diagnosisNotMemberAtom = 0;
+        minitestAtom = 0;
+        viewsVideoAtom = 0;
+        viewsArticleAtom = 0;
+        viewsTextbookAtom = 0;
+        viewsWikiAtom = 0;
+    }
+
     private void setTimeBound(LocalDateTime dateFrom, LocalDateTime dateTo) {
         if (dateFrom.equals(dateTo)) {
             cal = Calendar.getInstance();
@@ -224,30 +230,30 @@ public class DashboardService {
     }
 
     private int getAccessorCollectBase(FilterDTO filterDTO) {
-        FilterQueryDTO filterQueryDTO = filterQueryBuilder(filterDTO);
+        FilterRepoQueryDTO filterRepoQueryDTO = filterRepoQueryBuilder(filterDTO);
         Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
-        Timestamp dateBound = filterQueryDTO.getDateFrom();
+        Timestamp dateBound = filterRepoQueryDTO.getDateFrom();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateBound);
         calendar.set(Calendar.MILLISECOND, -1);
         dateBound = new Timestamp(calendar.getTimeInMillis());
-        filterQueryDTO.setDateFrom(bigbang);
-        filterQueryDTO.setDateTo(dateBound);
-        return statementRepository.filter(filterQueryDTO, "application", "enter").size();
+        filterRepoQueryDTO.setDateFrom(bigbang);
+        filterRepoQueryDTO.setDateTo(dateBound);
+        return statementRepository.filter(filterRepoQueryDTO, "application", "enter").size();
     }
 
     private int getDiagnosisCollectBase(FilterDTO filterDTO) {
-        FilterQueryDTO filterQueryDTO = filterQueryBuilder(filterDTO);
+        FilterRepoQueryDTO filterRepoQueryDTO = filterRepoQueryBuilder(filterDTO);
         Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
-        Timestamp dateBound = filterQueryDTO.getDateFrom();
+        Timestamp dateBound = filterRepoQueryDTO.getDateFrom();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateBound);
         calendar.set(Calendar.MILLISECOND, -1);
         dateBound = new Timestamp(calendar.getTimeInMillis());
-        filterQueryDTO.setDateFrom(bigbang);
-        filterQueryDTO.setDateTo(dateBound);
-        return diagnosisReportRepository.filter(filterQueryDTO).size()
-                + minitestReportRepository.filter(filterQueryDTO).size();
+        filterRepoQueryDTO.setDateFrom(bigbang);
+        filterRepoQueryDTO.setDateTo(dateBound);
+        return diagnosisReportRepository.filter(filterRepoQueryDTO).size()
+                + minitestReportRepository.filter(filterRepoQueryDTO).size();
     }
 
     private void checkMember() {
@@ -255,12 +261,17 @@ public class DashboardService {
             for (StatementDashboardDTO statement : statements) {
                 if (statement.getStatementDate().after(timeLowerBound)
                         & statement.getStatementDate().before(timeUpperBound)) {
-                    if (statement.getActionType().equals("enter"))
-                        accessorAtom++;
-                    else if (statement.getActionType().equals("register"))
-                        memberRegisteredAtom++;
-                    else if (statement.getActionType().equals("withdrawl"))
-                        memberWithdrawnAtom++;
+                    switch (statement.getActionType()) {
+                        case "enter":
+                            accessorAtom++;
+                            break;
+                        case "register":
+                            memberRegisteredAtom++;
+                            break;
+                        case "withdrawal":
+                            memberWithdrawnAtom++;
+                            break;
+                    }
                 }
                 else
                     break;
@@ -273,7 +284,7 @@ public class DashboardService {
             for (DiagnosisDashboardDTO diagnosis : diagnosisReports) {
                 diagnosisDate = diagnosis.getDiagnosisDate();
                 if (diagnosisDate.after(timeLowerBound) & diagnosisDate.before(timeUpperBound)) {
-                    if (diagnosis.getUserUuid().startsWith("NR-")) // 비회원
+                    if (diagnosis.getUserUuid().startsWith("NR-"))
                         diagnosisNotMemberAtom++;
                     else
                         diagnosisMemberAtom++;
@@ -346,14 +357,20 @@ public class DashboardService {
             for (StatementDashboardDTO statement : statements) {
                 if (statement.getStatementDate().after(timeLowerBound)
                         & statement.getStatementDate().before(timeUpperBound)) {
-                    if (statement.getSourceType().equals("video"))
-                        viewsVideoAtom++;
-                    else if (statement.getSourceType().equals("article"))
-                        viewsArticleAtom++;
-                    else if (statement.getSourceType().equals("textbook"))
-                        viewsTextbookAtom++;
-                    else if (statement.getSourceType().equals("wiki"))
-                        viewsWikiAtom++;
+                    switch (statement.getSourceType()) {
+                        case "video":
+                            viewsVideoAtom++;
+                            break;
+                        case "article":
+                            viewsArticleAtom++;
+                            break;
+                        case "textbook":
+                            viewsTextbookAtom++;
+                            break;
+                        case "wiki":
+                            viewsWikiAtom++;
+                            break;
+                    }
                 }
                 else
                     break;
@@ -388,9 +405,7 @@ public class DashboardService {
         timeUpperBound = new Timestamp(cal.getTimeInMillis());
 
         statements = statements.subList(accessorAtom + memberRegisteredAtom + memberWithdrawnAtom, statements.size());
-        accessorAtom = 0;
-        memberRegisteredAtom = 0;
-        memberWithdrawnAtom = 0;
+        initializeAtom();
     }
 
     private void calculateDiagnosisInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
@@ -442,9 +457,7 @@ public class DashboardService {
 
         diagnosisReports = diagnosisReports.subList(diagnosisMemberAtom + diagnosisNotMemberAtom, diagnosisReports.size());
         minitestReports = minitestReports.subList(minitestAtom, minitestReports.size());
-        diagnosisMemberAtom = 0;
-        diagnosisNotMemberAtom = 0;
-        minitestAtom = 0;
+        initializeAtom();
     }
 
     private void calculateContentViewsInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
@@ -487,10 +500,7 @@ public class DashboardService {
         timeUpperBound = new Timestamp(cal.getTimeInMillis());
 
         statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom, statements.size());
-        viewsVideoAtom = 0;
-        viewsArticleAtom = 0;
-        viewsTextbookAtom = 0;
-        viewsWikiAtom = 0;
+        initializeAtom();
     }
 
     private void calculateMemberStatus() {
@@ -524,13 +534,76 @@ public class DashboardService {
         diagnosisCollectBase = 0;
     }
 
+    public OverallStatusDTO getOverallStatus(FilterDTO filterDTO) {
+        double serviceUsageDivisor = 0;
+        initializeAtom();
+        diagnosisReports = getDiagnosis(filterDTO);
+        minitestReports = getMinitest(filterDTO);
+        serviceUsageDivisor += diagnosisReports.size() + minitestReports.size();
+        statements = getStatements(filterDTO, "application", null);
+        for (StatementDashboardDTO statement : statements) {
+            switch (statement.getActionType()) {
+                case "enter":
+                    accessorAtom++;
+                    break;
+                case "register":
+                    memberRegisteredAtom++;
+                    break;
+                case "withdrawal":
+                    memberWithdrawnAtom++;
+                    break;
+            }
+        }
+
+        statements = getStatements(filterDTO, "content", "enter");
+        for (StatementDashboardDTO statement : statements) {
+            switch (statement.getSourceType()) {
+                case "video":
+                    viewsVideoAtom++;
+                    break;
+                case "article":
+                    viewsArticleAtom++;
+                    break;
+                case "textbook":
+                    viewsTextbookAtom++;
+                    break;
+                case "wiki":
+                    viewsWikiAtom++;
+                    break;
+            }
+            serviceUsageDivisor++;
+        }
+
+        return OverallStatusDTO.builder()
+                .accessorCollect(accessorAtom)
+                .memberCountOfChange(memberRegisteredAtom - memberWithdrawnAtom)
+                .memberRegistered(memberRegisteredAtom)
+                .memberWithdrawn(memberWithdrawnAtom)
+                .memberTotal(getUserAll())
+                .diagnosisTotal(diagnosisReports.size() + minitestReports.size())
+                .diagnosis(diagnosisReports.size())
+                .minitest(minitestReports.size())
+//                .diagnosisCategoryName()
+//                .diagnosisCategoryRatio()
+//                .minitestCategoryName()
+//                .minitestCategoryRatio()
+                .serviceUsage(ServiceUsageDTO.builder()
+                        .diagnosis(diagnosisReports.size() / serviceUsageDivisor)
+                        .minitest(minitestReports.size() / serviceUsageDivisor)
+                        .video(viewsVideoAtom / serviceUsageDivisor)
+                        .article(viewsArticleAtom / serviceUsageDivisor)
+                        .textbook(viewsTextbookAtom / serviceUsageDivisor)
+                        .build())
+                .build();
+    }
+
     public MemberStatusDTO getMemberStatus(FilterDTO filterDTO) {
         statements = getStatements(filterDTO, "application", null);
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
         accessorCollectBase = getAccessorCollectBase(filterDTO);
 
-        if (dateFrom.equals(dateTo)) { // 필터: 오늘
+        if (dateFrom.equals(dateTo)) {
             initialize(23);
             setTimeBound(dateFrom, dateTo);
             while (hourLowerBound < 23){
@@ -538,7 +611,7 @@ public class DashboardService {
                 calculateMemberInfo(0, dateFrom, dateTo);
             }
         }
-        else { // 필터: 그 외
+        else {
             int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
             initialize(daysBetweenTwoDates);
             setTimeBound(dateFrom, dateTo);
@@ -565,7 +638,7 @@ public class DashboardService {
         LocalDateTime dateTo = filterDTO.getDateTo();
         diagnosisCollectBase = getDiagnosisCollectBase(filterDTO);
 
-        if (dateFrom.equals(dateTo)) { // 필터: 오늘
+        if (dateFrom.equals(dateTo)) {
             initialize(23);
             setTimeBound(dateFrom, dateTo);
             while (hourLowerBound < 23){
@@ -574,7 +647,7 @@ public class DashboardService {
                 calculateDiagnosisInfo(0, dateFrom, dateTo);
             }
         }
-        else { // 필터: 그 외
+        else {
             int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
             initialize(daysBetweenTwoDates);
             setTimeBound(dateFrom, dateTo);
@@ -619,7 +692,7 @@ public class DashboardService {
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
 
-        if (dateFrom.equals(dateTo)) { // 필터: 오늘
+        if (dateFrom.equals(dateTo)) {
             initialize(23);
             setTimeBound(dateFrom, dateTo);
             while (hourLowerBound < 23){
@@ -627,7 +700,7 @@ public class DashboardService {
                 calculateContentViewsInfo(0, dateFrom, dateTo);
             }
         }
-        else { // 필터: 그 외
+        else {
             int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
             initialize(daysBetweenTwoDates);
             setTimeBound(dateFrom, dateTo);
@@ -650,6 +723,3 @@ public class DashboardService {
                 .build();
     }
 }
-
-
-

@@ -11,19 +11,15 @@ import java.time.LocalDate;
 import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
 
 public class UserFilterRepository {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
-
     public BooleanExpression ageGroupFilter(LocalDate ageGroupLowerBound, LocalDate ageGroupUpperBound){
         if (ageGroupLowerBound == null & ageGroupUpperBound == null)
             return null;
         return userMaster.birthday.between(ageGroupLowerBound, ageGroupUpperBound);
     }
+
     public BooleanExpression investmentExperienceFilter(int investmentExperience){
-        if (investmentExperience == 0 ){
+        if (investmentExperience == 0 )
             return null;
-        }
         return userMaster.investPeriod.eq(investmentExperience);
     }
-
-
 }
