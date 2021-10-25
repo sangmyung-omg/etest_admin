@@ -9,9 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberStatusDTO {
-    private String[] time;
-    private int[] accessorCollect;
-    private int[] memberTotal;
-    private int[] memberRegistered;
-    private int[] memberWithdrawn;
+    private CollectDTO accessor;
+    private MemberStatusMemberChangeDTO memberChange;
 }

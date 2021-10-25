@@ -2,6 +2,8 @@ package com.tmax.eTest.Admin.dashboard.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -9,14 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentViewsStatusDTO {
-    private String[] time;
-    private int[] viewsTotal;
-    private int[] viewsVideo;
-    private double[] viewsVideoRatio;
-    private int[] viewsArticle;
-    private double[] viewsArticleRatio;
-    private int[] viewsTextbook;
-    private double[] viewsTextbookRatio;
-    private int[] viewsWiki;
-    private double[] viewsWikiRatio;
+    private ContentViewsDTO contentViews;
+    private List<ContentViewsInfoDTO> contentViewsInfo;
 }

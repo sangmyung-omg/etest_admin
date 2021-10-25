@@ -24,7 +24,7 @@ import java.util.*;
 public class DashboardService {
     @Autowired
     @Qualifier("AU-UserRepository")
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     @Autowired
     @Qualifier(value ="AD-StatementRepository")
     private final StatementRepository statementRepository;
@@ -82,33 +82,38 @@ public class DashboardService {
     private double[] viewsWikiRatio;
 
     private int diagnosisCount;
-    private String[] diagnosisScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
-    private double[] diagnosisScore;
-    private int averageGI;
-    private int averageRisk;
-    private int averageInvest;
-    private int averageKnowledge;
+    private final String[] GIScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
+    private double[] GIScore;
+    private double averageGI;
+    private double averageRisk;
+    private double averageInvest;
+    private double averageKnowledge;
 
     private int minitestCount;
-    private String[] minitestScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
+    private final String[] minitestScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
     private double[] minitestScore;
     private double averageMinitest;
     private Map<String, Double> minitestCategoryScoreSum;
     private Map<String, Integer> minitestCategoryCount;
-    private List<String> minitestCategory;
+    private List<String> minitestCategoryName;
     private List<Double> minitestCategoryAverage;
 
     private Timestamp timeLowerBound;
     private Timestamp timeUpperBound;
     private Timestamp diagnosisDate;
     private Calendar cal;
+
+    private List<DiagnosisInfoDTO> diagnosisInfo;
+    private List<ContentViewsInfoDTO> contentViewsInfo;
     /** end of variables **/
 
     public DashboardService(ObjectMapper mapper,
+                            UserRepository userRepository,
                             StatementRepository statementRepository,
                             DiagnosisReportRepository diagnosisReportRepository,
                             MinitestReportRepository minitestReportRepository){
         this.mapper = mapper;
+        this.userRepository = userRepository;
         this.statementRepository = statementRepository;
         this.diagnosisReportRepository = diagnosisReportRepository;
         this.minitestReportRepository = minitestReportRepository;
@@ -173,19 +178,21 @@ public class DashboardService {
         viewsTextbookRatio = new double[arraySize];
         viewsWiki = new int[arraySize];
         viewsWikiRatio = new double[arraySize];
-        diagnosisScore = new double[diagnosisScoreLegend.length];
+        GIScore = new double[GIScoreLegend.length];
         minitestScore = new double[minitestScoreLegend.length];
         minitestCategoryScoreSum = new HashMap<>();
         minitestCategoryCount = new HashMap<>();
-        minitestCategory = new ArrayList<>();
+        minitestCategoryName = new ArrayList<>();
         minitestCategoryAverage = new ArrayList<>();
         diagnosisCount = 0;
-        averageGI = 0;
-        averageRisk = 0;
-        averageInvest = 0;
-        averageKnowledge = 0;
+        averageGI = 0.0;
+        averageRisk = 0.0;
+        averageInvest = 0.0;
+        averageKnowledge = 0.0;
         minitestCount = 0;
-        averageMinitest = 0.0;
+        averageMinitest = 0;
+        diagnosisInfo = new ArrayList<>();
+        contentViewsInfo = new ArrayList<>();
     }
 
     private void initializeAtom() {
@@ -290,13 +297,13 @@ public class DashboardService {
                         diagnosisMemberAtom++;
 
                     if (diagnosis.getGiScore() >= 80)
-                        diagnosisScore[0]++;
+                        GIScore[0]++;
                     else if (79 >= diagnosis.getGiScore() & diagnosis.getGiScore() >= 61)
-                        diagnosisScore[1]++;
+                        GIScore[1]++;
                     else if (60 >= diagnosis.getGiScore() & diagnosis.getGiScore() >= 41)
-                        diagnosisScore[2]++;
+                        GIScore[2]++;
                     else if (40 >= diagnosis.getGiScore())
-                        diagnosisScore[3]++;
+                        GIScore[3]++;
                     averageGI += diagnosis.getGiScore();
 
                     averageRisk += diagnosis.getRiskScore();
@@ -330,19 +337,19 @@ public class DashboardService {
                 try {
                     JsonNode minitestUkMastery = mapper.readTree(minitestReport.getMinitestUkMastery());
                     for (Iterator<String> it = minitestUkMastery.fieldNames(); it.hasNext(); ) {
-                        String minitestCategoryName = it.next();
-                        JsonNode minitestUkInfo = minitestUkMastery.get(minitestCategoryName);
-                        if(!minitestCategory.contains(minitestCategoryName)){
-                            minitestCategory.add(minitestCategoryName);
-                            minitestCategoryScoreSum.put(minitestCategoryName, 0.0);
-                            minitestCategoryCount.put(minitestCategoryName, 0);
+                        String minitestCategory = it.next();
+                        JsonNode minitestUkInfo = minitestUkMastery.get(minitestCategory);
+                        if(!minitestCategoryName.contains(minitestCategory)){
+                            minitestCategoryName.add(minitestCategory);
+                            minitestCategoryScoreSum.put(minitestCategory, 0.0);
+                            minitestCategoryCount.put(minitestCategory, 0);
                         }
                         if (minitestUkInfo.isArray()) {
                             for (JsonNode entity : minitestUkInfo)
-                                minitestCategoryScoreSum.put(minitestCategoryName,
-                                        minitestCategoryScoreSum.get(minitestCategoryName) + entity.get(2).asDouble());
-                            minitestCategoryCount.put(minitestCategoryName,
-                                    minitestCategoryCount.get(minitestCategoryName) + minitestUkInfo.size());
+                                minitestCategoryScoreSum.put(minitestCategory,
+                                        minitestCategoryScoreSum.get(minitestCategory) + entity.get(2).asDouble());
+                            minitestCategoryCount.put(minitestCategory,
+                                    minitestCategoryCount.get(minitestCategory) + minitestUkInfo.size());
                         }
                     }
                 } catch (JsonProcessingException e) {
@@ -513,8 +520,8 @@ public class DashboardService {
     }
 
     private void calculateDiagnosisStatus() {
-        for (int ds = 0; ds < diagnosisScore.length; ds++)
-            diagnosisScore[ds] /= diagnosisCount;
+        for (int ds = 0; ds < GIScore.length; ds++)
+            GIScore[ds] /= diagnosisCount;
 
         if (diagnosisCount != 0) {
             averageGI /= diagnosisCount;
@@ -528,10 +535,38 @@ public class DashboardService {
         if (minitestCount != 0)
             averageMinitest /= minitestCount;
 
-        minitestCategory = new ArrayList<>(minitestCategoryScoreSum.keySet());
-        for (String s : minitestCategory)
+        minitestCategoryName = new ArrayList<>(minitestCategoryScoreSum.keySet());
+        for (String s : minitestCategoryName)
             minitestCategoryAverage.add(minitestCategoryScoreSum.get(s) / minitestCategoryCount.get(s));
         diagnosisCollectBase = 0;
+
+        for (int i = 0; i < time.length; i++)
+            diagnosisInfo.add(DiagnosisInfoDTO.builder()
+                    .time(time[i])
+                    .diagnosisAndMinitest(diagnosisAndMinitest[i])
+                    .diagnosisTotal(diagnosisTotal[i])
+                    .diagnosisTotalRatio(diagnosisTotalRatio[i])
+                    .diagnosisMember(diagnosisMember[i])
+                    .diagnosisMemberRatio(diagnosisMemberRatio[i])
+                    .diagnosisNotMember(diagnosisNotMember[i])
+                    .diagnosisNotMemberRatio(diagnosisNotMemberRatio[i])
+                    .build());
+    }
+
+    private void calculateContentViewsStatus() {
+        for (int i = 0; i < time.length; i++)
+            contentViewsInfo.add(ContentViewsInfoDTO.builder()
+                    .time(time[i])
+                    .viewsTotal(viewsTotal[i])
+                    .viewsVideo(viewsVideo[i])
+                    .viewsVideoRatio(viewsVideoRatio[i])
+                    .viewsArticle(viewsArticle[i])
+                    .viewsArticleRatio(viewsArticleRatio[i])
+                    .viewsTextbook(viewsTextbook[i])
+                    .viewsTextbookRatio(viewsTextbookRatio[i])
+                    .viewsWiki(viewsWiki[i])
+                    .viewsWikiRatio(viewsWikiRatio[i])
+                    .build());
     }
 
     public OverallStatusDTO getOverallStatus(FilterDTO filterDTO) {
@@ -623,11 +658,16 @@ public class DashboardService {
         calculateMemberStatus();
 
         return MemberStatusDTO.builder()
-                .time(time)
-                .accessorCollect(accessorCollect)
-                .memberTotal(memberTotal)
-                .memberRegistered(memberRegistered)
-                .memberWithdrawn(memberWithdrawn)
+                .accessor(CollectDTO.builder()
+                        .time(time)
+                        .collect(accessorCollect)
+                        .build())
+                .memberChange(MemberStatusMemberChangeDTO.builder()
+                        .time(time)
+                        .memberTotal(memberTotal)
+                        .memberRegistered(memberRegistered)
+                        .memberWithdrawn(memberWithdrawn)
+                        .build())
                 .build();
     }
 
@@ -660,30 +700,33 @@ public class DashboardService {
         calculateDiagnosisStatus();
 
         return DiagnosisStatusDTO.builder()
-                .time(time)
-                .diagnosisCollect(diagnosisCollect)
-                .diagnosisAndMinitest(diagnosisAndMinitest)
-                .diagnosisTotal(diagnosisTotal)
-                .diagnosisTotalRatio(diagnosisTotalRatio)
-                .diagnosisMember(diagnosisMember)
-                .diagnosisMemberRatio(diagnosisMemberRatio)
-                .diagnosisNotMember(diagnosisNotMember)
-                .diagnosisNotMemberRatio(diagnosisNotMemberRatio)
-                .minitest(minitest)
-                .minitestRatio(minitestRatio)
-                .diagnosisCount(diagnosisCount)
-                .diagnosisScoreLegend(diagnosisScoreLegend)
-                .diagnosisScore(diagnosisScore)
-                .averageGI(averageGI)
-                .averageRisk(averageRisk)
-                .averageInvest(averageInvest)
-                .averageKnowledge(averageKnowledge)
-                .minitestCount(minitestCount)
-                .minitestScoreLegend(minitestScoreLegend)
-                .minitestScore(minitestScore)
-                .averageMinitest(averageMinitest)
-                .minitestCategory(minitestCategory)
-                .minitestCategoryAverage(minitestCategoryAverage)
+                .diagnosisCollect(CollectDTO.builder()
+                        .time(time)
+                        .collect(diagnosisCollect)
+                        .build())
+                .diagnosisPerTime(DiagnosisPerTimeDTO.builder()
+                        .time(time)
+                        .diagnosisMember(diagnosisMember)
+                        .diagnosisNotMember(diagnosisNotMember)
+                        .minitest(minitest)
+                        .build())
+                .diagnosisInfo(diagnosisInfo)
+                .diagnosisStatus(ReportStatusDTO.builder()
+                        .diagnosisCount(diagnosisCount)
+                        .ScoreLegend(GIScoreLegend)
+                        .Score(GIScore)
+                        .averageScore(averageGI)
+                        .categoryName(Arrays.asList("위험대응", "행동편향", "지식이해"))
+                        .categoryAverageScore(Arrays.asList(averageRisk, averageInvest, averageKnowledge))
+                        .build())
+                .minitestStatus(ReportStatusDTO.builder()
+                        .diagnosisCount(minitestCount)
+                        .ScoreLegend(minitestScoreLegend)
+                        .Score(minitestScore)
+                        .averageScore(averageMinitest)
+                        .categoryName(minitestCategoryName)
+                        .categoryAverageScore(minitestCategoryAverage)
+                        .build())
                 .build();
     }
 
@@ -709,17 +752,16 @@ public class DashboardService {
                 calculateContentViewsInfo(timeIndex, dateFrom, dateTo);
             }
         }
+        calculateContentViewsStatus();
         return ContentViewsStatusDTO.builder()
-                .time(time)
-                .viewsTotal(viewsTotal)
-                .viewsVideo(viewsVideo)
-                .viewsVideoRatio(viewsVideoRatio)
-                .viewsArticle(viewsArticle)
-                .viewsArticleRatio(viewsArticleRatio)
-                .viewsTextbook(viewsTextbook)
-                .viewsTextbookRatio(viewsTextbookRatio)
-                .viewsWiki(viewsWiki)
-                .viewsWikiRatio(viewsWikiRatio)
+                .contentViews(ContentViewsDTO.builder()
+                        .time(time)
+                        .viewsVideo(viewsVideo)
+                        .viewsArticle(viewsArticle)
+                        .viewsTextbook(viewsTextbook)
+                        .viewsWiki(viewsWiki)
+                        .build())
+                .contentViewsInfo(contentViewsInfo)
                 .build();
     }
 }
