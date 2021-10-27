@@ -110,7 +110,7 @@ public class AuthService {
         // StatementDto빌드
         StatementDTO statementDTO = StatementDTO.builder()
                 .userId(principalDetails.getUserUuid())
-                .actionType("withdrwawal")
+                .actionType("withdrawal")
                 .sourceType("application")
                 .timestamp(text)
                 .build();
