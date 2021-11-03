@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiagnosisStatusDTO {
-    private CollectDTO diagnosisCollect;
+//    private CollectDTO diagnosisCollect;
     private DiagnosisPerTimeDTO diagnosisPerTime;
     private List<DiagnosisInfoDTO> diagnosisInfo;
     private ReportStatusDTO diagnosisStatus;

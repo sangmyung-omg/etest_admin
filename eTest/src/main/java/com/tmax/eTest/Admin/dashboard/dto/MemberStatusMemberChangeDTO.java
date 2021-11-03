@@ -13,5 +13,5 @@ public class MemberStatusMemberChangeDTO {
     private String[] time;
     private int[] memberTotal;
     private int[] memberRegistered;
-    private int[] memberWithdrawn;
+//    private int[] memberWithdrawn;
 }

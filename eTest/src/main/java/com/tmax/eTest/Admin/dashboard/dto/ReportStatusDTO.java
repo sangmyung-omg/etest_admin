@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ReportStatusDTO {
     private int diagnosisCount;
-    private String[] ScoreLegend;
-    private double[] Score;
+    private String[] scoreLegend;
+    private double[] scoreRatio;
     private double averageScore;
     private List<String> categoryName;
     private List<Double> categoryAverageScore;
