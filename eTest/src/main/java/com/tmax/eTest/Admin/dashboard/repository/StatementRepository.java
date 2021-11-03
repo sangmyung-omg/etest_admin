@@ -18,9 +18,7 @@ import static com.tmax.eTest.LRS.model.QStatement.statement;
 public class StatementRepository extends UserFilterRepository {
     private final JPAQueryFactory query;
 
-    public StatementRepository(EntityManager entityManager) {
-        this.query = new JPAQueryFactory(entityManager);
-    }
+    public StatementRepository(EntityManager entityManager) { this.query = new JPAQueryFactory(entityManager); }
 
     public List<StatementDashboardDTO> filter(FilterRepoQueryDTO filterRepoQueryDTO, String sourceType, String actionType) {
         return query.select(Projections.constructor(StatementDashboardDTO.class,
@@ -51,13 +49,18 @@ public class StatementRepository extends UserFilterRepository {
             return null;
         else if (sourceType.equals("content"))
             return statement.sourceType.eq("video").or(statement.sourceType.eq("article"))
-                    .or(statement.sourceType.eq("textbook")).or(statement.sourceType.eq("wiki"));
+                    .or(statement.sourceType.eq("textbook"));
+//                    .or(statement.sourceType.eq("textbook")).or(statement.sourceType.eq("wiki"));
         return statement.sourceType.eq(sourceType);
     }
 
     private BooleanExpression actionTypeFilter(String actionType){
         if (actionType == null)
             return null;
+        else if (actionType.equals("member"))
+            return statement.actionType.eq("enter")
+                    .or(statement.actionType.eq("withdrawal"))
+                    .or(statement.actionType.eq("register"));
         return statement.actionType.eq(actionType);
     }
 }

@@ -39,7 +39,7 @@ public class DashboardService {
     private List<DiagnosisDashboardDTO> diagnosisReports;
     private List<MinitestDashboardDTO> minitestReports;
     private List<StatementDashboardDTO> statements;
-    private int diagnosisCollectBase;
+//    private int diagnosisCollectBase;
     private int accessorCollectBase;
 
     private int hourLowerBound;
@@ -52,7 +52,7 @@ public class DashboardService {
     private int viewsVideoAtom;
     private int viewsArticleAtom;
     private int viewsTextbookAtom;
-    private int viewsWikiAtom;
+//    private int viewsWikiAtom;
 
     private String[] time;
     private int[] accessorCollect;
@@ -60,7 +60,7 @@ public class DashboardService {
     private int[] memberRegistered;
     private int[] memberWithdrawn;
 
-    private int[] diagnosisCollect;
+//    private int[] diagnosisCollect;
     private int[] diagnosisAndMinitest;
     private int[] diagnosisTotal;
     private double[] diagnosisTotalRatio;
@@ -78,12 +78,12 @@ public class DashboardService {
     private double[] viewsArticleRatio;
     private int[] viewsTextbook;
     private double[] viewsTextbookRatio;
-    private int[] viewsWiki;
-    private double[] viewsWikiRatio;
+//    private int[] viewsWiki;
+//    private double[] viewsWikiRatio;
 
     private int diagnosisCount;
-    private final String[] GIScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
-    private double[] GIScore;
+    private final String[] giScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
+    private double[] giScoreRatio;
     private double averageGI;
     private double averageRisk;
     private double averageInvest;
@@ -91,7 +91,7 @@ public class DashboardService {
 
     private int minitestCount;
     private final String[] minitestScoreLegend = {"80점 이상", "60~79점", "41~60점", "40점 이하"};
-    private double[] minitestScore;
+    private double[] minitestScoreRatio;
     private double averageMinitest;
     private Map<String, Double> minitestCategoryScoreSum;
     private Map<String, Integer> minitestCategoryCount;
@@ -159,7 +159,7 @@ public class DashboardService {
         memberTotal = new int[arraySize];
         memberRegistered = new int[arraySize];
         memberWithdrawn = new int[arraySize];
-        diagnosisCollect = new int[arraySize];
+//        diagnosisCollect = new int[arraySize];
         diagnosisAndMinitest = new int[arraySize];
         diagnosisTotal = new int[arraySize];
         diagnosisTotalRatio = new double[arraySize];
@@ -176,10 +176,10 @@ public class DashboardService {
         viewsArticleRatio = new double[arraySize];
         viewsTextbook = new int[arraySize];
         viewsTextbookRatio = new double[arraySize];
-        viewsWiki = new int[arraySize];
-        viewsWikiRatio = new double[arraySize];
-        GIScore = new double[GIScoreLegend.length];
-        minitestScore = new double[minitestScoreLegend.length];
+//        viewsWiki = new int[arraySize];
+//        viewsWikiRatio = new double[arraySize];
+        giScoreRatio = new double[giScoreLegend.length];
+        minitestScoreRatio = new double[minitestScoreLegend.length];
         minitestCategoryScoreSum = new HashMap<>();
         minitestCategoryCount = new HashMap<>();
         minitestCategoryName = new ArrayList<>();
@@ -205,7 +205,7 @@ public class DashboardService {
         viewsVideoAtom = 0;
         viewsArticleAtom = 0;
         viewsTextbookAtom = 0;
-        viewsWikiAtom = 0;
+//        viewsWikiAtom = 0;
     }
 
     private void setTimeBound(LocalDateTime dateFrom, LocalDateTime dateTo) {
@@ -249,19 +249,19 @@ public class DashboardService {
         return statementRepository.filter(filterRepoQueryDTO, "application", "enter").size();
     }
 
-    private int getDiagnosisCollectBase(FilterDTO filterDTO) {
-        FilterRepoQueryDTO filterRepoQueryDTO = filterRepoQueryBuilder(filterDTO);
-        Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
-        Timestamp dateBound = filterRepoQueryDTO.getDateFrom();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(dateBound);
-        calendar.set(Calendar.MILLISECOND, -1);
-        dateBound = new Timestamp(calendar.getTimeInMillis());
-        filterRepoQueryDTO.setDateFrom(bigbang);
-        filterRepoQueryDTO.setDateTo(dateBound);
-        return diagnosisReportRepository.filter(filterRepoQueryDTO).size()
-                + minitestReportRepository.filter(filterRepoQueryDTO).size();
-    }
+//    private int getDiagnosisCollectBase(FilterDTO filterDTO) {
+//        FilterRepoQueryDTO filterRepoQueryDTO = filterRepoQueryBuilder(filterDTO);
+//        Timestamp bigbang = new Timestamp(Long.MIN_VALUE);
+//        Timestamp dateBound = filterRepoQueryDTO.getDateFrom();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(dateBound);
+//        calendar.set(Calendar.MILLISECOND, -1);
+//        dateBound = new Timestamp(calendar.getTimeInMillis());
+//        filterRepoQueryDTO.setDateFrom(bigbang);
+//        filterRepoQueryDTO.setDateTo(dateBound);
+//        return diagnosisReportRepository.filter(filterRepoQueryDTO).size()
+//                + minitestReportRepository.filter(filterRepoQueryDTO).size();
+//    }
 
     private void checkMember() {
         if (statements.size() > 0) {
@@ -275,9 +275,9 @@ public class DashboardService {
                         case "register":
                             memberRegisteredAtom++;
                             break;
-                        case "withdrawal":
-                            memberWithdrawnAtom++;
-                            break;
+//                        case "withdrawal":
+//                            memberWithdrawnAtom++;
+//                            break;
                     }
                 }
                 else
@@ -297,13 +297,13 @@ public class DashboardService {
                         diagnosisMemberAtom++;
 
                     if (diagnosis.getGiScore() >= 80)
-                        GIScore[0]++;
+                        giScoreRatio[0]++;
                     else if (79 >= diagnosis.getGiScore() & diagnosis.getGiScore() >= 61)
-                        GIScore[1]++;
+                        giScoreRatio[1]++;
                     else if (60 >= diagnosis.getGiScore() & diagnosis.getGiScore() >= 41)
-                        GIScore[2]++;
+                        giScoreRatio[2]++;
                     else if (40 >= diagnosis.getGiScore())
-                        GIScore[3]++;
+                        giScoreRatio[3]++;
                     averageGI += diagnosis.getGiScore();
 
                     averageRisk += diagnosis.getRiskScore();
@@ -325,13 +325,13 @@ public class DashboardService {
                     break;
 
                 if (minitestReport.getAvgUkMastery() >= 80)
-                    minitestScore[0]++;
+                    minitestScoreRatio[0]++;
                 else if (79 >= minitestReport.getAvgUkMastery() & minitestReport.getAvgUkMastery() >= 61)
-                    minitestScore[1]++;
+                    minitestScoreRatio[1]++;
                 else if (60 >= minitestReport.getAvgUkMastery() & minitestReport.getAvgUkMastery() >= 41)
-                    minitestScore[2]++;
+                    minitestScoreRatio[2]++;
                 else if (40 >= minitestReport.getAvgUkMastery())
-                    minitestScore[3]++;
+                    minitestScoreRatio[3]++;
                 averageMinitest += minitestReport.getAvgUkMastery();
 
                 try {
@@ -374,9 +374,9 @@ public class DashboardService {
                         case "textbook":
                             viewsTextbookAtom++;
                             break;
-                        case "wiki":
-                            viewsWikiAtom++;
-                            break;
+//                        case "wiki":
+//                            viewsWikiAtom++;
+//                            break;
                     }
                 }
                 else
@@ -445,8 +445,8 @@ public class DashboardService {
                 / (double) (diagnosisMemberAtom + diagnosisNotMemberAtom + minitestAtom);
         if (Double.isNaN(minitestRatio[index]))
             minitestRatio[index] = 0;
-        diagnosisCollectBase += diagnosisAndMinitest[index];
-        diagnosisCollect[index] = diagnosisCollectBase;
+//        diagnosisCollectBase += diagnosisAndMinitest[index];
+//        diagnosisCollect[index] = diagnosisCollectBase;
         diagnosisCount += diagnosisMemberAtom + diagnosisNotMemberAtom;
         minitestCount += minitestAtom;
 
@@ -476,7 +476,8 @@ public class DashboardService {
             index = timeIndex;
             time[index] = (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
         }
-        viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom;
+//        viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom;
+        viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom;
         viewsVideo[index] = viewsVideoAtom;
         viewsVideoRatio[index] = (double) viewsVideoAtom / (double) viewsTotal[index];
         if (Double.isNaN(viewsVideoRatio[index]))
@@ -489,10 +490,10 @@ public class DashboardService {
         viewsTextbookRatio[index] = (double) viewsTextbookAtom / (double) viewsTotal[index];
         if (Double.isNaN(viewsTextbookRatio[index]))
             viewsTextbookRatio[index] = 0;
-        viewsWiki[index] = viewsWikiAtom;
-        viewsWikiRatio[index] = (double) viewsWikiAtom / (double) viewsTotal[index];
-        if (Double.isNaN(viewsWikiRatio[index]))
-            viewsWikiRatio[index] = 0;
+//        viewsWiki[index] = viewsWikiAtom;
+//        viewsWikiRatio[index] = (double) viewsWikiAtom / (double) viewsTotal[index];
+//        if (Double.isNaN(viewsWikiRatio[index]))
+//            viewsWikiRatio[index] = 0;
 
         if (dateFrom.equals(dateTo)) {
             hourLowerBound++;
@@ -506,7 +507,8 @@ public class DashboardService {
         }
         timeUpperBound = new Timestamp(cal.getTimeInMillis());
 
-        statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom, statements.size());
+//        statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom, statements.size());
+        statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom, statements.size());
         initializeAtom();
     }
 
@@ -520,8 +522,11 @@ public class DashboardService {
     }
 
     private void calculateDiagnosisStatus() {
-        for (int ds = 0; ds < GIScore.length; ds++)
-            GIScore[ds] /= diagnosisCount;
+        for (int ds = 0; ds < giScoreRatio.length; ds++) {
+            giScoreRatio[ds] /= diagnosisCount;
+            if (Double.isNaN(giScoreRatio[ds]))
+                giScoreRatio[ds] = 0;
+        }
 
         if (diagnosisCount != 0) {
             averageGI /= diagnosisCount;
@@ -530,15 +535,18 @@ public class DashboardService {
             averageKnowledge /= diagnosisCount;
         }
 
-        for (int ms = 0; ms < minitestScore.length; ms++)
-            minitestScore[ms] /= minitestCount;
+        for (int ms = 0; ms < minitestScoreRatio.length; ms++) {
+            minitestScoreRatio[ms] /= minitestCount;
+            if (Double.isNaN(minitestScoreRatio[ms]))
+                minitestScoreRatio[ms] = 0;
+        }
         if (minitestCount != 0)
             averageMinitest /= minitestCount;
 
         minitestCategoryName = new ArrayList<>(minitestCategoryScoreSum.keySet());
         for (String s : minitestCategoryName)
             minitestCategoryAverage.add(minitestCategoryScoreSum.get(s) / minitestCategoryCount.get(s));
-        diagnosisCollectBase = 0;
+//        diagnosisCollectBase = 0;
 
         for (int i = 0; i < time.length; i++)
             diagnosisInfo.add(DiagnosisInfoDTO.builder()
@@ -564,8 +572,8 @@ public class DashboardService {
                     .viewsArticleRatio(viewsArticleRatio[i])
                     .viewsTextbook(viewsTextbook[i])
                     .viewsTextbookRatio(viewsTextbookRatio[i])
-                    .viewsWiki(viewsWiki[i])
-                    .viewsWikiRatio(viewsWikiRatio[i])
+//                    .viewsWiki(viewsWiki[i])
+//                    .viewsWikiRatio(viewsWikiRatio[i])
                     .build());
     }
 
@@ -590,6 +598,37 @@ public class DashboardService {
             }
         }
 
+        giScoreRatio = new double[giScoreLegend.length];
+        for (DiagnosisDashboardDTO diagnosis : diagnosisReports) {
+                if (diagnosis.getGiScore() >= 80)
+                    giScoreRatio[0]++;
+                else if (79 >= diagnosis.getGiScore() & diagnosis.getGiScore() >= 61)
+                    giScoreRatio[1]++;
+                else if (60 >= diagnosis.getGiScore() & diagnosis.getGiScore() >= 41)
+                    giScoreRatio[2]++;
+                else if (40 >= diagnosis.getGiScore())
+                    giScoreRatio[3]++;
+                averageGI += diagnosis.getGiScore();
+        }
+
+        minitestScoreRatio = new double[minitestScoreLegend.length];
+        for (MinitestDashboardDTO minitestReport : minitestReports) {
+            if (minitestReport.getAvgUkMastery() >= 80)
+                minitestScoreRatio[0]++;
+            else if (79 >= minitestReport.getAvgUkMastery() & minitestReport.getAvgUkMastery() >= 61)
+                minitestScoreRatio[1]++;
+            else if (60 >= minitestReport.getAvgUkMastery() & minitestReport.getAvgUkMastery() >= 41)
+                minitestScoreRatio[2]++;
+            else if (40 >= minitestReport.getAvgUkMastery())
+                minitestScoreRatio[3]++;
+            averageMinitest += minitestReport.getAvgUkMastery();
+        }
+
+        if (diagnosisCount != 0)
+            averageGI /= diagnosisCount;
+        if (minitestCount != 0)
+            averageMinitest /= minitestCount;
+
         statements = getStatements(filterDTO, "content", "enter");
         for (StatementDashboardDTO statement : statements) {
             switch (statement.getSourceType()) {
@@ -602,27 +641,27 @@ public class DashboardService {
                 case "textbook":
                     viewsTextbookAtom++;
                     break;
-                case "wiki":
-                    viewsWikiAtom++;
-                    break;
+//                case "wiki":
+//                    viewsWikiAtom++;
+//                    break;
             }
             serviceUsageDivisor++;
         }
 
         return OverallStatusDTO.builder()
                 .accessorCollect(accessorAtom)
-                .memberCountOfChange(memberRegisteredAtom - memberWithdrawnAtom)
+//                .memberCountOfChange(memberRegisteredAtom - memberWithdrawnAtom)
                 .memberRegistered(memberRegisteredAtom)
-                .memberWithdrawn(memberWithdrawnAtom)
+//                .memberWithdrawn(memberWithdrawnAtom)
                 .memberTotal(getUserAll())
                 .diagnosisTotal(diagnosisReports.size() + minitestReports.size())
                 .diagnosis(diagnosisReports.size())
                 .minitest(minitestReports.size())
-//                .diagnosisCategoryName()
-//                .diagnosisCategoryRatio()
-//                .minitestCategoryName()
-//                .minitestCategoryRatio()
-                .serviceUsage(ServiceUsageDTO.builder()
+                .giScoreLegend(giScoreLegend)
+                .giScoreRatio(giScoreRatio)
+                .minitestScoreLegend(minitestScoreLegend)
+                .minitestScoreRatio(minitestScoreRatio)
+                .serviceUsageRatio(ServiceUsageDTO.builder()
                         .diagnosis(diagnosisReports.size() / serviceUsageDivisor)
                         .minitest(minitestReports.size() / serviceUsageDivisor)
                         .video(viewsVideoAtom / serviceUsageDivisor)
@@ -633,7 +672,7 @@ public class DashboardService {
     }
 
     public MemberStatusDTO getMemberStatus(FilterDTO filterDTO) {
-        statements = getStatements(filterDTO, "application", null);
+        statements = getStatements(filterDTO, "application", "member");
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
         accessorCollectBase = getAccessorCollectBase(filterDTO);
@@ -666,7 +705,7 @@ public class DashboardService {
                         .time(time)
                         .memberTotal(memberTotal)
                         .memberRegistered(memberRegistered)
-                        .memberWithdrawn(memberWithdrawn)
+//                        .memberWithdrawn(memberWithdrawn)
                         .build())
                 .build();
     }
@@ -676,7 +715,7 @@ public class DashboardService {
         minitestReports = getMinitest(filterDTO);
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
-        diagnosisCollectBase = getDiagnosisCollectBase(filterDTO);
+//        diagnosisCollectBase = getDiagnosisCollectBase(filterDTO);
 
         if (dateFrom.equals(dateTo)) {
             initialize(23);
@@ -700,10 +739,10 @@ public class DashboardService {
         calculateDiagnosisStatus();
 
         return DiagnosisStatusDTO.builder()
-                .diagnosisCollect(CollectDTO.builder()
-                        .time(time)
-                        .collect(diagnosisCollect)
-                        .build())
+//                .diagnosisCollect(CollectDTO.builder()
+//                        .time(time)
+//                        .collect(diagnosisCollect)
+//                        .build())
                 .diagnosisPerTime(DiagnosisPerTimeDTO.builder()
                         .time(time)
                         .diagnosisMember(diagnosisMember)
@@ -713,16 +752,16 @@ public class DashboardService {
                 .diagnosisInfo(diagnosisInfo)
                 .diagnosisStatus(ReportStatusDTO.builder()
                         .diagnosisCount(diagnosisCount)
-                        .ScoreLegend(GIScoreLegend)
-                        .Score(GIScore)
+                        .scoreLegend(giScoreLegend)
+                        .scoreRatio(giScoreRatio)
                         .averageScore(averageGI)
                         .categoryName(Arrays.asList("위험대응", "행동편향", "지식이해"))
                         .categoryAverageScore(Arrays.asList(averageRisk, averageInvest, averageKnowledge))
                         .build())
                 .minitestStatus(ReportStatusDTO.builder()
                         .diagnosisCount(minitestCount)
-                        .ScoreLegend(minitestScoreLegend)
-                        .Score(minitestScore)
+                        .scoreLegend(minitestScoreLegend)
+                        .scoreRatio(minitestScoreRatio)
                         .averageScore(averageMinitest)
                         .categoryName(minitestCategoryName)
                         .categoryAverageScore(minitestCategoryAverage)
@@ -759,7 +798,7 @@ public class DashboardService {
                         .viewsVideo(viewsVideo)
                         .viewsArticle(viewsArticle)
                         .viewsTextbook(viewsTextbook)
-                        .viewsWiki(viewsWiki)
+//                        .viewsWiki(viewsWiki)
                         .build())
                 .contentViewsInfo(contentViewsInfo)
                 .build();

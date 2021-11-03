@@ -14,5 +14,5 @@ public class ContentViewsDTO {
     private int[] viewsVideo;
     private int[] viewsArticle;
     private int[] viewsTextbook;
-    private int[] viewsWiki;
+//    private int[] viewsWiki;
 }
