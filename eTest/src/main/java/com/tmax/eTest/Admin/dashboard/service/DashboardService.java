@@ -666,7 +666,7 @@ public class DashboardService {
                         .article(Double.isNaN(viewsArticleAtom / serviceUsageDivisor) ?
                                 0.0 : viewsArticleAtom / serviceUsageDivisor)
                         .textbook(Double.isNaN(viewsTextbookAtom / serviceUsageDivisor) ?
-                                0.0 : viewsArticleAtom / serviceUsageDivisor)
+                                0.0 : viewsTextbookAtom / serviceUsageDivisor)
                         .build())
                 .build();
     }
