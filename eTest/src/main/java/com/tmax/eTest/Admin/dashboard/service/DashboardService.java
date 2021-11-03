@@ -522,11 +522,8 @@ public class DashboardService {
     }
 
     private void calculateDiagnosisStatus() {
-        for (int ds = 0; ds < giScoreRatio.length; ds++) {
-            giScoreRatio[ds] /= diagnosisCount;
-            if (Double.isNaN(giScoreRatio[ds]))
-                giScoreRatio[ds] = 0;
-        }
+        for (int ds = 0; ds < giScoreRatio.length; ds++)
+            giScoreRatio[ds] = Double.isNaN(giScoreRatio[ds] / diagnosisCount) ? 0.0 : giScoreRatio[ds] / diagnosisCount;
 
         if (diagnosisCount != 0) {
             averageGI /= diagnosisCount;
@@ -535,11 +532,9 @@ public class DashboardService {
             averageKnowledge /= diagnosisCount;
         }
 
-        for (int ms = 0; ms < minitestScoreRatio.length; ms++) {
-            minitestScoreRatio[ms] /= minitestCount;
-            if (Double.isNaN(minitestScoreRatio[ms]))
-                minitestScoreRatio[ms] = 0;
-        }
+        for (int ms = 0; ms < minitestScoreRatio.length; ms++)
+            minitestScoreRatio[ms] = Double.isNaN(minitestScoreRatio[ms] / minitestCount) ? 0.0 : minitestScoreRatio[ms] / minitestCount;
+
         if (minitestCount != 0)
             averageMinitest /= minitestCount;
 
@@ -662,11 +657,16 @@ public class DashboardService {
                 .minitestScoreLegend(minitestScoreLegend)
                 .minitestScoreRatio(minitestScoreRatio)
                 .serviceUsageRatio(ServiceUsageDTO.builder()
-                        .diagnosis(diagnosisReports.size() / serviceUsageDivisor)
-                        .minitest(minitestReports.size() / serviceUsageDivisor)
-                        .video(viewsVideoAtom / serviceUsageDivisor)
-                        .article(viewsArticleAtom / serviceUsageDivisor)
-                        .textbook(viewsTextbookAtom / serviceUsageDivisor)
+                        .diagnosis(Double.isNaN(diagnosisReports.size() / serviceUsageDivisor) ?
+                                0.0 : diagnosisReports.size() / serviceUsageDivisor)
+                        .minitest(Double.isNaN(minitestReports.size() / serviceUsageDivisor) ?
+                                0.0 : minitestReports.size() / serviceUsageDivisor)
+                        .video(Double.isNaN(viewsVideoAtom / serviceUsageDivisor) ?
+                                0.0 : viewsVideoAtom / serviceUsageDivisor)
+                        .article(Double.isNaN(viewsArticleAtom / serviceUsageDivisor) ?
+                                0.0 : viewsArticleAtom / serviceUsageDivisor)
+                        .textbook(Double.isNaN(viewsTextbookAtom / serviceUsageDivisor) ?
+                                0.0 : viewsArticleAtom / serviceUsageDivisor)
                         .build())
                 .build();
     }
