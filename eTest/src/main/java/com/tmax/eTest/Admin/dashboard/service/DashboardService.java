@@ -574,6 +574,7 @@ public class DashboardService {
 
     public OverallStatusDTO getOverallStatus(FilterDTO filterDTO) {
         double serviceUsageDivisor = 0;
+        initialize(0);
         initializeAtom();
         diagnosisReports = getDiagnosis(filterDTO);
         minitestReports = getMinitest(filterDTO);
