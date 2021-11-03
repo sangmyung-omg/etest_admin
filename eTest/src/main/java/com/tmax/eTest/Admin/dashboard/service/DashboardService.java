@@ -275,9 +275,9 @@ public class DashboardService {
                         case "register":
                             memberRegisteredAtom++;
                             break;
-//                        case "withdrawal":
-//                            memberWithdrawnAtom++;
-//                            break;
+                        case "withdrawal":
+                            memberWithdrawnAtom++;
+                            break;
                     }
                 }
                 else
