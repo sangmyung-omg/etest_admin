@@ -22,7 +22,7 @@ public class CommentRisk {
 	private String versionName;
 	@Id
 	private Integer index;
-
-	private String comment_text;
-	private String rule;
+	private String commentName;
+	private String commentText;
+	private String ruleText;
 }
