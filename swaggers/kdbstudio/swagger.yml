@@ -226,7 +226,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UKInfoDTO'
-  /uk/{ukId}:
     put:
       tags:
         - UK
@@ -235,7 +234,14 @@ paths:
       parameters:
         - name: ukId
           description: UK Id
-          in: path
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: versionId
+          description: Version of UK's
+          in: query
           required: true
           schema:
             type: integer
@@ -329,6 +335,9 @@ components:
         versionName:
           type: string
           example: Ver 1.0
+        isDefault:
+          type: integer
+          example: 1
 
     UKInfoDTO:
       properties:
