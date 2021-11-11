@@ -338,6 +338,9 @@ components:
         isDefault:
           type: integer
           example: 1
+        isDeleted:
+          type: integer
+          example: 0
 
     UKInfoDTO:
       properties:
