@@ -47,7 +47,11 @@ paths:
                 versionName:
                   type: string
                   description: 버전 이름
-                  example: Ver 2.0
+                  example: Ver 211104
+                versionNum:
+                  type: string
+                  description: 버전 번호
+                  example: Ver 1.3
       responses:
         200:
           description: OK
@@ -117,6 +121,10 @@ paths:
                   type: string
                   description: 버전 이름
                   example: Ver 1.1 복사본
+                versionNum:
+                  type: string
+                  description: 버전 번호
+                  example: Ver 1.3
       responses:
         200:
           description: OK
@@ -226,7 +234,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UKInfoDTO'
-  /uk/{ukId}:
     put:
       tags:
         - UK
@@ -235,7 +242,14 @@ paths:
       parameters:
         - name: ukId
           description: UK Id
-          in: path
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: versionId
+          description: Version of UK's
+          in: query
           required: true
           schema:
             type: integer
@@ -328,7 +342,16 @@ components:
           example: 1
         versionName:
           type: string
+          example: "Ver 211024"
+        versionNum:
+          type: string
           example: Ver 1.0
+        isDefault:
+          type: integer
+          example: 1
+        isDeleted:
+          type: integer
+          example: 0
 
     UKInfoDTO:
       properties:
