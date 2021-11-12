@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-public class CommentGIService {
+public class CommentGIService implements CommentService{
 	
 	@Autowired
 	CommentGIRepo commentRepo;
@@ -44,5 +44,20 @@ public class CommentGIService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public boolean saveComment(List<CommentDTO> commentList) {
+		// TODO Auto-generated method stub
+		List<CommentGI> modelList = new ArrayList<>();
+		
+		for(CommentDTO comment : commentList)
+		{
+			modelList.add(comment.toGIEntity());
+		}
+		
+		commentRepo.saveAll(modelList);
+		
+		return false;
 	}
 }

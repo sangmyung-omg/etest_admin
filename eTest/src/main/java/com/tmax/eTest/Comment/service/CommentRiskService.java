@@ -16,10 +16,11 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-public class CommentRiskService {
+public class CommentRiskService implements CommentService{
 	@Autowired
 	CommentGIRepo commentRepo;
 	
+	@Override
 	public Map<String, List<CommentDTO>> getAllComment()
 	{
 		Map<String, List<CommentDTO>> result = new HashMap<>();
@@ -43,5 +44,11 @@ public class CommentRiskService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public boolean saveComment(List<CommentDTO> commentList) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

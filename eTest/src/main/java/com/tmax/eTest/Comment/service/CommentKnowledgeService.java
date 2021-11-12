@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-public class CommentKnowledgeService {
+public class CommentKnowledgeService implements CommentService{
 	@Autowired
 	CommentKnowledgeRepo commentRepo;
 	
@@ -43,5 +43,11 @@ public class CommentKnowledgeService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public boolean saveComment(List<CommentDTO> commentList) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

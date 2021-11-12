@@ -53,4 +53,56 @@ public class CommentDTO {
 		this.commentText = model.getCommentText();
 		this.ruleText = model.getRuleText();
 	}
+	
+	public CommentGI toGIEntity()
+	{
+		CommentGI result = CommentGI.builder()
+				.versionName(versionName)
+				.index(index)
+				.commentName(commentName)
+				.commentName(commentName)
+				.ruleText(ruleText)
+				.build();
+		
+		return result;
+	}
+	
+	public CommentRisk toRiskEntity()
+	{
+		CommentRisk result = CommentRisk.builder()
+				.versionName(versionName)
+				.index(index)
+				.commentName(commentName)
+				.commentName(commentName)
+				.ruleText(ruleText)
+				.build();
+		
+		return result;
+	}
+	
+	public CommentKnowledge toKnowledgeEntity()
+	{
+		CommentKnowledge result = CommentKnowledge.builder()
+				.versionName(versionName)
+				.index(index)
+				.commentName(commentName)
+				.commentName(commentName)
+				.ruleText(ruleText)
+				.build();
+		
+		return result;
+	}
+	
+	public CommentInvest toInvestEntity()
+	{
+		CommentInvest result = CommentInvest.builder()
+				.versionName(versionName)
+				.index(index)
+				.commentName(commentName)
+				.commentName(commentName)
+				.ruleText(ruleText)
+				.build();
+		
+		return result;
+	}
 }
