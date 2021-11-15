@@ -21,7 +21,7 @@ public class CommentGI {
 	@Id
 	private String versionName;
 	@Id
-	private Integer index;
+	private Integer seqNum;
 	private String commentName;
 	private String commentText;
 	private String ruleText;

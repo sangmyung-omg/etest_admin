@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentDTO {
 	private String versionName;
-	private Integer index;
+	private Integer seqNum;
 	private String commentName;
 	private String commentText;
 	private String ruleText;
@@ -24,7 +24,7 @@ public class CommentDTO {
 	
 	public CommentDTO(CommentGI model)	{
 		this.versionName = model.getVersionName();
-		this.index = model.getIndex();
+		this.seqNum = model.getSeqNum();
 		this.commentName = model.getCommentName();
 		this.commentText = model.getCommentText();
 		this.ruleText = model.getRuleText();
@@ -32,7 +32,7 @@ public class CommentDTO {
 	
 	public CommentDTO(CommentInvest model)	{
 		this.versionName = model.getVersionName();
-		this.index = model.getIndex();
+		this.seqNum = model.getSeqNum();
 		this.commentName = model.getCommentName();
 		this.commentText = model.getCommentText();
 		this.ruleText = model.getRuleText();
@@ -40,7 +40,7 @@ public class CommentDTO {
 	
 	public CommentDTO(CommentKnowledge model)	{
 		this.versionName = model.getVersionName();
-		this.index = model.getIndex();
+		this.seqNum = model.getSeqNum();
 		this.commentName = model.getCommentName();
 		this.commentText = model.getCommentText();
 		this.ruleText = model.getRuleText();
@@ -48,7 +48,7 @@ public class CommentDTO {
 	
 	public CommentDTO(CommentRisk model)	{
 		this.versionName = model.getVersionName();
-		this.index = model.getIndex();
+		this.seqNum = model.getSeqNum();
 		this.commentName = model.getCommentName();
 		this.commentText = model.getCommentText();
 		this.ruleText = model.getRuleText();
@@ -58,7 +58,7 @@ public class CommentDTO {
 	{
 		CommentGI result = CommentGI.builder()
 				.versionName(versionName)
-				.index(index)
+				.seqNum(seqNum)
 				.commentName(commentName)
 				.commentName(commentName)
 				.ruleText(ruleText)
@@ -71,7 +71,7 @@ public class CommentDTO {
 	{
 		CommentRisk result = CommentRisk.builder()
 				.versionName(versionName)
-				.index(index)
+				.seqNum(seqNum)
 				.commentName(commentName)
 				.commentName(commentName)
 				.ruleText(ruleText)
@@ -84,7 +84,7 @@ public class CommentDTO {
 	{
 		CommentKnowledge result = CommentKnowledge.builder()
 				.versionName(versionName)
-				.index(index)
+				.seqNum(seqNum)
 				.commentName(commentName)
 				.commentName(commentName)
 				.ruleText(ruleText)
@@ -97,7 +97,7 @@ public class CommentDTO {
 	{
 		CommentInvest result = CommentInvest.builder()
 				.versionName(versionName)
-				.index(index)
+				.seqNum(seqNum)
 				.commentName(commentName)
 				.commentName(commentName)
 				.ruleText(ruleText)

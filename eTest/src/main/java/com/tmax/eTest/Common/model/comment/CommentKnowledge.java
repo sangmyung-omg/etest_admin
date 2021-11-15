@@ -21,7 +21,7 @@ public class CommentKnowledge {
 	@Id
 	private String versionName;
 	@Id
-	private Integer index;
+	private Integer seqNum;
 	private String commentName;
 	private String commentText;
 	private String ruleText;
