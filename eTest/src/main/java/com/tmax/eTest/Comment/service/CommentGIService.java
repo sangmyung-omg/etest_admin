@@ -58,6 +58,6 @@ public class CommentGIService implements CommentService{
 		
 		commentRepo.saveAll(modelList);
 		
-		return false;
+		return true;
 	}
 }

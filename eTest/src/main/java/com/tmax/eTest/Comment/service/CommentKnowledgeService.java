@@ -48,6 +48,15 @@ public class CommentKnowledgeService implements CommentService{
 	@Override
 	public boolean saveComment(List<CommentDTO> commentList) {
 		// TODO Auto-generated method stub
-		return false;
+		List<CommentKnowledge> modelList = new ArrayList<>();
+		
+		for(CommentDTO comment : commentList)
+		{
+			modelList.add(comment.toKnowledgeEntity());
+		}
+		
+		commentRepo.saveAll(modelList);
+		
+		return true;
 	}
 }

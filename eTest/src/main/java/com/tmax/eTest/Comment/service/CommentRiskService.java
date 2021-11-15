@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tmax.eTest.Comment.dto.CommentDTO;
-import com.tmax.eTest.Common.model.comment.CommentGI;
-import com.tmax.eTest.Common.repository.comment.CommentGIRepo;
+import com.tmax.eTest.Common.model.comment.CommentRisk;
+import com.tmax.eTest.Common.repository.comment.CommentRiskRepo;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -18,16 +18,16 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class CommentRiskService implements CommentService{
 	@Autowired
-	CommentGIRepo commentRepo;
+	CommentRiskRepo commentRepo;
 	
 	@Override
 	public Map<String, List<CommentDTO>> getAllComment()
 	{
 		Map<String, List<CommentDTO>> result = new HashMap<>();
 		
-		List<CommentGI> allComment = commentRepo.findAll();
+		List<CommentRisk> allComment = commentRepo.findAll();
 		
-		for(CommentGI comment : allComment)
+		for(CommentRisk comment : allComment)
 		{
 			CommentDTO resDTO = new CommentDTO(comment);
 			
@@ -49,6 +49,15 @@ public class CommentRiskService implements CommentService{
 	@Override
 	public boolean saveComment(List<CommentDTO> commentList) {
 		// TODO Auto-generated method stub
-		return false;
+		List<CommentRisk> modelList = new ArrayList<>();
+		
+		for(CommentDTO comment : commentList)
+		{
+			modelList.add(comment.toRiskEntity());
+		}
+		
+		commentRepo.saveAll(modelList);
+		
+		return true;
 	}
 }

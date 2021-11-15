@@ -48,6 +48,15 @@ public class CommentInvestService implements CommentService{
 	@Override
 	public boolean saveComment(List<CommentDTO> commentList) {
 		// TODO Auto-generated method stub
-		return false;
+		List<CommentInvest> modelList = new ArrayList<>();
+		
+		for(CommentDTO comment : commentList)
+		{
+			modelList.add(comment.toInvestEntity());
+		}
+		
+		commentRepo.saveAll(modelList);
+		
+		return true;
 	}
 }
