@@ -3,7 +3,9 @@ package com.tmax.eTest.TestStudio.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,11 +32,7 @@ public class PartController {
 
 	@GetMapping("test-studio/part")
 	public ResponseEntity<List<PartListDTO>> PartList() {
-		try {
-			return new ResponseEntity<>(partService.read(), HttpStatus.OK);
-		}catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		return new ResponseEntity<>(partService.read(), HttpStatus.OK);
 	}
 	
 	@PostMapping("test-studio/part")
@@ -42,7 +40,7 @@ public class PartController {
 		try {
 			partService.create(request.name, request.order, request.count);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}catch (Exception e) {
+		}catch (DataAccessException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -52,7 +50,7 @@ public class PartController {
 		try {
 			partService.update(id, request.getName(), request.getOrder(), request.getCount());
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}catch (Exception e) {
+		}catch (DataAccessException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -62,15 +60,18 @@ public class PartController {
 		try {
 			partService.delete(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}catch (DataAccessException e) {
+			return new ResponseEntity<>("파트에 포함된 문제가 있어 삭제할 수 없습니다.", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@Data
 	static class PartRequest {
+		@NotNull
 		private String name;
+		@NotNull
 		private Integer order;
+		@NotNull
 		private Integer count;
 	}
 
