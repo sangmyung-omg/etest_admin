@@ -13,15 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @IdClass(CommentKey.class)
-@Table(name="COMMENT_RISK")
+@Table(name="COMMENT_INFO")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentRisk {
+public class CommentInfo {
 	@Id
 	private String versionName;
 	@Id
 	private Integer seqNum;
+	private String commentType;
 	private String commentName;
 	private String commentText;
 	private String ruleText;

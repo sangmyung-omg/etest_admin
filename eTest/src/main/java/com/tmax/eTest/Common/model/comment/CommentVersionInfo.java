@@ -2,7 +2,6 @@ package com.tmax.eTest.Common.model.comment;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -12,17 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@IdClass(CommentKey.class)
-@Table(name="COMMENT_GI")
+@Table(name="COMMENT_SELECTED_INFO")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentGI {
+public class CommentVersionInfo {
 	@Id
 	private String versionName;
-	@Id
-	private Integer seqNum;
-	private String commentName;
-	private String commentText;
-	private String ruleText;
+	private Integer isSelected;
 }

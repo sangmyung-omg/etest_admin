@@ -1,9 +1,6 @@
 package com.tmax.eTest.Comment.dto;
 
-import com.tmax.eTest.Common.model.comment.CommentGI;
-import com.tmax.eTest.Common.model.comment.CommentInvest;
-import com.tmax.eTest.Common.model.comment.CommentKnowledge;
-import com.tmax.eTest.Common.model.comment.CommentRisk;
+import com.tmax.eTest.Common.model.comment.CommentInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,92 +14,33 @@ import lombok.NoArgsConstructor;
 public class CommentDTO {
 	private String versionName;
 	private Integer seqNum;
+	private String commentType;
 	private String commentName;
 	private String commentText;
 	private String ruleText;
 	
 	
-	public CommentDTO(CommentGI model)	{
+	public CommentDTO(CommentInfo model)	{
 		this.versionName = model.getVersionName();
 		this.seqNum = model.getSeqNum();
 		this.commentName = model.getCommentName();
 		this.commentText = model.getCommentText();
 		this.ruleText = model.getRuleText();
+		this.commentType = model.getCommentType();
 	}
 	
-	public CommentDTO(CommentInvest model)	{
-		this.versionName = model.getVersionName();
-		this.seqNum = model.getSeqNum();
-		this.commentName = model.getCommentName();
-		this.commentText = model.getCommentText();
-		this.ruleText = model.getRuleText();
-	}
-	
-	public CommentDTO(CommentKnowledge model)	{
-		this.versionName = model.getVersionName();
-		this.seqNum = model.getSeqNum();
-		this.commentName = model.getCommentName();
-		this.commentText = model.getCommentText();
-		this.ruleText = model.getRuleText();
-	}
-	
-	public CommentDTO(CommentRisk model)	{
-		this.versionName = model.getVersionName();
-		this.seqNum = model.getSeqNum();
-		this.commentName = model.getCommentName();
-		this.commentText = model.getCommentText();
-		this.ruleText = model.getRuleText();
-	}
-	
-	public CommentGI toGIEntity()
+	public CommentInfo toEntity()
 	{
-		CommentGI result = CommentGI.builder()
+		CommentInfo result = CommentInfo.builder()
 				.versionName(versionName)
 				.seqNum(seqNum)
+				.commentType(commentType)
 				.commentName(commentName)
-				.commentName(commentName)
+				.commentText(commentText)
 				.ruleText(ruleText)
 				.build();
 		
 		return result;
 	}
 	
-	public CommentRisk toRiskEntity()
-	{
-		CommentRisk result = CommentRisk.builder()
-				.versionName(versionName)
-				.seqNum(seqNum)
-				.commentName(commentName)
-				.commentName(commentName)
-				.ruleText(ruleText)
-				.build();
-		
-		return result;
-	}
-	
-	public CommentKnowledge toKnowledgeEntity()
-	{
-		CommentKnowledge result = CommentKnowledge.builder()
-				.versionName(versionName)
-				.seqNum(seqNum)
-				.commentName(commentName)
-				.commentName(commentName)
-				.ruleText(ruleText)
-				.build();
-		
-		return result;
-	}
-	
-	public CommentInvest toInvestEntity()
-	{
-		CommentInvest result = CommentInvest.builder()
-				.versionName(versionName)
-				.seqNum(seqNum)
-				.commentName(commentName)
-				.commentName(commentName)
-				.ruleText(ruleText)
-				.build();
-		
-		return result;
-	}
 }
