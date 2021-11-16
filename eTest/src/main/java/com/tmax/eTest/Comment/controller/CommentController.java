@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tmax.eTest.Comment.dto.CommentDTO;
 import com.tmax.eTest.Comment.service.CommentService;
+import com.tmax.eTest.Comment.service.CommentVersionService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -28,6 +29,9 @@ public class CommentController {
 	
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	CommentVersionService versionService;
 	
 	@GetMapping(value="", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> readComment(
@@ -49,15 +53,16 @@ public class CommentController {
 			return ResponseEntity.internalServerError().body("Succeed save comment num = "+ savedListSize);
 	}
 	
-	@PutMapping(value="/activate/{commentType}/{versionName}", produces = "application/json; charset=utf-8")
+	@PutMapping(value="/activate/{versionName}", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> changeActivateVersion(
 			HttpServletRequest request,
 			@PathVariable("versionName") String versionName) throws Exception{
 	
-//		if(!commentService.checkVersionName(versionName))
-//			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid. Now versionName is "
-//					+ versionName);
-	
-		return ResponseEntity.ok(true);
+		if(versionService.changeActivateVersion(versionName))
+			return ResponseEntity.ok(true);
+		else
+			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid. Now versionName is "
+					+ versionName);
+		
 	}
 }

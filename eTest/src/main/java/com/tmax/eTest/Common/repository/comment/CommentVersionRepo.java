@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.tmax.eTest.Common.model.comment.CommentVersionInfo;
 
 @Repository
-public interface CommentSelectedInfoRepo extends JpaRepository<CommentVersionInfo, Integer> {
-
+public interface CommentVersionRepo extends JpaRepository<CommentVersionInfo, String> {
+	
 }
