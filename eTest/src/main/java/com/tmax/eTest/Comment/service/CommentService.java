@@ -2,6 +2,7 @@ package com.tmax.eTest.Comment.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.tmax.eTest.Comment.dto.CommentDTO;
 import com.tmax.eTest.Comment.dto.CommentMapDTO;
 import com.tmax.eTest.Common.model.comment.CommentInfo;
+import com.tmax.eTest.Common.model.comment.CommentKey;
 import com.tmax.eTest.Common.repository.comment.CommentRepo;
 
 import lombok.extern.log4j.Log4j2;
@@ -42,8 +44,22 @@ public class CommentService {
 		
 		for(CommentDTO comment : commentList)
 		{
-			modelList.add(comment.toEntity());
+			CommentKey key = new CommentKey(comment.getVersionName(), comment.getSeqNum());
+			
+			Optional<CommentInfo> opt = commentRepo.findById(key);
+			
+			if(opt.isPresent())
+			{
+				CommentInfo saveInfo = opt.get();
+				saveInfo.setCommentText(comment.getCommentText());
+				modelList.add(saveInfo);
+			}
+			else
+				log.error("Error in save comment process. " + comment.toString());
+			
 		}
+		
+		log.info(modelList.toString());
 		
 		return commentRepo.saveAll(modelList).size();
 	}
