@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @IdClass(UkDesriptionVersionCompositeKey.class)
-@Table(name = "UK_VERSION")
+@Table(name = "UK_DESCRIPTION_VERSION")
 public class UkDescriptionVersion {
     @Id
     private Long ukId;
