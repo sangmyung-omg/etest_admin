@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name="COMMENT_SELECTED_INFO")
+@Table(name="COMMENT_VERSION_INFO")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentVersionInfo {
 	@Id
 	private String versionName;
-	private Integer isSelected;
+	private Integer isActivate;
 }

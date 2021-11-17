@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tmax.eTest.Comment.dto.CommentDTO;
@@ -53,10 +55,10 @@ public class CommentController {
 			return ResponseEntity.internalServerError().body("Succeed save comment num = "+ savedListSize);
 	}
 	
-	@PutMapping(value="/activate/{versionName}", produces = "application/json; charset=utf-8")
+	@PutMapping(value="/activateVersion", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> changeActivateVersion(
 			HttpServletRequest request,
-			@PathVariable("versionName") String versionName) throws Exception{
+			@RequestParam("versionName") String versionName) throws Exception{
 	
 		if(versionService.changeActivateVersion(versionName))
 			return ResponseEntity.ok(true);
@@ -65,4 +67,59 @@ public class CommentController {
 					+ versionName);
 		
 	}
+	
+	@PutMapping(value="/version", produces = "application/json; charset=utf-8")
+	public ResponseEntity<?> copyOrCutVersion(
+			HttpServletRequest request,
+			@RequestParam("prevVersionName") String prevVersionName,
+			@RequestParam("newVersionName") String newVersionName,
+			@RequestParam("isKeepPrevVersion") Boolean isKeepPrevVersion) throws Exception{
+	
+		if(versionService.isExistVersion(newVersionName))
+			return ResponseEntity.internalServerError().body("Check newVersionName. It already exists. newVersionName is "
+					+ newVersionName);
+		
+		if( !versionService.isExistVersion(prevVersionName) 
+			|| !commentService.copyComment(prevVersionName, newVersionName)
+			|| !versionService.makeVersion(newVersionName))
+		{
+			// rollback
+			commentService.deleteCommentByVersion(newVersionName);
+			versionService.deleteByVersion(newVersionName);
+			
+			return ResponseEntity.internalServerError().body("Check prevVersionName. Not Invalid. prevVersionName is "
+					+ prevVersionName);
+		}
+		
+		if(!isKeepPrevVersion) // Copy? or Cut?
+		{
+			commentService.deleteCommentByVersion(prevVersionName);
+			versionService.deleteByVersion(prevVersionName);
+		}
+		
+		
+		return ResponseEntity.ok(true);
+	}
+
+	@DeleteMapping(value="/version", produces = "application/json; charset=utf-8")
+	public ResponseEntity<?> deleteVersion(
+			HttpServletRequest request,
+			@RequestParam("versionName") String versionName) throws Exception{
+	
+		if(!versionService.isExistVersion(versionName))
+			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid. versionName is "
+					+ versionName);
+		
+		boolean commentResult = commentService.deleteCommentByVersion(versionName);
+		boolean versionResult = versionService.deleteByVersion(versionName);
+		
+		if(!commentResult || !versionResult)
+			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid. versionName is "
+					+ versionName);
+		
+		return ResponseEntity.ok(true);
+	}
+	
+	
+	
 }

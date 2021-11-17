@@ -47,5 +47,40 @@ public class CommentService {
 		
 		return commentRepo.saveAll(modelList).size();
 	}
+	
+	public boolean copyComment(String prevVersion, String newVersion)
+	{
+		boolean result = false;
+		
+		List<CommentInfo> list = commentRepo.findAllByVersionName(prevVersion);
+		List<CommentInfo> saveList = new ArrayList<>();
+		
+		if(list.size() != 0)
+		{
+			for(CommentInfo info : list)
+			{
+				CommentInfo newInfo = CommentInfo.builder()
+					.versionName(newVersion)
+					.seqNum(info.getSeqNum())
+					.commentText(info.getCommentText())
+					.commentType(info.getCommentType())
+					.commentName(info.getCommentName())
+					.ruleText(info.getRuleText())
+					.build();
+				
+				saveList.add(newInfo);
+			}
+			
+			commentRepo.saveAll(saveList);
+			result = true;
+		}
+		
+		return result;
+	}
 
+	public boolean deleteCommentByVersion(String versionName)
+	{
+		return commentRepo.deleteByVersionName(versionName) != 0;
+	}
+	
 }

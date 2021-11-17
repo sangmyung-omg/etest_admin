@@ -2,6 +2,7 @@ package com.tmax.eTest.Comment.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,11 @@ public class CommentVersionService {
 		{
 			if(info.getVersionName().equals(versionName))
 			{
-				info.setIsSelected(1);
+				info.setIsActivate(1);
 				result = true;
 			}
 			else
-				info.setIsSelected(0);
+				info.setIsActivate(0);
 			newVersionList.add(info);
 		}
 		
@@ -43,5 +44,24 @@ public class CommentVersionService {
 			versionRepo.saveAll(newVersionList);
 		
 		return result;
+	}
+	
+	public boolean deleteByVersion(String versionName)
+	{
+		versionRepo.deleteById(versionName);
+		
+		return true;
+	}
+	
+	public boolean makeVersion(String versionName)
+	{
+		CommentVersionInfo info = CommentVersionInfo.builder()
+				.versionName(versionName)
+				.isActivate(0)
+				.build();
+		
+		versionRepo.save(info);
+		
+		return true;
 	}
 }
