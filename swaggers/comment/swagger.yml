@@ -1,0 +1,196 @@
+openapi: "3.0.2"
+info:
+    title: Kofia Comment API
+    version: "1.0"
+    description: Kofia Comment 관련 API
+servers:
+  - url: http://192.168.153.208:8080/
+    description: OSD's Server
+tags:
+- name: Comment
+  description: 코멘트 관련
+
+paths:
+  /comment:
+    get:
+      tags:
+      - Comment
+      summary: Comment 가져오기.
+      description: 생성된 모든 Comment를 가져옵니다
+      responses:
+          200:
+            description: OK
+            content:
+              json:
+                schema:
+                  $ref: "#/components/schemas/CommentOutputList"  
+    post:
+      tags:
+      - Comment
+      summary: Comment 저장하기.
+      description: 해당 Comment List를 DB에 저장합니다.
+      requestBody:
+        $ref: "#/components/requestBodies/CommentInputList"
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                type: integer
+                example: 5
+  /activateVersion:
+    put:
+      tags:
+      - Comment
+      summary: 버전 활성화 API
+      description: 해당 버전을 활성화 합니다.
+      parameters:
+      - in: query
+        name: versionName
+        schema:
+          type: string
+        description: 활성화 할 버전 이름.
+      responses:
+          200:
+            description: OK
+            content:
+              json:
+                schema:
+                  type: boolean
+  /version:
+    put:
+      tags:
+      - Comment
+      summary: 코멘트 버전의 복사 혹은 변경 API
+      description: 지정한 이전 버전의 코멘트 데이터를 새로 지정한 버전 이름으로 복사하거나 이름 변경을 합니다.
+      parameters:
+      - in: query
+        name: prevVersionName
+        schema:
+          type: string
+        description: 복사할 버전 이름.
+      - in: query
+        name: newVersionName
+        schema:
+          type: string
+        description: 새로운 버전 이름.
+      - in: query
+        name: isKeepPrevVersion
+        schema:
+          type: boolean
+        description: 이전 버전을 유지할 것인지 여부. (false 시 복사, true 시 잘라내기)
+      responses:
+          200:
+            description: OK
+            content:
+              json:
+                schema:
+                  type: boolean
+    delete:
+      tags:
+      - Comment
+      summary: 코멘트 버전 삭제 API
+      description: 지정한 버전의 코멘트 데이터를 삭제합니다.
+      parameters:
+      - in: query
+        name: versionName
+        schema:
+          type: string
+        description: 삭제할 버전 이름.
+      responses:
+          200:
+            description: OK
+            content:
+              json:
+                schema:
+                  type: boolean
+components:
+  requestBodies:
+    CommentInputList:
+      description: "DB에 저장할 코멘트 리스트."
+      required: true
+      content:
+        json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/CommentDTO"
+  schemas:
+    CommentDTO:
+      properties:
+        versionName:
+          type: string
+          example: "default_version"
+          description: 해당 코멘트의 버전 정보
+        seqNum:
+          type: integer
+          example: 0
+          description: 해당 코멘트의 버전 내에서의 순서
+        commentName:
+          type: string
+          example: "Q1 정답유무 별 세부 코멘트"
+          description: 해당 코멘트의 이름
+        commentType:
+          type: string
+          example: "risk"
+          description: 해당 코멘트의 타입(gi, risk, invest, knowledge 로 구성)
+        commentText:
+          type: string
+          example: "높은 수익률 제안에 의심을 품을 줄 알고 있습니다."
+          description: 해당 코멘트의 내용
+        ruleText:
+          type: string
+          example: "정답 시 코멘트"
+          description: 해당 코멘트의 적용 규칙 내용
+    CommentOutputList:
+      properties:
+        gi:
+          type : object
+          description: 공통 파트. 버전 개수에 따라 하위 객체들의 개수가 늘어나고 줄어든다. (해당 예시는 version_name1, version_name2 두개가 있다.)
+          properties:
+            version_name1:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+            version_name2:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+        risk:
+          type : object
+          description: 위험대응 파트. 버전 개수에 따라 하위 객체들의 개수가 늘어나고 줄어든다. (해당 예시는 version_name1, version_name2 두개가 있다.)
+          properties:
+            version_name1:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+            version_name2:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+        invest:
+          type : object
+          description: 행동편향 파트. 버전 개수에 따라 하위 객체들의 개수가 늘어나고 줄어든다. (해당 예시는 version_name1, version_name2 두개가 있다.)
+          properties:
+            version_name1:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+            version_name2:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+        knowledge:
+          type : object
+          description: 지식이해 파트. 버전 개수에 따라 하위 객체들의 개수가 늘어나고 줄어든다. (해당 예시는 version_name1, version_name2 두개가 있다.)
+          properties:
+            version_name1:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+            version_name2:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentDTO"
+        
