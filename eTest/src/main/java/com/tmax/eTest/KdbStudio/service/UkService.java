@@ -29,7 +29,7 @@ public class UkService {
     public List<UkGetOutputDTO> getAllUkInfoForVersion(Integer versionId) {
         List<UkGetOutputDTO> result = new ArrayList<UkGetOutputDTO>();
 
-        List<UkDescriptionVersion> ukList = ukVersionRepo.findByVersionId(new Long(versionId));
+        List<UkDescriptionVersion> ukList = ukVersionRepo.findByVersionIdOrderByUkId(new Long(versionId));
         log.info("ukList : " + Integer.toString(ukList.size()));
 
         for (UkDescriptionVersion ukInfo : ukList) {
