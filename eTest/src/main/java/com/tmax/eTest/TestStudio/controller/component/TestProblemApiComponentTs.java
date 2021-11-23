@@ -1,14 +1,18 @@
 package com.tmax.eTest.TestStudio.controller.component;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -46,6 +50,7 @@ import com.tmax.eTest.TestStudio.service.TestProblemServiceTs;
 import com.tmax.eTest.TestStudio.service.UKServiceTs;
 import com.tmax.eTest.TestStudio.util.InitialConsonantUtilTs;
 import com.tmax.eTest.TestStudio.util.PathUtilTs;
+import com.tmax.eTest.TestStudio.util.TimeUtilTs;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,11 +76,13 @@ public class TestProblemApiComponentTs {
 	/**
 	 * 문제 생성 problemCreate component
 	 * request form 받아 생성한 문제 id list 반환
+	 * @throws NoDataExceptionTs 
+	 * @throws ParseException 
 	 */
 	
-	public List<List<Long>> CreateProblemComponet(PostTestProblemDTOIn request) throws Exception {
+	public List<List<Long>> CreateProblemComponet(PostTestProblemDTOIn request) throws IOException, NoDataExceptionTs, ParseException {
 		
-		try {
+//		try {
 			
 			List<List<Long>> result = new ArrayList<List<Long>>();
 			
@@ -107,8 +114,9 @@ public class TestProblemApiComponentTs {
 				problem.setDifficulty(requestInfo.getDifficulty());
 				problem.setCategory(requestInfo.getCategory());
 				problem.setImgSrc(requestInfo.getImgSrc());
-				if(requestInfo.getTimeRecommendation()!=null)
+				if( ! (requestInfo.getTimeRecommendation()==null||requestInfo.getTimeRecommendation()==""||requestInfo.getTimeRecommendation()==" ") ){
 					problem.setTimeReco(Long.parseLong( requestInfo.getTimeRecommendation() ) );
+				}
 //				problem.setCreatorId(requestInfo.getCreatorID());
 //				problem.setCreateDate(requestInfo.getCreateDate());
 //				problem.setValiatorID(requestInfo.getValidatorID());
@@ -246,9 +254,10 @@ public class TestProblemApiComponentTs {
 			
 			return result;
 			
-		}catch (Exception e) {
-			throw e;
-		}
+//		}catch(IOException e) {
+//			log.info("IOException occurred");
+//			throw e;
+//		}
 	}
 	
 	
@@ -263,6 +272,7 @@ public class TestProblemApiComponentTs {
 //			List<String> strProbIdList
 			) throws Exception {
 		
+//		try {
 			GetTestProblemDTOOut output = new GetTestProblemDTOOut( new ArrayList<BaseTestProblemSetDTO>() );
 
 			// set : probId []
@@ -295,15 +305,26 @@ public class TestProblemApiComponentTs {
 //					String dateResult = sdf.format(findProblem.getCreateDate());
 //					System.out.println(dateResult);
 //					System.out.println(findProblem.getCreateDate().getTime());
+//					System.out.println(findProblem.getEditDate());
+//					System.out.println(findProblem.getEditDate().toGMTString());
+//					System.out.println(findProblem.getEditDate().toLocaleString());
+//					System.out.println(findProblem.getEditDate().toString());
+//					System.out.println(findProblem.getEditDate().toInstant());
+//					System.out.println(  Date.from( findProblem.getEditDate().toInstant() ) );
+//					System.out.println(  Date.from( findProblem.getEditDate().toInstant() ).toInstant() );
+//					System.out.println(  Date.from( findProblem.getEditDate().toInstant() ).toString() );
+//					System.out.println(  findProblem.getEditDate().toInstant().atZone(ZoneId.of("Asia/Seoul")));
+//					System.out.println(  findProblem.getEditDate().toInstant().atZone(ZoneId.systemDefault()));
+//					System.out.println(  TimeUtilTs.DateToZonedDT_Seoul(findProblem.getEditDate()) );
 					BaseProblemDTO collect = new BaseProblemDTO(
 							findProblem.getProbID().toString(), findProblem.getAnswerType(),
 							findProblem.getQuestion(), findProblem.getSolution(),
 							findProblem.getDifficulty(), findProblem.getCategory(),
 							findProblem.getImgSrc(),
 							findProblem.getTimeReco()==null? null: findProblem.getTimeReco().toString(),
-							findProblem.getCreatorId(), findProblem.getCreateDate(),
-							findProblem.getValiatorID(), findProblem.getValiateDate(),
-							findProblem.getEditorID(), findProblem.getEditDate(),
+							findProblem.getCreatorId(),  TimeUtilTs.DateToZonedDT_Seoul(findProblem.getCreateDate()),
+							findProblem.getValiatorID(), TimeUtilTs.DateToZonedDT_Seoul(findProblem.getValiateDate()),
+							findProblem.getEditorID(), TimeUtilTs.DateToZonedDT_Seoul(findProblem.getEditDate()),
 							findProblem.getSource(), findProblem.getIntention(),
 							findProblem.getQuestionInitial(),findProblem.getSolutionInitial(),
 							imgJsonObjectNormToString,null
@@ -346,7 +367,7 @@ public class TestProblemApiComponentTs {
 					//
 //					TestProblem testProblem = testProblemServiceETest.findOne( probId );
 					if(findProblem.getTestInfo() ==null) {
-						throw new Exception("TestInfo() ==null");
+						throw new NoDataExceptionTs("TestInfo is null");
 					}
 					TestProblem testProblem = findProblem.getTestInfo();
 					BaseTestProblemDTO baseTestProblemDTO 
@@ -361,6 +382,13 @@ public class TestProblemApiComponentTs {
 					
 				}
 				return output;
+//		}catch(IOException e) {
+//			log.info("IOException occurred");
+//			throw e;
+//		}catch(NoDataExceptionTs e) {
+//			log.info("NoDataExceptionTs occurred");
+//			throw e;
+//		}
 
 	}
 	
@@ -370,7 +398,7 @@ public class TestProblemApiComponentTs {
 	 * 
 	 */
 	public String updateProblemcomponent(PutTestProblemDTOIn request) throws Exception{
-		try {
+//		try {
 					
 			// 문제 n개 업데이트
 
@@ -396,9 +424,10 @@ public class TestProblemApiComponentTs {
 			imageFileServerApiComponentETest.deleteImgTempFolerOfUserIDServiceComponent(request.getUserID());
 			
 			return "success";
-		}catch(Exception e) {
-			 throw e;
-		}
+//		}catch(IOException e) {
+//			log.info("IOException occurred");
+//			throw e;
+//		}
 	}
 	
 	/**
@@ -407,7 +436,7 @@ public class TestProblemApiComponentTs {
 	 */
 	public String updateTestProbStatus(PutTestProbStatusDTOIn request) throws Exception{
 	
-						
+//		try {	
 			// 문제 n개 업데이트
 			Long idx = -1L;
 			if(request.getUserID() == null || request.getProbID() ==null) return null;
@@ -420,6 +449,10 @@ public class TestProblemApiComponentTs {
 				throw new CustomExceptionTs(ErrorCodeEnumTs.INVALID_STATUS_RESOURCE);
 
 			}
+//		}catch(IOException e) {
+//			log.info("IOException occurred");
+//			throw e;
+//		}
 	
 	}
 	
@@ -434,7 +467,7 @@ public class TestProblemApiComponentTs {
 			List<String> strProbIdList
 			) throws Exception {
 		
-		try {
+//		try {
 			
 //			if(userId==null || probIdList==null || probIdList.isEmpty() ) return null;
 			if(userId==null || strProbIdList==null || strProbIdList.isEmpty() ) return null;
@@ -454,9 +487,10 @@ public class TestProblemApiComponentTs {
 			imageFileServerApiComponentETest.deleteImgTempFolerOfUserIDServiceComponent(userId);
 			return "success";
 			
-		}catch(Exception e) {
-			throw e;
-		}
+//		}catch(IOException e) {
+//			log.info("IOException occurred");
+//			throw e;
+//		}
 		
 	}
 

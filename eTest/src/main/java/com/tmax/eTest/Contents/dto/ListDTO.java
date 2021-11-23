@@ -14,6 +14,7 @@ public class ListDTO {
   private Book book;
   private Wiki wiki;
   private Article article;
+  private Code code;
 
   @Data
   @AllArgsConstructor
@@ -65,5 +66,11 @@ public class ListDTO {
   public static class Stat {
     private int size;
     private List<StatDTO> stats;
+  }
+
+  @Data
+  @AllArgsConstructor
+  public static class Code {
+    private List<CodeDTO> codes;
   }
 }

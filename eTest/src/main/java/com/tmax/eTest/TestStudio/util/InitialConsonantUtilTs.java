@@ -1,24 +1,27 @@
 package com.tmax.eTest.TestStudio.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
+
+import com.tmax.eTest.TestStudio.controller.component.exception.CustomExceptionTs;
+import com.tmax.eTest.TestStudio.controller.component.exception.ErrorCodeEnumTs;
 
 import lombok.Getter;
 
 @Component
 public class InitialConsonantUtilTs {
 	
-	public String InitialConsonantsV2( String jsonStr ) throws Exception{
+	public String InitialConsonantsV2( String jsonStr ) throws IOException, ParseException{
 		
-		try {
-			
 		     if(jsonStr.length()>2500) {
-		    	 throw new Exception("InitialConsonant: excceed capacity"); // temp
+		    	 throw new CustomExceptionTs(ErrorCodeEnumTs.EXCEEDED_REQUEST_SIZE);
 		     }
 			
 			 String rtName = "";
@@ -58,23 +61,18 @@ public class InitialConsonantUtilTs {
 			 
 			 return rtName;
 			
-		}catch (Exception e) {
-            throw e;
-		}
-			
 	}
 	
 	/**
 	 * 
 	 * 	
 	 */
-	public String InitialConsonants( String name ) throws Exception{
+	public String InitialConsonants( String name ) throws IOException{
 		
     	String rtName = "";
 
     	char epName;
 
-    	try{
 
     		for (int i=0; i<name.length()&&i<2500; i++){
 
@@ -91,11 +89,6 @@ public class InitialConsonantUtilTs {
 
     		}
 
-    	}catch (Exception e) {
-    		throw e;
-//			throw new Exception("convertName err: "+ name);
-
-		}
 
     	
 //    	System.out.println(rtName);

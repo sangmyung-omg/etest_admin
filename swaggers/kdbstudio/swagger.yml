@@ -1,0 +1,428 @@
+openapi: "3.0.2"
+info:
+    title: KDB Studio API
+    version: "0.1"
+    description: KDB 스튜디오 API
+servers:
+  - url: http://192.168.153.173:8080/kdbstudio/
+    description: 로컬 상명 server
+tags:
+- name: Version
+  description: 버전 조회/생성/삭제
+# - name: Part
+#   description: 분류 조회/수정
+- name: UK
+  description: UK 조회/수정
+
+paths:
+  /version:
+    get:
+      tags:
+        - Version
+      summary: 전체 버전 정보 리턴
+      description: 전체 버전 정보 리턴
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully return versions information.
+                  versionList:
+                    items:
+                      $ref: '#/components/schemas/VersionInfoDTO'
+    post:
+      tags:
+        - Version
+      summary: 신 버전 생성
+      description: 신 버전 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                versionName:
+                  type: string
+                  description: 버전 이름
+                  example: Ver 211104
+                versionNum:
+                  type: string
+                  description: 버전 번호
+                  example: Ver 1.3
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully create new version.
+                  versionId:
+                    type: integer
+                    description: 새 버전 Id
+                    example: 10
+  /version/{versionId}:
+    put:
+      tags:
+        - Version
+      summary: 버전 정보 업데이트
+      description: 버전 정보 업데이트
+      parameters:
+        - name: versionId
+          description: 버전 Id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                versionName:
+                  type: string
+                  description: 버전 이름
+                  example: Ver 1.1 복사본
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully change version information.
+    post:
+      tags:
+        - Version
+      summary: 기존 버전 복사 생성
+      description: 기존 버전 복사 생성
+      parameters:
+        - name: versionId
+          description: 버전 Id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                versionName:
+                  type: string
+                  description: 버전 이름
+                  example: Ver 1.1 복사본
+                versionNum:
+                  type: string
+                  description: 버전 번호
+                  example: Ver 1.3
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully copy version.
+                  versionId:
+                    type: integer
+                    description: 새 버전 Id
+                    example: 2
+    delete:
+      tags:
+        - Version
+      summary: 버전 삭제
+      description: 버전 삭제
+      parameters:
+        - name: versionId
+          description: 버전 Id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully delete version.
+  /version/default/{versionId}:
+    put:
+      tags:
+        - Version
+      summary: 적용 버전 설정
+      description: 적용 버전 설정
+      parameters:
+        - name: versionId
+          description: 버전 Id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully set given version with default.
+  /uk:
+    get:
+      tags:
+        - UK
+      summary : 필터/페이징 UK 정보 리턴
+      description : 필터/페이징 UK 정보 리턴
+      parameters:
+        - name: versionId
+          description: 버전 Id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: part 
+          description: 분류 종류 필터링. null이면 모든 분류 적용.
+          in: query
+          required: false
+          schema:
+            type: array
+            items: 
+              type: string
+            example: 
+              - 생애주기
+              - 필요자금 마련 방법
+        - name: page
+          description: 현재 페이지. null이면 모든 uk 리스트 리턴.
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: size
+          description: 페이지 사이즈. null이면 모든 uk 리스트 리턴.
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 10
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UKInfoDTO'
+    put:
+      tags:
+        - UK
+      summary : UK 정보 업데이트
+      description : UK 정보 업데이트
+      parameters:
+        - name: ukId
+          description: UK Id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: versionId
+          description: Version of UK's
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        $ref: '#/components/requestBodies/UKInfoPutDTO'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Successfully update UK inform.
+        409:
+          description: Conflict (uk 이름 중복)
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: "Duplicate information: ukName"
+
+  # /part:
+  #   get:
+  #     tags:
+  #       - Part
+  #     summary : 전체 파트 리턴
+  #     description: 전체 파트 리턴
+  #     responses:
+  #       200:
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 type: string
+  #               example:
+  #                 - 필요자금 마련방법
+  #                 - 행동편향
+  #                 - 생애주기
+  #   put:
+  #     tags:
+  #       - Part
+  #     summary : 파트 이름 수정
+  #     description: 파트 이름 수정
+  #     responses:
+  #       200:
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 beforeName:
+  #                   type: string
+  #                   example: 생애주기
+  #                 afterName:
+  #                   type: string
+  #                   example: 생애죽이
+                
+
+components:
+
+  requestBodies:
+    UKInfoPutDTO:
+      description: UK 정보 업데이트 내용
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              ukName:
+                type: string
+                example: 전세자금대출
+              ukDescription:
+                type: string
+                example: 설명설명설명설명설명
+  
+  
+  schemas:
+    VersionInfoDTO:
+      properties:
+        versionId:
+          type: integer
+          example: 1
+        versionName:
+          type: string
+          example: "Ver 211024"
+        versionNum:
+          type: string
+          example: Ver 1.0
+        isDefault:
+          type: integer
+          example: 1
+        isDeleted:
+          type: integer
+          example: 0
+
+    UKInfoDTO:
+      properties:
+        ukId:
+          type: integer
+          example: 1
+        partId:
+          type: integer
+          example: 1
+        ukName:
+          type: string
+          example: 전세자금대출
+        partName:
+          type: string
+          example: 생애주기
+        ukDescription:
+          type: string
+          example: 설명설명설명설명설명
+        updateDate:
+          type: string
+          description: yyyy.MM.dd
+          example: 2021.07.20
+        relatedVideo:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoInfoDTO'
+        relatedArticle:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleInfoDTO'
+
+    VideoInfoDTO:
+      properties:
+        videoId:
+          type: integer
+          example: 2
+        vidoeSrc:
+          type: string
+          example: https://m2media.ncs-slp.com/KCIE/rtplus/basic02.mp4
+        title:
+          type: string
+          example: 투자위험이란 무엇인가요?
+        imgSrc:
+          type: string
+          example: https://img.youtube.com/vi/zRGoYsKKyUQ/hqdefault.jpg
+        totalTime:
+          type: integer
+          example: 1083
+        views:
+          type: integer
+          example: 67
+
+    ArticleInfoDTO:
+      type: object
+      properties:
+        articleId:
+          type: integer
+          example: 2
+        articleSrc:
+          type: string
+          example: http://naver.me/FNmXvxx5
+        title:
+          type: string
+          example: 차트를 알면 주식시장의 흐름을 읽을 수 있을까?
+        imgSrc:
+          type: string
+          example: https://img.youtube.com/vi/zRGoYsKKyUQ/hqdefault.jpg
+        totalTime:
+          type: integer
+          example: 1083
+        views:
+          type: integer
+          example: 67
+

@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tmax.eTest.Common.repository.uk.UkMasterRepo;
+import com.tmax.eTest.Common.repository.uk.UkDescriptionVersionRepo;
+import com.tmax.eTest.KdbStudio.util.UkVersionManager;
 import com.tmax.eTest.TestStudio.dto.UKListDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -19,15 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UKController {
 
-	private final UkMasterRepo ukMasterRepo;
+	private final UkDescriptionVersionRepo ukDescriptionVersionRepo;
+	private final UkVersionManager ukVersionManager;
 
 	@GetMapping("test-studio/uk")
 	public ResponseEntity<List<UKListDTO>> UKList() {
-		try {
-			return new ResponseEntity<>(ukMasterRepo.findAll().stream().map(UKListDTO::new).collect(Collectors.toList()), HttpStatus.OK);
-		}catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		return new ResponseEntity<>(ukDescriptionVersionRepo.findByVersionIdOrderByUkId(ukVersionManager.getCurrentUkVersionId()).stream().map(UKListDTO::new).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 }
