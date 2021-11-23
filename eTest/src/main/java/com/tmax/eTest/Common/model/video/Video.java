@@ -1,5 +1,6 @@
 package com.tmax.eTest.Common.model.video;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Video {
   @Id
   private String videoId;
@@ -37,26 +40,44 @@ public class Video {
   private Date createDate;
   private Date registerDate;
   private Date endDate;
-  private Long sequence;
+  private BigInteger sequence;
   private String codeSet;
   private String type;
   private String related;
   private String description;
+  private String show;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "curriculumId", insertable = false, updatable = false)
   private VideoCurriculum videoCurriculum;
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "videoId")
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "video")
   private VideoHit videoHit;
 
+  public void setVideoHit(VideoHit videoHit) {
+    this.videoHit = videoHit;
+    videoHit.setVideo(this);
+  }
+
+  @Builder.Default
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<VideoBookmark> videoBookmarks = new LinkedHashSet<VideoBookmark>();
 
+  @Builder.Default
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<VideoUkRel> videoUks = new LinkedHashSet<VideoUkRel>();
 
+  public void addUk(VideoUkRel videoUk) {
+    this.videoUks.add(videoUk);
+    videoUk.setVideo(this);
+  }
+
+  @Builder.Default
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<VideoHashtag> videoHashtags = new LinkedHashSet<VideoHashtag>();
+
+  public void addHashTag(VideoHashtag videoHashtag) {
+    this.videoHashtags.add(videoHashtag);
+    videoHashtag.setVideo(this);
+  }
 }

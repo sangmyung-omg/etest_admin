@@ -1,0 +1,469 @@
+openapi: "3.0.2"
+info:
+    title: Contents API
+    version: "0.1"
+    description: 영상/교재/위키피디아/아티클 API
+servers:
+  - url: http://192.168.153.173:8080/
+    description: example server address
+tags:
+- name: Video
+  description: 영상 컨텐츠
+- name: File
+  description: 이미지, 교재 파일 관리
+- name: Code
+  description: 메타 코드
+paths:       
+  /videos:
+    get:
+      tags:
+        - Video
+      summary : 영상 리스트 조회
+      description : 영상 리스트 조회
+      parameters:
+      - name: curriculumId
+        in: query
+        description: 영상 주제
+        required: false
+        schema:
+          type: integer
+          format: integer
+      - name: sort
+        in: query
+        description: DATE(날짜순)/HIT(조회순)/SEQUENCE(우선순위순)
+        required: false
+        schema:
+          type: string
+          format: string
+          default: DATE
+      - name: keyword
+        in: query
+        description: 검색 키워드
+        required: false
+        schema:
+          type: string
+          format: string
+      - name: page
+        in: query
+        description: 페이지네이션 용도(0번부터 시작) 없으면 전체 영상 반환
+        required: false
+        schema:
+          type: integer
+          format: integer
+      - name: size
+        in: query
+        description: 한 페이지에 보여질 개수, page와 함께 불러야함.
+        required: false
+        schema:
+          type: integer
+          format: integer
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/VideoListModel'  
+  /videos/{video_id}:
+    get:
+      tags:
+        - Video
+      summary : 영상 조회
+      description : 북마크 정보를 포함한 영상 조회
+      parameters:
+      - name: video_id
+        in: path
+        description: 영상 아이디
+        required: true
+        schema:
+          type: integer
+          format: integer
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/VideoModel'
+    post:
+      tags:
+        - Video
+      summary : 영상 수정
+      description : 영상 수정
+      parameters:
+      - name: video_id
+        in: path
+        description: 영상 아이디
+        required: true
+        schema:
+          type: integer
+          format: integer
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/VideoUpdateModel'
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/VideoModel'
+    delete:
+      tags:
+        - Video
+      summary : 영상 삭제
+      description : 영상 삭제
+      parameters:
+      - name: video_id
+        in: path
+        description: 영상 아이디
+        required: true
+        schema:
+          type: string
+          format: string
+      responses:
+        204:
+          description: OK          
+  /file/{filename}:
+    get:
+      tags:
+        - File
+      summary : 파일 조회
+      description : 이미지, 교재 등의 파일 조회
+      parameters:
+      - name: filename
+        in: path
+        description: 파일명
+        required: true
+        schema:
+          type: string
+          format: string
+      responses:
+        200:
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary  
+  /file:
+    post:
+      tags:
+        - File
+      summary : 파일 업로드
+      description : 이미지 파일 업로드
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  required:
+                    - "true"                    
+                  description: VIDEO/BOOK                  
+                  format: string
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                type: string
+                description: 업로드된 URL
+                format: string
+  /codes:
+    get:
+      tags:
+        - Code
+      summary : 메타 코드 리스트 조회
+      description : 메타 코드 리스트 조회
+      parameters:
+      - name: domain
+        in: query
+        description: 메타 코드 영역
+        required: true
+        schema:
+          type: string
+          format: string
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/MetaCodeListModel'
+    post:
+      tags:
+        - Code
+      summary : 메타 코드 생성
+      description : 메타 코드 생성
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/MetaCodeCreateModel'
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/MetaCodeModel'
+  /codes/{codeId}:
+    put:
+      tags:
+        - Code
+      summary : 메타 코드 수정
+      description : 메타 코드 수정(코드 아이디는 수정 불가)
+      parameters:
+      - name: codeId
+        in: path
+        description: 메타 코드 아이디
+        required: true
+        schema:
+          type: string
+          format: string
+      requestBody:
+        content:
+          json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/MetaCodeModel'
+components:
+  schemas:
+    VideoModel:
+      type: object
+      properties:
+        videoId:
+          type: string
+        videoSrc:
+          type: string
+        title: 
+          type: string
+        imgSrc: 
+          type: string
+        subject: 
+          type: string
+        createDate:
+          type: string
+        registerDate:
+          type: string
+        endDate:
+          type: string
+        totalTime: 
+          type: number
+        startTime:
+          type: number
+        endTime:
+          type: number
+        hit: 
+          type: integer
+        show:
+          type: integer
+          description: 1(공개)/0(비공개)
+        hashtags:
+          type: array
+          items:
+            type: string
+        related:
+          type: string
+        ukIds:
+          type: array
+          items:
+            type: integer
+        videoType:
+          type: string
+          description: YOUTBUE(유튜브 영상)/SELF(자체 제작)/ARTICLE(아티클)
+        largArea:
+          type: string
+          description: 콘텐츠 대영역
+        groupArea:
+          type: string
+          description: 콘텐츠 그룹영역
+        detailArea:
+          type: string
+          description: 콘텐츠 세부영역
+        particleArea:
+          type: string
+          description: 콘텐츠 상세영역
+        serialNum:
+          type: integer
+          description: 일련번호
+        level:
+          type: string
+          description: 수준
+        difficulty:
+          type: string
+          description: 난이도
+        type:
+          type: string
+          description: 콘텐츠 종류
+        source:
+          type: string
+          description: 콘텐츠 제작기관
+        views:
+          type: string
+          description: 조회수
+        likes:
+          type: string
+          description: 좋아요
+        disLikes:
+          type: string
+          description: 싫어요
+        viewDate:
+          type: string
+          description: 조회수 기준일
+    VideoListModel:    
+      type: object
+      properties:
+        recommended:
+          type: boolean
+        recommendDate:
+          type: string
+        riskScore:
+          type: integer
+          description: 위험대응 점수
+        investScore:
+          type: integer
+          description: 행동편향 점수
+        knowledgeScore:
+          type: integer
+          description: 지식이해 점수
+        size: 
+          type: integer
+        videos:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/VideoModel'
+    VideoCreateModel:
+      type: object
+      properties:
+        videoSrc:
+          type: string
+        videoType:
+          type: string
+          description: YOUTBUE(유튜브 영상)/SELF(자체 제작)/ARTICLE(아티클)
+        title: 
+          type: string
+        imgSrc: 
+          type: string
+        totalTime: 
+          type: number
+          description: 초로 변환한 값
+        startTime:
+          type: number
+          description: 초로 변환한 값
+        endTime:
+          type: number          
+          description: 초로 변환한 값
+        createDate:
+          type: string
+          description: 생성 날짜
+        registerDate:
+          type: string
+          description: 게시 시작 날짜
+        endDate:
+          type: string
+          description: 게시 끝 날짜
+        related:
+          type: string
+          description: 추천 영상
+        show:
+          type: string
+          description: 공개('1')/비공개('0')
+        ukIds:
+          type: array
+          items:
+            type: integer
+        hashtags:
+          type: array
+          items:
+            type: string
+        classification:
+          type: string
+          description: 콘텐츠 분류
+        largeArea:
+          type: string
+          description: 콘텐츠 대영역
+        groupArea:
+          type: string
+          description: 콘텐츠 그룹영역
+        detailArea:
+          type: string
+          description: 콘텐츠 세부영역
+        particleArea:
+          type: string
+          description: 콘텐츠 상세영역
+        level:
+          type: string
+          description: 수준
+        difficulty:
+          type: string
+          description: 난이도
+        source:
+          type: string
+          description: 콘텐츠 출처
+        views:
+          type: string
+          description: 조회수
+        likes:
+          type: string
+          description: 좋아요
+        disLikes:
+          type: string
+          description: 싫어요
+        viewDate:
+          type: string
+          description: 조회수 기준일
+    VideoUpdateModel:
+      allOf:
+        - type: object
+          properties:
+            video_id:
+              type: string
+        - $ref: '#/components/schemas/VideoCreateModel'
+    MetaCodeModel:
+      properties:
+        domain:
+          type: string
+        codeId:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+    MetaCodeListModel:
+      properties:
+        codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetaCodeModel'
+    MetaCodeCreateModel:
+      properties:
+        domain:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
