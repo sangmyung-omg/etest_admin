@@ -14,6 +14,8 @@ public interface UkDescriptionVersionRepo extends JpaRepository<UkDescriptionVer
 
     List<UkDescriptionVersion> findByVersionIdOrderByUkId(Long versionId);
 
+    List<UkDescriptionVersion> findByVersionId(Long versionId);
+
     @Transactional
     void deleteAllByVersionId(Long versionId);
 }

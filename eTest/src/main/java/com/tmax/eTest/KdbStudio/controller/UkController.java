@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tmax.eTest.Common.model.uk.UkDescriptionVersion;
+import com.tmax.eTest.KdbStudio.dto.UkGetOutputDTO;
 import com.tmax.eTest.KdbStudio.dto.UkUpdateDTO;
 import com.tmax.eTest.KdbStudio.service.UkService;
 
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,26 +30,43 @@ public class UkController {
     @Autowired
     UkService ukService;
 
-    @GetMapping(name = "/uk", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/uk", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> getUkInfo(@RequestParam Integer versionId,
                                                 @RequestParam List<String> part,
                                                 @RequestParam Integer page,
                                                 @RequestParam Integer size) {
 
         log.info("> Getting UKs for version : " + versionId + ". part = " + part.toString() + ", page = " + Integer.toString(page) + ", size = " + Integer.toString(size));
-        List<UkDescriptionVersion> ukList = ukService.getAllUkInfoForVersion(versionId);
+        List<UkGetOutputDTO> resultList = ukService.getAllUkInfoForVersion(versionId);
 
-        return new ResponseEntity<>(ukList, HttpStatus.OK);
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
-    @PutMapping(name = "/uk", produces = "application/json; charset=utf-8")
+    @PutMapping(value = "/uk", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> updateUkInfo(@RequestParam Integer ukId, @RequestParam Integer versionId,
                                                     @RequestBody UkUpdateDTO inputBody) {
-        log.info("> Update Uk Info. ukId : " + Integer.toString(ukId) + ", versionId : " + Integer.toString(versionId) + ", inputBody : " + inputBody.toString());
+        log.info("> Update Uk Info. ukId : " + Integer.toString(ukId) + ", versionId : " + Integer.toString(versionId) + ", inputBody : " + inputBody);
         Map<String, Object> map = new HashMap<String, Object>();
+    
+        String description = inputBody.getUkDescription();
+        String ukName = inputBody.getUkName();
+        
+        // input check
+        if (description != null) {
+            if (description.equalsIgnoreCase(""))
+                description = null;
+        }
+        if (ukName != null) {
+            if (ukName.equalsIgnoreCase(""))
+                ukName = null;
+        }
+        if (description == null && ukName == null) {
+            map.put("error", "ukName and ukDescription are empty.");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
 
         try {
-            String message = ukService.updateUkInfo(new Long(ukId), new Long(versionId), inputBody);
+            String message = ukService.updateUkInfo(new Long(ukId), new Long(versionId), ukName, description);
             map.put("message", message);
             return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (NotFoundException e) {
