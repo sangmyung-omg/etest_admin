@@ -22,4 +22,8 @@ public class VideoCurriculumRepositorySupport extends QuerydslRepositorySupport 
   public List<VideoCurriculum> findAll() {
     return query.selectFrom(videoCurriculum).fetch();
   }
+
+  public VideoCurriculum findBySubject(String subject) {
+    return query.selectFrom(videoCurriculum).where(videoCurriculum.subject.eq(subject)).fetchOne();
+  }
 }

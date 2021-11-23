@@ -9,12 +9,18 @@ import javax.persistence.ManyToOne;
 
 import com.tmax.eTest.Common.model.uk.UkMaster;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @IdClass(VideoUkRelId.class)
 public class VideoUkRel {
   @Id

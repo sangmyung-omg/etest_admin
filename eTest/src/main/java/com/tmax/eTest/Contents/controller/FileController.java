@@ -2,20 +2,29 @@ package com.tmax.eTest.Contents.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import com.tmax.eTest.Contents.exception.ContentsException;
+import com.tmax.eTest.Contents.exception.ErrorCode;
 import com.tmax.eTest.Contents.util.CommonUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,59 +32,93 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class FileController {
 
-  @Value("${file.path}")
-  private String DEFAULT_PATH;
+	@Value("${file.path}")
+	private String DEFAULT_PATH;
 
-  @Autowired
-  private CommonUtils commonUtils;
+	@Autowired
+	private CommonUtils commonUtils;
 
-  private static final String CONTETNS_PATH = "contents" + File.separator;
+	private static final String CONTETNS_PATH = "contents" + File.separator;
 
-  // @GetMapping("/file")
-  // public ResponseEntity<Object> download(@RequestParam(value = "filename",
-  // required = true) String filename,
-  // HttpServletRequest request, HttpServletResponse response) throws IOException
-  // {
+	private static final String VIDEO_PATH = "videos" + File.separator;
 
-  @GetMapping("/file/**")
-  public ResponseEntity<Object> download(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public enum FileType {
+		VIDEO
+	}
 
-    String filename = request.getRequestURI().split(request.getContextPath() + "/file/")[1];
+	@GetMapping("/file/**")
+	public void download(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		String originalFilename = request.getRequestURI().split(request.getContextPath() + "/file/")[1];
+		String filename = URLDecoder.decode(originalFilename, "UTF-8");
+		String filePath = DEFAULT_PATH + CONTETNS_PATH + filename;
 
-    log.info("File Download: " + filename);
-    String filePath = DEFAULT_PATH + CONTETNS_PATH + filename;
-    File downloadFile = new File(filePath);
-    FileInputStream inputStream = new FileInputStream(downloadFile);
+		log.info("File Download: " + filePath);
 
-    int fileSize = (int) downloadFile.length();
-    log.info("File Size: " + fileSize);
+		File downloadFile = new File(filePath);
+		if (!downloadFile.exists())
+			throw new ContentsException(ErrorCode.FILE_ERROR, filePath);
 
-    String mimeType = request.getServletContext().getMimeType(filePath);
-    if (commonUtils.stringNullCheck(mimeType))
-      mimeType = "application/octet-stream";
-    log.info("MimeType: " + mimeType);
+		int fileSize = (int) downloadFile.length();
+		log.info("File Size: " + fileSize);
 
-    // System.out.println("Executable: " + file.canExecute());
-    // System.out.println("Readable: " + file.canRead());
-    // System.out.println("Writable: " + file.canWrite());
+		String mimeType = request.getServletContext().getMimeType(filePath);
+		if (commonUtils.stringNullCheck(mimeType))
+			mimeType = "application/octet-stream";
+		log.info("MimeType: " + mimeType);
 
-    // Path path = Paths.get(downloadFile.getAbsolutePath());
-    // ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+		response.setContentType(mimeType);
+		response.setContentLength(fileSize);
+		// response.setHeader("Content-Disposition", "attachment; filename=" +
+		// filename);
 
-    // return
-    // ResponseEntity.ok().contentLength(downloadFile.length()).contentType(MediaType.parseMediaType(mimeType))
-    // .body(resource);
+		FileInputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(downloadFile);
+			FileCopyUtils.copy(inputStream, response.getOutputStream());
+		} catch (IOException e) {
+			throw new ContentsException(ErrorCode.FILE_ERROR, filePath);
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				log.error("File InputStream Close Error.");
+			}
+		}
+	}
 
-    response.setContentType(mimeType);
-    response.setContentLength(fileSize);
-    // response.setHeader("Content-Disposition", "attachment; filename=" +
-    // filename);
+	@PostMapping("/file")
+	public ResponseEntity<Object> upload(@Valid @RequestParam("type") String type,
+			@Valid @RequestParam("file") MultipartFile file) throws IOException {
+		if (file.isEmpty()) {
+			throw new ContentsException(ErrorCode.FILE_ERROR, "EMPTY");
+		}
 
-    // start download stream
-    StreamUtils.copy(inputStream, response.getOutputStream());
+		String uploadPath = DEFAULT_PATH + CONTETNS_PATH;
+		File uploadDir = new File(uploadPath);
+		if (!uploadDir.exists()) {
+			uploadDir.mkdirs();
+		}
+		String ret = "";
+		if (type.equals(FileType.VIDEO.name())) {
+			uploadPath += VIDEO_PATH + file.getOriginalFilename();
+			ret = VIDEO_PATH + file.getOriginalFilename();
+		}
+		// else
 
-    response.flushBuffer();
-    inputStream.close();
-    return new ResponseEntity<>(null, HttpStatus.OK);
-  }
+		log.info(uploadPath);
+		// File uploadFile = new File(uploadPath);
+		// file.transferTo(uploadFile);
+		File uploadFile = new File(uploadPath);
+		try {
+			if (uploadFile.createNewFile()) {
+				try (FileOutputStream fos = new FileOutputStream(uploadFile)) {
+					fos.write(file.getBytes());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>(ret, HttpStatus.OK);
+	}
 }

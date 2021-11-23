@@ -37,12 +37,25 @@ public class MetaCodeMasterRepositorySupport extends QuerydslRepositorySupport {
         .collect(Collectors.toMap(MetaCodeMaster::getMetaCodeId, MetaCodeMaster::getCodeName));
   }
 
+  public List<MetaCodeMaster> findMetaCodesByDomain(String domain) {
+    return query.selectFrom(metaCodeMaster).where(domainEq(domain)).orderBy(metaCodeMaster.code.asc()).fetch();
+  }
+
+  public MetaCodeMaster findMaxMetaCodeByDomain(String domain) {
+    return query.selectFrom(metaCodeMaster).where(domainEq(domain)).orderBy(metaCodeMaster.code.desc()).limit(2).fetch()
+        .get(1);
+  }
+
   private BooleanExpression idEq(String metaCodeId) {
     return commonUtils.stringNullCheck(metaCodeId) ? null : metaCodeMaster.metaCodeId.eq(metaCodeId);
   }
 
   private BooleanExpression idEq(List<String> metaCodeIds) {
     return commonUtils.objectNullcheck(metaCodeIds) ? null : metaCodeMaster.metaCodeId.in(metaCodeIds);
+  }
+
+  private BooleanExpression domainEq(String domain) {
+    return commonUtils.stringNullCheck(domain) ? null : metaCodeMaster.domain.eq(domain);
   }
 
 }

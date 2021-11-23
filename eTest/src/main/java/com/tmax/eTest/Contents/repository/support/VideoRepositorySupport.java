@@ -1,5 +1,6 @@
 package com.tmax.eTest.Contents.repository.support;
 
+import static com.tmax.eTest.Common.model.uk.QUkDescriptionVersion.ukDescriptionVersion;
 import static com.tmax.eTest.Common.model.uk.QUkMaster.ukMaster;
 import static com.tmax.eTest.Common.model.video.QHashtag.hashtag;
 import static com.tmax.eTest.Common.model.video.QVideo.video;
@@ -24,6 +25,7 @@ import com.tmax.eTest.Contents.exception.ContentsException;
 import com.tmax.eTest.Contents.exception.ErrorCode;
 import com.tmax.eTest.Contents.util.CommonUtils;
 import com.tmax.eTest.Contents.util.QuerydslUtils;
+import com.tmax.eTest.KdbStudio.util.UkVersionManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -42,6 +44,9 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
   @Autowired
   private QuerydslUtils querydslUtils;
 
+  @Autowired
+  private UkVersionManager ukVersionManager;
+
   public VideoRepositorySupport(JPAQueryFactory query) {
     super(Video.class);
     this.query = query;
@@ -49,29 +54,31 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
 
   public OrderSpecifier<?> getVideoSortedColumn(SortType sort) {
     switch (sort.name()) {
-      case "DATE":
-        return querydslUtils.getSortedColumn(Order.ASC, video, "createDate");
-      case "HIT":
-        return querydslUtils.getSortedColumn(Order.DESC, video.videoHit, "hit");
-      case "RECOMMEND":
-      case "SEQUENCE":
-        return querydslUtils.getSortedColumn(Order.ASC, video, "sequence");
-      default:
-        throw new ContentsException(ErrorCode.TYPE_ERROR, sort.name() + ": type not provided!");
+    case "DATE":
+      return querydslUtils.getSortedColumn(Order.ASC, video, "createDate");
+    case "HIT":
+      return querydslUtils.getSortedColumn(Order.DESC, video.videoHit, "hit");
+    case "RECOMMEND":
+    case "SEQUENCE":
+      return querydslUtils.getSortedColumn(Order.ASC, video, "sequence");
+    default:
+      throw new ContentsException(ErrorCode.TYPE_ERROR, sort.name() + ": type not provided!");
     }
   }
 
   public JPAQuery<Video> multipleFetchJoin() {
     return query.select(video).from(video).join(video.videoCurriculum).fetchJoin().join(video.videoHit).fetchJoin()
         .leftJoin(video.videoHashtags, videoHashtag).fetchJoin().leftJoin(videoHashtag.hashtag, hashtag).fetchJoin()
-        .leftJoin(video.videoUks, videoUkRel).fetchJoin().leftJoin(videoUkRel.ukMaster, ukMaster).fetchJoin();
+        .leftJoin(video.videoUks, videoUkRel).fetchJoin().leftJoin(videoUkRel.ukMaster, ukMaster).fetchJoin()
+        .leftJoin(ukMaster.ukVersion, ukDescriptionVersion).fetchJoin();
   }
 
   public JPAQuery<Tuple> multipleBookmarkFetchJoin() {
     return query.select(video, videoBookmark.userUuid).from(video).join(video.videoCurriculum).fetchJoin()
         .join(video.videoHit).fetchJoin().leftJoin(video.videoHashtags, videoHashtag).fetchJoin()
         .leftJoin(videoHashtag.hashtag, hashtag).fetchJoin().leftJoin(video.videoUks, videoUkRel).fetchJoin()
-        .leftJoin(videoUkRel.ukMaster, ukMaster).fetchJoin().leftJoin(video.videoBookmarks, videoBookmark).fetchJoin();
+        .leftJoin(videoUkRel.ukMaster, ukMaster).fetchJoin().leftJoin(ukMaster.ukVersion, ukDescriptionVersion)
+        .fetchJoin().leftJoin(video.videoBookmarks, videoBookmark).fetchJoin();
   }
 
   public Video findVideoById(String videoId) {
@@ -80,6 +87,12 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
 
   public List<Video> findVideosByCurriculum(Long curriculumId, SortType sort, String keyword) {
     return multipleFetchJoin().where(curriculumEq(curriculumId)).where(checkKeyword(keyword))
+        .orderBy(getVideoSortedColumn(sort)).distinct().fetch();
+  }
+
+  public List<Video> findVideosByCurriculumByPage(Long curriculumId, SortType sort, String keyword, Integer page,
+      Integer size) {
+    return multipleFetchJoin().where(curriculumEq(curriculumId)).where(checkKeyword(keyword)).offset(page).limit(size)
         .orderBy(getVideoSortedColumn(sort)).distinct().fetch();
   }
 

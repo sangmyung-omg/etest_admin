@@ -24,6 +24,10 @@ public interface VideoRepository extends JpaRepository<Video, String> {
   List<Video> findAllByVideoBookmarksUserUuid(String userId, Sort sort);
 
   List<Video> findAllByVideoBookmarksUserUuidAndCurriculumId(String userId, Long curriculumId, Sort sort);
-  
+
   List<Video> findAllByRelatedIn(Iterable<String> relatedList);
+
+  @Query(value = "select * from ( select substr(v.video_id,-9) from video v order by substr(v.video_id,-9) desc ) where rownum = 1;", nativeQuery = true)
+  String findMaxSerialNum();
+
 }
