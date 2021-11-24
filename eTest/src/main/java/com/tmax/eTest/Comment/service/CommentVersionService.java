@@ -21,6 +21,18 @@ public class CommentVersionService {
 		return versionRepo.existsById(versionName);
 	}
 	
+	public String getSelectedVersion()
+	{
+		String result = null;
+		
+		Optional<CommentVersionInfo> opt = versionRepo.findByIsSelected(1); 
+		
+		if(opt.isPresent())
+			result = opt.get().getVersionName();
+		
+		return result;
+	}
+	
 	public boolean changeActivateVersion(String versionName)
 	{
 		boolean result = false;
@@ -32,11 +44,11 @@ public class CommentVersionService {
 		{
 			if(info.getVersionName().equals(versionName))
 			{
-				info.setIsActivate(1);
+				info.setIsSelected(1);
 				result = true;
 			}
 			else
-				info.setIsActivate(0);
+				info.setIsSelected(0);
 			newVersionList.add(info);
 		}
 		
@@ -57,7 +69,7 @@ public class CommentVersionService {
 	{
 		CommentVersionInfo info = CommentVersionInfo.builder()
 				.versionName(versionName)
-				.isActivate(0)
+				.isSelected(0)
 				.build();
 		
 		versionRepo.save(info);

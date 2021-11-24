@@ -20,6 +20,8 @@ public class CommentMapDTO {
 	Map<String, List<CommentDTO>> invest = new HashMap<>();
 	Map<String, List<CommentDTO>> knowledge = new HashMap<>();
 	
+	String selectedVersion = "";
+	
 	public boolean putComment(CommentDTO dto)
 	{
 		List<CommentDTO> temp = new ArrayList<>();

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tmax.eTest.Comment.dto.CommentDTO;
+import com.tmax.eTest.Comment.dto.CommentMapDTO;
 import com.tmax.eTest.Comment.service.CommentService;
 import com.tmax.eTest.Comment.service.CommentVersionService;
 
@@ -38,7 +39,19 @@ public class CommentController {
 	public ResponseEntity<?> readComment(
 			HttpServletRequest request) throws Exception{
 		
-		return ResponseEntity.ok(commentService.getAllComment());
+		CommentMapDTO result =  commentService.getAllComment();
+		String selectedVersion = versionService.getSelectedVersion();
+		
+		if(selectedVersion != null)
+		{
+			result.setSelectedVersion(selectedVersion);
+			return ResponseEntity.ok(result);
+		}
+		else
+		{
+			versionService.changeActivateVersion("default_version");
+			return ResponseEntity.internalServerError().body("Selected Version error. Selected Version will be change 'default_version'");
+		}
 	}
 	
 	@PostMapping(value="", produces = "application/json; charset=utf-8")
@@ -68,6 +81,30 @@ public class CommentController {
 	}
 	
 	@PutMapping(value="/version", produces = "application/json; charset=utf-8")
+	public ResponseEntity<?> makeNewCommentVersion(
+			HttpServletRequest request,
+			@RequestParam("newVersionName") String newVersionName) throws Exception{
+	
+		if(versionService.isExistVersion(newVersionName))
+			return ResponseEntity.internalServerError().body("Check newVersionName. It already exists. newVersionName is "
+					+ newVersionName);
+		
+		if(!commentService.makeDefaultComment(newVersionName)
+			|| !versionService.makeVersion(newVersionName))
+		{
+			// rollback
+			commentService.deleteCommentByVersion(newVersionName);
+			versionService.deleteByVersion(newVersionName);
+			
+			return ResponseEntity.internalServerError().body("Something wrong! in make comment with new version name! "
+					+ newVersionName);
+		}
+	
+		
+		return ResponseEntity.ok(true);
+	}
+	
+	@PutMapping(value="/version/copyOrCut", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> copyOrCutVersion(
 			HttpServletRequest request,
 			@RequestParam("prevVersionName") String prevVersionName,
