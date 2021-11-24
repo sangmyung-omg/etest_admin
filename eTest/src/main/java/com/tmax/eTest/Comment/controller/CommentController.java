@@ -112,7 +112,7 @@ public class CommentController {
 					+ prevVersionName);
 		}
 		
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(newVersionName);
 	}
 	
 	@PutMapping(value="/version", produces = "application/json; charset=utf-8")
@@ -137,7 +137,7 @@ public class CommentController {
 		}
 	
 		
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(newVersionName);
 	}
 	
 
