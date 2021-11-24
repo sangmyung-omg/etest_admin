@@ -147,7 +147,9 @@ public class CommentController {
 			HttpServletRequest request,
 			@RequestParam("versionName") String versionName) throws Exception{
 	
-		if(!versionService.isExistVersion(versionName) || versionService.isSelectedVersion(versionName))
+		if(!versionService.isExistVersion(versionName) 
+			|| versionService.isSelectedVersion(versionName)
+			|| versionName.equals("default_version"))
 			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid or selected. versionName is "
 					+ versionName);
 		
