@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.tmax.eTest.Comment.util.CommentUtil;
 import com.tmax.eTest.Common.model.comment.CommentVersionInfo;
 import com.tmax.eTest.Common.repository.comment.CommentVersionRepo;
 
 @Service
+
 public class CommentVersionService {
 
 	@Autowired
@@ -19,6 +24,26 @@ public class CommentVersionService {
 	public boolean isExistVersion(String versionName)
 	{
 		return versionRepo.existsById(versionName);
+	}
+	
+	public boolean isSelectedVersion(String versionName)
+	{
+		if(versionRepo.existsById(versionName))
+			return versionRepo.findById(versionName).get().getIsSelected() == 1;
+		else
+			return false;
+	}
+	
+	public String getSelectedVersion()
+	{
+		String result = null;
+		
+		Optional<CommentVersionInfo> opt = versionRepo.findByIsSelected(1); 
+		
+		if(opt.isPresent())
+			result = opt.get().getVersionName();
+		
+		return result;
 	}
 	
 	public boolean changeActivateVersion(String versionName)
@@ -32,16 +57,19 @@ public class CommentVersionService {
 		{
 			if(info.getVersionName().equals(versionName))
 			{
-				info.setIsActivate(1);
+				info.setIsSelected(1);
 				result = true;
 			}
 			else
-				info.setIsActivate(0);
+				info.setIsSelected(0);
 			newVersionList.add(info);
 		}
 		
 		if(result)
+		{
 			versionRepo.saveAll(newVersionList);
+			CommentUtil.putCommentToUserBackend();
+		}
 		
 		return result;
 	}
@@ -57,7 +85,7 @@ public class CommentVersionService {
 	{
 		CommentVersionInfo info = CommentVersionInfo.builder()
 				.versionName(versionName)
-				.isActivate(0)
+				.isSelected(0)
 				.build();
 		
 		versionRepo.save(info);

@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tmax.eTest.Common.model.meta.MetaCodeMaster;
-import com.tmax.eTest.Common.model.uk.UkDescriptionVersion;
 import com.tmax.eTest.Common.model.uk.UkMaster;
 import com.tmax.eTest.Common.model.video.Hashtag;
 import com.tmax.eTest.Common.model.video.Video;
@@ -30,6 +29,7 @@ import com.tmax.eTest.Common.repository.video.VideoCurriculumRepository;
 import com.tmax.eTest.Common.repository.video.VideoRepository;
 import com.tmax.eTest.Contents.dto.CodeSet;
 import com.tmax.eTest.Contents.dto.ListDTO;
+import com.tmax.eTest.Contents.dto.SizeDTO;
 import com.tmax.eTest.Contents.dto.SortType;
 import com.tmax.eTest.Contents.dto.SuccessDTO;
 import com.tmax.eTest.Contents.dto.VideoCreateDTO;
@@ -143,6 +143,10 @@ public class VideoService {
   public ListDTO.Video getVideoList(Long curriculumId, SortType sort, String keyword, Integer page, Integer size) {
     List<Video> videos = videoRePositorySupport.findVideosByCurriculumByPage(curriculumId, sort, keyword, page, size);
     return convertVideoToDTO(videos);
+  }
+
+  public SizeDTO getVideoSize() {
+    return new SizeDTO(videoRePositorySupport.findVideoSize());
   }
 
   @Transactional
@@ -310,7 +314,8 @@ public class VideoService {
         .uks(video.getVideoUks().stream()
             .map(videoUks -> videoUks.getUkMaster().getUkVersion().stream()
                 .filter(ukVersion -> ukVersion.getVersionId().equals(ukVersionId)).findAny()
-                .orElse(new UkDescriptionVersion()).getUkName())
+                .orElseThrow(() -> new ContentsException(ErrorCode.DB_ERROR, ukVersionId + ": UK Version not exist!"))
+                .getUkName())
             .collect(Collectors.toList()))
         .hashtags(video.getVideoHashtags().stream().map(videoHashtags -> videoHashtags.getHashtag().getName())
             .collect(Collectors.toList()))

@@ -22,6 +22,8 @@ public class CommentService {
 	@Autowired
 	CommentRepo commentRepo;
 	
+	private final String DEFAULT_VERSION = "default_version";
+	
 	public CommentMapDTO getAllComment()
 	{
 		CommentMapDTO result = new CommentMapDTO();
@@ -30,9 +32,10 @@ public class CommentService {
 		
 		for(CommentInfo comment : allComment)
 		{
-			CommentDTO resDTO = new CommentDTO(comment);
-			
-			result.putComment(resDTO);
+			if(!comment.getVersionName().equals(DEFAULT_VERSION))
+			{
+				result.putComment(new CommentDTO(comment));
+			}
 		}
 		
 		return result;
@@ -62,6 +65,35 @@ public class CommentService {
 		log.info(modelList.toString());
 		
 		return commentRepo.saveAll(modelList).size();
+	}
+	
+	public boolean makeDefaultComment(String newVersion)
+	{
+		boolean result = false;
+		List<CommentInfo> list = commentRepo.findAllByVersionName(DEFAULT_VERSION);
+		List<CommentInfo> saveList = new ArrayList<>();
+		
+		if(list.size() != 0)
+		{
+			for(CommentInfo info : list)
+			{
+				CommentInfo newInfo = CommentInfo.builder()
+					.versionName(newVersion)
+					.seqNum(info.getSeqNum())
+					.commentText("")
+					.commentType(info.getCommentType())
+					.commentName(info.getCommentName())
+					.ruleText(info.getRuleText())
+					.build();
+				
+				saveList.add(newInfo);
+			}
+			
+			commentRepo.saveAll(saveList);
+			result = true;
+		}
+		
+		return result;
 	}
 	
 	public boolean copyComment(String prevVersion, String newVersion)
@@ -96,7 +128,13 @@ public class CommentService {
 
 	public boolean deleteCommentByVersion(String versionName)
 	{
-		return commentRepo.deleteByVersionName(versionName) != 0;
+		if(versionName.equals(DEFAULT_VERSION))
+		{
+			log.info("You can't delete 'default_version' in comment");
+			return false;
+		}
+		else
+			return commentRepo.deleteByVersionName(versionName) != 0;
 	}
 	
 }

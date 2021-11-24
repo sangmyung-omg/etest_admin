@@ -24,7 +24,7 @@ public class CommentDTO {
 		this.versionName = model.getVersionName();
 		this.seqNum = model.getSeqNum();
 		this.commentName = model.getCommentName();
-		this.commentText = model.getCommentText();
+		this.commentText = (model.getCommentText()==null)?"":model.getCommentText();
 		this.ruleText = model.getRuleText();
 		this.commentType = model.getCommentType();
 	}

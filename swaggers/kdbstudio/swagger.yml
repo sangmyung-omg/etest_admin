@@ -370,6 +370,9 @@ components:
         ukDescription:
           type: string
           example: 설명설명설명설명설명
+        externalLink:
+          type: string
+          example: https://kofia.waplstudy.com/api/file/books/CB1/index.html#p=560
         updateDate:
           type: string
           description: yyyy.MM.dd
@@ -386,8 +389,8 @@ components:
     VideoInfoDTO:
       properties:
         videoId:
-          type: integer
-          example: 2
+          type: string
+          example: CV202120203031402407000000065
         vidoeSrc:
           type: string
           example: https://m2media.ncs-slp.com/KCIE/rtplus/basic02.mp4
@@ -408,8 +411,8 @@ components:
       type: object
       properties:
         articleId:
-          type: integer
-          example: 2
+          type: string
+          example: CW202120202022203208000000047
         articleSrc:
           type: string
           example: http://naver.me/FNmXvxx5

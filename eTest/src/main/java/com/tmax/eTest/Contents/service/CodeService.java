@@ -9,6 +9,8 @@ import com.tmax.eTest.Common.model.meta.MetaCodeMaster;
 import com.tmax.eTest.Common.repository.meta.MetaCodeMasterRepository;
 import com.tmax.eTest.Contents.dto.CodeCreateDTO;
 import com.tmax.eTest.Contents.dto.CodeDTO;
+import com.tmax.eTest.Contents.exception.ContentsException;
+import com.tmax.eTest.Contents.exception.ErrorCode;
 import com.tmax.eTest.Contents.repository.support.MetaCodeMasterRepositorySupport;
 import com.tmax.eTest.Contents.util.CommonUtils;
 
@@ -40,9 +42,15 @@ public class CodeService {
     String domain = codeCreateDTO.getDomain();
     String code = codeCreateDTO.getCode();
     String codeId = domain + code;
+
     MetaCodeMaster metaCodeMaster = MetaCodeMaster.builder().metaCodeId(codeId).code(code).domain(domain)
         .codeName(codeCreateDTO.getName()).build();
-    MetaCodeMaster createCode = metaCodeMasterRepository.save(metaCodeMaster);
+
+    MetaCodeMaster createCode = null;
+    if (metaCodeMasterRepository.existsById(codeId))
+      throw new ContentsException(ErrorCode.DB_ERROR, "Code already exists in Meta Code Table");
+    else
+      createCode = metaCodeMasterRepository.save(metaCodeMaster);
     return convertCodeToDTO(createCode);
   }
 

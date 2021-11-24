@@ -1,7 +1,22 @@
 package com.tmax.eTest.Comment.util;
 
-public class CommentUtil {
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 
+@Component
+@PropertySource("classpath:push-admin-config.properties")  
+public class CommentUtil {
+	
+	@Value("${backend.base.uri}")
+    static String userBackendUri;
+	
+	public static void putCommentToUserBackend()
+	{
+		WebClient.create().put().uri(userBackendUri + "/report/diagnosis/comment");
+	}
+	
 	public enum CommentType{
 		ALL("all"),
 		KNOWLEDGE("knowledge"),

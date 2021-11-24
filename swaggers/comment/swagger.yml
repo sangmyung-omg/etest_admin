@@ -4,8 +4,8 @@ info:
     version: "1.0"
     description: Kofia Comment 관련 API
 servers:
-  - url: http://192.168.153.208:8080/
-    description: OSD's Server
+  - url: http://192.168.153.132:26000/
+    description: OSD's Admin Server
 tags:
 - name: Comment
   description: 코멘트 관련
@@ -23,12 +23,12 @@ paths:
             content:
               json:
                 schema:
-                  $ref: "#/components/schemas/CommentOutputList"  
+                  $ref: "#/components/schemas/CommentMapDTO"  
     post:
       tags:
       - Comment
       summary: Comment 저장하기.
-      description: 해당 Comment List를 DB에 저장합니다.
+      description: 해당 Comment List 를 VersioName - SeqNum 으로 찾아, CommentText를 변경합니다. (다른 데이터(type, ruleText, commentName)는 변경되지 않습니다.)
       requestBody:
         $ref: "#/components/requestBodies/CommentInputList"
       responses:
@@ -39,7 +39,7 @@ paths:
               schema:
                 type: integer
                 example: 5
-  /activateVersion:
+  /comment/activateVersion:
     put:
       tags:
       - Comment
@@ -58,7 +58,7 @@ paths:
               json:
                 schema:
                   type: boolean
-  /version:
+  /comment/version/copy:
     put:
       tags:
       - Comment
@@ -70,16 +70,19 @@ paths:
         schema:
           type: string
         description: 복사할 버전 이름.
-      - in: query
-        name: newVersionName
-        schema:
-          type: string
-        description: 새로운 버전 이름.
-      - in: query
-        name: isKeepPrevVersion
-        schema:
-          type: boolean
-        description: 이전 버전을 유지할 것인지 여부. (false 시 복사, true 시 잘라내기)
+      responses:
+          200:
+            description: OK
+            content:
+              json:
+                schema:
+                  type: boolean
+  /comment/version:
+    put:
+      tags:
+      - Comment
+      summary: 코멘트 버전 생성.
+      description: 내용이 빈 코멘트 신규 버전을 생성합니다.
       responses:
           200:
             description: OK
@@ -143,8 +146,11 @@ components:
           type: string
           example: "정답 시 코멘트"
           description: 해당 코멘트의 적용 규칙 내용
-    CommentOutputList:
+    CommentMapDTO:
       properties:
+        selectedVersion:
+          type : string
+          description: 현재 선택된 Comment Version 이름.
         gi:
           type : object
           description: 공통 파트. 버전 개수에 따라 하위 객체들의 개수가 늘어나고 줄어든다. (해당 예시는 version_name1, version_name2 두개가 있다.)

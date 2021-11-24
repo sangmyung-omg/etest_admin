@@ -43,12 +43,12 @@ public class VersionController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         map.put("message", "Successfully returned version informations.");
-        map.put("verionList", versionList);
+        map.put("versionList", versionList);
         
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PostMapping(value="/version", produces = "application/json; charset-utf-8")
+    @PostMapping(value="/version", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> createNewVersion(@RequestBody VersionCreateInputDTO inputBody) {
         log.info("> Creating new version. input = " + inputBody.toString());
         Map<String, Object> map = new HashMap<String, Object>();
@@ -75,7 +75,7 @@ public class VersionController {
         }
     }
 
-    @PutMapping(value="/version/{versionId}", produces = "application/json; charset-utf-8")
+    @PutMapping(value="/version/{versionId}", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> updateVersionInfo(@PathVariable Integer versionId, @RequestBody VersionUpdateInputDTO inputBody) {
         log.info("> Update version info. versionId = " + Integer.toString(versionId) + ", versionName = " + inputBody);
         Map<String, Object> map = new HashMap<String, Object>();
@@ -102,7 +102,7 @@ public class VersionController {
 
     }
 
-    @PostMapping(value="/version/{versionId}", produces = "application/json; charset-utf-8")
+    @PostMapping(value="/version/{versionId}", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> copyVersionInfo(@PathVariable Integer versionId, @RequestBody VersionCreateInputDTO inputBody) {
         log.info("> Copy and paste version info. versionId = " + Integer.toString(versionId) + ", inputBody = " + inputBody.toString());
         Map<String, Object> map = new HashMap<String, Object>();
@@ -118,7 +118,7 @@ public class VersionController {
         }
     }
 
-    @DeleteMapping(value="/version/{versionId}", produces = "application/json; charset-utf-8")
+    @DeleteMapping(value="/version/{versionId}", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> deleteVersion(@PathVariable Integer versionId) {
         log.info("> Delete version. versionId = " + Integer.toString(versionId));
         Map<String, Object> map = new HashMap<String, Object>();
@@ -131,7 +131,7 @@ public class VersionController {
         }
     }
     // 버전에 연결된 UK가 하나도 없는 버전도 default로 적용될 가능성 있음!
-    @PutMapping(value="/version/default/{versionId}", produces = "application/json; charset-utf-8")
+    @PutMapping(value="/version/default/{versionId}", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> applyDefaultVersion(@PathVariable Integer versionId) {
         log.info("> Apply default version. versionId = " + Integer.toString(versionId));
         Map<String, Object> map = new HashMap<String, Object>();

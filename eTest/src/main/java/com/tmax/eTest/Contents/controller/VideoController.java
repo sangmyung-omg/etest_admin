@@ -60,6 +60,12 @@ public class VideoController {
     return new ResponseEntity<>(videoService.createVideo(videoCreateDTO), HttpStatus.OK);
   }
 
+  @GetMapping("/videos/size")
+  public ResponseEntity<Object> getVideoSize(HttpServletRequest request) {
+    log.info("---getVideoSize---");
+    return new ResponseEntity<>(videoService.getVideoSize(), HttpStatus.OK);
+  }
+
   @GetMapping("/videos/{video_id}")
   public ResponseEntity<Object> getVideo(@PathVariable("video_id") String videoId, HttpServletRequest request) {
     log.info("---getVideo---");

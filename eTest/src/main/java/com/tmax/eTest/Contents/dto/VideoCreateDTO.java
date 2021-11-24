@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoCreateDTO {
-  private String videoType;
   private String videoSrc;
+  private String videoType;
   private String title;
   private String imgSrc;
   private Float totalTime;
@@ -45,5 +45,4 @@ public class VideoCreateDTO {
   private Integer disLikes;
   @DateTimeFormat(iso = ISO.DATE)
   private Date viewDate;
-
 }

@@ -85,6 +85,10 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
     return multipleFetchJoin().where(idEq(videoId)).distinct().fetchOne();
   }
 
+  public Long findVideoSize() {
+    return query.select(video).from(video).fetchCount();
+  }
+
   public List<Video> findVideosByCurriculum(Long curriculumId, SortType sort, String keyword) {
     return multipleFetchJoin().where(curriculumEq(curriculumId)).where(checkKeyword(keyword))
         .orderBy(getVideoSortedColumn(sort)).distinct().fetch();

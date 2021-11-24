@@ -18,5 +18,5 @@ import lombok.NoArgsConstructor;
 public class CommentVersionInfo {
 	@Id
 	private String versionName;
-	private Integer isActivate;
+	private Integer isSelected;
 }
