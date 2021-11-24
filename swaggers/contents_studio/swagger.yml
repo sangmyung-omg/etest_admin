@@ -63,7 +63,40 @@ paths:
           content:
             json:
               schema:
-                $ref: '#/components/schemas/VideoListModel'  
+                $ref: '#/components/schemas/VideoListModel'
+    post:
+      tags:
+        - Video
+      summary: 영상 생성
+      description: 영상 생성
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/VideoCreateModel'
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/VideoModel'
+  /videos/size:
+    get:
+      tags:
+        - Video
+      summary: 영상 갯수 조회
+      description: 전체 영상 갯수 조회
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                type: object
+                properties:
+                  size:
+                    type: integer
   /videos/{video_id}:
     get:
       tags:
@@ -125,7 +158,7 @@ paths:
           format: string
       responses:
         204:
-          description: OK          
+          description: OK
   /file/{filename}:
     get:
       tags:
