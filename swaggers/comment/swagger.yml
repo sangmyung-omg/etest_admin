@@ -58,7 +58,7 @@ paths:
               json:
                 schema:
                   type: boolean
-  /comment/version/copyOrCut:
+  /comment/version/copy:
     put:
       tags:
       - Comment
@@ -70,16 +70,6 @@ paths:
         schema:
           type: string
         description: 복사할 버전 이름.
-      - in: query
-        name: newVersionName
-        schema:
-          type: string
-        description: 새로운 버전 이름.
-      - in: query
-        name: isKeepPrevVersion
-        schema:
-          type: boolean
-        description: 이전 버전을 유지할 것인지 여부. (false 시 복사, true 시 잘라내기)
       responses:
           200:
             description: OK
@@ -93,12 +83,6 @@ paths:
       - Comment
       summary: 코멘트 버전 생성.
       description: 내용이 빈 코멘트 신규 버전을 생성합니다.
-      parameters:
-      - in: query
-        name: newVersionName
-        schema:
-          type: string
-        description: 생성할 Comment Version 이름.
       responses:
           200:
             description: OK
