@@ -28,7 +28,7 @@ paths:
       tags:
       - Comment
       summary: Comment 저장하기.
-      description: 해당 Comment List를 DB에 저장합니다.
+      description: 해당 Comment List 를 VersioName - SeqNum 으로 찾아, CommentText를 변경합니다. (다른 데이터(type, ruleText, commentName)는 변경되지 않습니다.)
       requestBody:
         $ref: "#/components/requestBodies/CommentInputList"
       responses:
@@ -39,7 +39,7 @@ paths:
               schema:
                 type: integer
                 example: 5
-  /activateVersion:
+  /comment/activateVersion:
     put:
       tags:
       - Comment
@@ -58,7 +58,7 @@ paths:
               json:
                 schema:
                   type: boolean
-  /version/copyOrCut:
+  /comment/version/copyOrCut:
     put:
       tags:
       - Comment
@@ -87,7 +87,7 @@ paths:
               json:
                 schema:
                   type: boolean
-  /version:
+  /comment/version:
     put:
       tags:
       - Comment

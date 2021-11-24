@@ -89,6 +89,33 @@ public class CommentController {
 		
 	}
 	
+	@PutMapping(value="/version/copy", produces = "application/json; charset=utf-8")
+	public ResponseEntity<?> copyVersion(
+			HttpServletRequest request,
+			@RequestParam("prevVersionName") String prevVersionName) throws Exception{
+
+
+		if(!versionService.isExistVersion(prevVersionName))
+			return ResponseEntity.internalServerError().body("Check prevVersionName. Not exists. prevVersionName is "
+					+ prevVersionName);
+		
+		String newVersionName = VersionGenerator.getVersionName();
+		
+		if( !versionService.isExistVersion(prevVersionName) 
+			|| !commentService.copyComment(prevVersionName, newVersionName)
+			|| !versionService.makeVersion(newVersionName))
+		{
+			// rollback
+			commentService.deleteCommentByVersion(newVersionName);
+			versionService.deleteByVersion(newVersionName);
+			
+			return ResponseEntity.internalServerError().body("Check prevVersionName. Not Invalid. prevVersionName is "
+					+ prevVersionName);
+		}
+		
+		return ResponseEntity.ok(true);
+	}
+	
 	@PutMapping(value="/version", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> makeNewCommentVersion(
 			HttpServletRequest request) throws Exception{
@@ -114,31 +141,7 @@ public class CommentController {
 		return ResponseEntity.ok(true);
 	}
 	
-	@PutMapping(value="/version/copyOrCut", produces = "application/json; charset=utf-8")
-	public ResponseEntity<?> copyOrCutVersion(
-			HttpServletRequest request,
-			@RequestParam("prevVersionName") String prevVersionName) throws Exception{
-	
-		String newVersionName = VersionGenerator.getVersionName();
-		
-		if(versionService.isExistVersion(newVersionName))
-			return ResponseEntity.internalServerError().body("Check newVersionName. It already exists. newVersionName is "
-					+ newVersionName);
-		
-		if( !versionService.isExistVersion(prevVersionName) 
-			|| !commentService.copyComment(prevVersionName, newVersionName)
-			|| !versionService.makeVersion(newVersionName))
-		{
-			// rollback
-			commentService.deleteCommentByVersion(newVersionName);
-			versionService.deleteByVersion(newVersionName);
-			
-			return ResponseEntity.internalServerError().body("Check prevVersionName. Not Invalid. prevVersionName is "
-					+ prevVersionName);
-		}
-		
-		return ResponseEntity.ok(true);
-	}
+
 
 	@DeleteMapping(value="/version", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> deleteVersion(
