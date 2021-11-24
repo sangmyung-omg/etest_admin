@@ -10,9 +10,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class CommentUtil {
 	
 	@Value("${backend.base.uri}")
-    String userBackendUri;
+    static String userBackendUri;
 	
-	public void putCommentToUserBackend()
+	public static void putCommentToUserBackend()
 	{
 		WebClient.create().put().uri(userBackendUri + "/report/diagnosis/comment");
 	}
