@@ -5,20 +5,36 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.tmax.eTest.Comment.util.CommentUtil;
 import com.tmax.eTest.Common.model.comment.CommentVersionInfo;
 import com.tmax.eTest.Common.repository.comment.CommentVersionRepo;
 
 @Service
+
 public class CommentVersionService {
 
 	@Autowired
 	CommentVersionRepo versionRepo;
 	
+	@Autowired
+	CommentUtil util;
+	
 	public boolean isExistVersion(String versionName)
 	{
 		return versionRepo.existsById(versionName);
+	}
+	
+	public boolean isSelectedVersion(String versionName)
+	{
+		if(versionRepo.existsById(versionName))
+			return versionRepo.findById(versionName).get().getIsSelected() == 1;
+		else
+			return false;
 	}
 	
 	public String getSelectedVersion()
@@ -53,7 +69,10 @@ public class CommentVersionService {
 		}
 		
 		if(result)
+		{
 			versionRepo.saveAll(newVersionList);
+			util.putCommentToUserBackend();
+		}
 		
 		return result;
 	}

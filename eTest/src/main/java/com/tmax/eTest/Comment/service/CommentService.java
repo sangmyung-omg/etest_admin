@@ -32,9 +32,10 @@ public class CommentService {
 		
 		for(CommentInfo comment : allComment)
 		{
-			CommentDTO resDTO = new CommentDTO(comment);
-			
-			result.putComment(resDTO);
+			if(!comment.getVersionName().equals(DEFAULT_VERSION))
+			{
+				result.putComment(new CommentDTO(comment));
+			}
 		}
 		
 		return result;

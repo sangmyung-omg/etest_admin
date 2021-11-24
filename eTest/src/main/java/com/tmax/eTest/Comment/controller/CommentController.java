@@ -4,8 +4,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +25,10 @@ import com.tmax.eTest.Comment.dto.CommentDTO;
 import com.tmax.eTest.Comment.dto.CommentMapDTO;
 import com.tmax.eTest.Comment.service.CommentService;
 import com.tmax.eTest.Comment.service.CommentVersionService;
+import com.tmax.eTest.Comment.util.VersionGenerator;
+import com.tmax.eTest.Push.PushService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -34,6 +42,7 @@ public class CommentController {
 	
 	@Autowired
 	CommentVersionService versionService;
+
 	
 	@GetMapping(value="", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> readComment(
@@ -82,9 +91,10 @@ public class CommentController {
 	
 	@PutMapping(value="/version", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> makeNewCommentVersion(
-			HttpServletRequest request,
-			@RequestParam("newVersionName") String newVersionName) throws Exception{
-	
+			HttpServletRequest request) throws Exception{
+
+		String newVersionName = VersionGenerator.getVersionName();
+		
 		if(versionService.isExistVersion(newVersionName))
 			return ResponseEntity.internalServerError().body("Check newVersionName. It already exists. newVersionName is "
 					+ newVersionName);
@@ -107,10 +117,10 @@ public class CommentController {
 	@PutMapping(value="/version/copyOrCut", produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> copyOrCutVersion(
 			HttpServletRequest request,
-			@RequestParam("prevVersionName") String prevVersionName,
-			@RequestParam("newVersionName") String newVersionName,
-			@RequestParam("isKeepPrevVersion") Boolean isKeepPrevVersion) throws Exception{
+			@RequestParam("prevVersionName") String prevVersionName) throws Exception{
 	
+		String newVersionName = VersionGenerator.getVersionName();
+		
 		if(versionService.isExistVersion(newVersionName))
 			return ResponseEntity.internalServerError().body("Check newVersionName. It already exists. newVersionName is "
 					+ newVersionName);
@@ -127,13 +137,6 @@ public class CommentController {
 					+ prevVersionName);
 		}
 		
-		if(!isKeepPrevVersion) // Copy? or Cut?
-		{
-			commentService.deleteCommentByVersion(prevVersionName);
-			versionService.deleteByVersion(prevVersionName);
-		}
-		
-		
 		return ResponseEntity.ok(true);
 	}
 
@@ -142,8 +145,8 @@ public class CommentController {
 			HttpServletRequest request,
 			@RequestParam("versionName") String versionName) throws Exception{
 	
-		if(!versionService.isExistVersion(versionName))
-			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid. versionName is "
+		if(!versionService.isSelectedVersion(versionName))
+			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid or selected. versionName is "
 					+ versionName);
 		
 		boolean commentResult = commentService.deleteCommentByVersion(versionName);
