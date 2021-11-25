@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tmax.eTest.Common.model.uk.UkDescriptionVersion;
+import com.tmax.eTest.Common.repository.uk.UkDescriptionVersionRepo;
 import com.tmax.eTest.KdbStudio.dto.UkGetOutputDTO;
 import com.tmax.eTest.KdbStudio.dto.UkUpdateDTO;
 import com.tmax.eTest.KdbStudio.service.UkService;
@@ -30,16 +30,27 @@ public class UkController {
     @Autowired
     UkService ukService;
 
+    @Autowired
+    UkDescriptionVersionRepo ukRepo;
+
     @GetMapping(value = "/uk", produces = "application/json; charset=utf-8")
-    public ResponseEntity<Object> getUkInfo(@RequestParam Integer versionId,
-                                                @RequestParam List<String> part,
+    public ResponseEntity<Object> getUkInfo(@RequestParam Integer versionId) {
+        log.info("> Getting UKs for version : " + versionId);
+
+        List<UkGetOutputDTO> ukList = ukService.getUkInfo(versionId);
+        return new ResponseEntity<>(ukList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/uk/page", produces = "application/json; charset=utf-8")
+    public ResponseEntity<Object> getPagedUkInfo(@RequestParam Integer versionId,
+                                                @RequestParam(required = false) List<String> part,
                                                 @RequestParam Integer page,
                                                 @RequestParam Integer size) {
 
         log.info("> Getting UKs for version : " + versionId + ". part = " + part.toString() + ", page = " + Integer.toString(page) + ", size = " + Integer.toString(size));
-        List<UkGetOutputDTO> resultList = ukService.getAllUkInfoForVersion(versionId);
-
-        return new ResponseEntity<>(resultList, HttpStatus.OK);
+        Map<String, Object> result = ukService.getAllPagedUkInfoForVersion(versionId, page, size);
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping(value = "/uk", produces = "application/json; charset=utf-8")

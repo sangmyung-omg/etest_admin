@@ -1,7 +1,9 @@
 package com.tmax.eTest.KdbStudio.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tmax.eTest.Common.model.uk.UkDescriptionVersion;
 import com.tmax.eTest.Common.model.uk.UkDesriptionVersionCompositeKey;
@@ -14,6 +16,10 @@ import com.tmax.eTest.KdbStudio.dto.UkRelatedVideoDTO;
 import com.tmax.eTest.KdbStudio.dto.UkUpdateDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javassist.NotFoundException;
@@ -26,13 +32,12 @@ public class UkService {
     @Autowired
     UkDescriptionVersionRepo ukVersionRepo;
 
-    public List<UkGetOutputDTO> getAllUkInfoForVersion(Integer versionId) {
-        List<UkGetOutputDTO> result = new ArrayList<UkGetOutputDTO>();
+    public List<UkGetOutputDTO> getUkInfo(Integer versionId) {
+        List<UkGetOutputDTO> ukList = new ArrayList<UkGetOutputDTO>();
+        
+        List<UkDescriptionVersion> allUkList = ukVersionRepo.findByVersionIdOrderByUkId(new Long(versionId));
 
-        List<UkDescriptionVersion> ukList = ukVersionRepo.findByVersionIdOrderByUkId(new Long(versionId));
-        log.info("ukList : " + Integer.toString(ukList.size()));
-
-        for (UkDescriptionVersion ukInfo : ukList) {
+        for (UkDescriptionVersion ukInfo : allUkList) {
             List<UkRelatedVideoDTO> videoList = new ArrayList<UkRelatedVideoDTO>();
             List<UkRelatedArticleDTO> articleList = new ArrayList<UkRelatedArticleDTO>();
 
@@ -73,8 +78,85 @@ public class UkService {
             template.setRelatedVideo(videoList);
             template.setRelatedArticle(articleList);
 
-            result.add(template);
+            ukList.add(template);
         }
+
+        return ukList;
+    }
+
+    public Map<String, Object> getAllPagedUkInfoForVersion(Integer versionId, Integer page, Integer size) {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        List<UkGetOutputDTO> ukList = new ArrayList<UkGetOutputDTO>();
+
+        // 페이징 조건 설정
+        Pageable pageAndSize = PageRequest.of(page, size, Sort.by("ukId").ascending());
+
+        log.info("Getting uk version infos......");
+        Page<UkDescriptionVersion> pages = ukVersionRepo.findByVersionId(new Long(versionId), pageAndSize);
+        log.info(Long.toString(pages.getTotalElements()));
+        // 선정한 페이지에 속하는 UK 정보들 (: target infos)
+        List<UkDescriptionVersion> ukQueryResult = pages.getContent();
+        // 페이지 관련 추가 변수들 (: paging infos)
+        Integer max_page_num = pages.getTotalPages();
+        Integer current_page = pages.getNumber();
+        Integer page_size = pages.getSize();
+        Long total_elements_num = pages.getTotalElements();
+        
+        log.info("ukList : " + Integer.toString(ukQueryResult.size()));
+
+        // 조회해온 특정 페이지의 UK들을 output 형식에 맞게 가공
+        for (UkDescriptionVersion ukInfo : ukQueryResult) {
+            List<UkRelatedVideoDTO> videoList = new ArrayList<UkRelatedVideoDTO>();
+            List<UkRelatedArticleDTO> articleList = new ArrayList<UkRelatedArticleDTO>();
+
+            // basic uk info
+            UkGetOutputDTO template = UkGetOutputDTO.builder().ukId(ukInfo.getUkId().intValue())
+                                                                .ukName(ukInfo.getUkName())
+                                                                .partName(ukInfo.getUkMaster().getPart())
+                                                                .ukDescription(ukInfo.getUkDescription())
+                                                                .externalLink(ukInfo.getExternalLink())
+                                                                .updateDate(ukInfo.getEditDate())
+                                                                .build();
+            log.info("DTO uk_id : " + Integer.toString(template.getUkId()));
+            // video & article info
+            for (VideoUkRel video : ukInfo.getUkMaster().getVideoUks()) {
+                if (video.getVideo().getType().equalsIgnoreCase("VIDEO")) {
+                    Video videoObj = video.getVideo();
+                    UkRelatedVideoDTO videoInfo = UkRelatedVideoDTO.builder().videoId(video.getVideoId())
+                                                                                .videoSrc(videoObj.getVideoSrc())
+                                                                                .title(videoObj.getTitle())
+                                                                                .imgSrc(videoObj.getImgSrc())
+                                                                                .totalTime(videoObj.getTotalTime())
+                                                                                .views(videoObj.getVideoHit().getHit())
+                                                                                .build();
+                    videoList.add(videoInfo);
+                } else if (video.getVideo().getType().equalsIgnoreCase("ARTICLE")) {
+                    Video articleObj = video.getVideo();
+                    UkRelatedArticleDTO articleInfo = UkRelatedArticleDTO.builder().articleId(video.getVideoId())
+                                                                                    .articleSrc(articleObj.getVideoSrc())
+                                                                                    .title(articleObj.getTitle())
+                                                                                    .imgSrc(articleObj.getImgSrc())
+                                                                                    .totalTime(articleObj.getTotalTime())
+                                                                                    .views(articleObj.getVideoHit().getHit())
+                                                                                    .build();
+                    articleList.add(articleInfo);
+                }
+            }
+
+            template.setRelatedVideo(videoList);
+            template.setRelatedArticle(articleList);
+
+            ukList.add(template);
+        }
+
+        // construct output format
+        result.put("ukList", ukList);
+        result.put("maxPageNum", max_page_num);
+        result.put("currentPage", current_page);
+        result.put("pageSize", page_size);
+        result.put("totalElementsNum", total_elements_num);
+
         return result;
     }
 
