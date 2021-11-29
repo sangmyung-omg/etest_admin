@@ -4,17 +4,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @Component
-@PropertySource("classpath:push-admin-config.properties")  
+@PropertySource("classpath:push-admin-config.properties")
 public class CommentUtil {
 	
-	@Value("${backend.base.uri}")
-    static String userBackendUri;
+    @Value("${backend.base.uri}")
+    String userBackendUri;
 	
-	public static void putCommentToUserBackend()
+	public void putCommentToUserBackend()
 	{
-		WebClient.create().put().uri(userBackendUri + "/report/diagnosis/comment");
+		ResponseSpec response = WebClient.create().put().uri(userBackendUri + "/report/diagnosis/comment").retrieve();
+		
+		log.info("put to " + userBackendUri + "/report/diagnosis/comment");
+		if(response != null)
+			log.info(response.bodyToMono(Boolean.class).block());
 	}
 	
 	public enum CommentType{
