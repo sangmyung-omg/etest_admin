@@ -66,6 +66,6 @@ public class VersionGenerator {
     			}
     		}
     	}
-    	log.info("now comment version name is Ver 1."+versionIdx);
+    	log.info("Now New comment version name will be Ver 1."+versionIdx);
     }
 }
