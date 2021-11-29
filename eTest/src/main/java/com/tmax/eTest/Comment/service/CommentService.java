@@ -1,6 +1,8 @@
 package com.tmax.eTest.Comment.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,10 @@ public class CommentService {
 		CommentMapDTO result = new CommentMapDTO();
 		
 		List<CommentInfo> allComment = commentRepo.findAll();
+		
+		// version sort.
+		allComment.sort(Comparator.comparing(CommentInfo::getVersionName));
+		
 		
 		for(CommentInfo comment : allComment)
 		{

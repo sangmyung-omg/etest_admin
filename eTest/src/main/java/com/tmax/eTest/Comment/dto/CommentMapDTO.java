@@ -1,7 +1,7 @@
 package com.tmax.eTest.Comment.dto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +15,10 @@ import lombok.extern.log4j.Log4j2;
 @Data
 @NoArgsConstructor
 public class CommentMapDTO {
-	Map<String, List<CommentDTO>> gi = new HashMap<>();
-	Map<String, List<CommentDTO>> risk = new HashMap<>();
-	Map<String, List<CommentDTO>> invest = new HashMap<>();
-	Map<String, List<CommentDTO>> knowledge = new HashMap<>();
+	Map<String, List<CommentDTO>> gi = new LinkedHashMap<>();
+	Map<String, List<CommentDTO>> risk = new LinkedHashMap<>();
+	Map<String, List<CommentDTO>> invest = new LinkedHashMap<>();
+	Map<String, List<CommentDTO>> knowledge = new LinkedHashMap<>();
 	
 	String selectedVersion = "";
 	
