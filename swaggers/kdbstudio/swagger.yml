@@ -190,7 +190,7 @@ paths:
     get:
       tags:
         - UK
-      summary : 필터/페이징 UK 정보 리턴
+      summary : 전체 UK 정보 리턴
       description : 필터/페이징 UK 정보 리턴
       parameters:
         - name: versionId
@@ -200,31 +200,6 @@ paths:
           schema:
             type: integer
             example: 1
-        - name: part 
-          description: 분류 종류 필터링. null이면 모든 분류 적용.
-          in: query
-          required: false
-          schema:
-            type: array
-            items: 
-              type: string
-            example: 
-              - 생애주기
-              - 필요자금 마련 방법
-        - name: page
-          description: 현재 페이지. null이면 모든 uk 리스트 리턴.
-          in: query
-          required: false
-          schema:
-            type: integer
-            example: 1
-        - name: size
-          description: 페이지 사이즈. null이면 모든 uk 리스트 리턴.
-          in: query
-          required: false
-          schema:
-            type: integer
-            example: 10
       responses:
         200:
           description: OK
@@ -275,6 +250,68 @@ paths:
                   message:
                     type: string
                     example: "Duplicate information: ukName"
+  /uk/page:
+    get:
+      deprecated: true
+      tags:
+        - UK
+      summary : 필터/페이징 UK 정보 리턴
+      description : 필터/페이징 UK 정보 리턴
+      parameters:
+        - name: versionId
+          description: 버전 Id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: part 
+          description: 분류 종류 필터링. null이면 모든 분류 적용.
+          in: query
+          required: false
+          schema:
+            type: array
+            items: 
+              type: string
+            example: 
+              - 생애주기
+              - 필요자금 마련 방법
+        - name: page
+          description: 현재 페이지. null이면 모든 uk 리스트 리턴.
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: size
+          description: 페이지 사이즈. null이면 모든 uk 리스트 리턴.
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 10
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  currentPage:
+                    type: integer
+                    example: 1
+                  pageSize:
+                    type: integer
+                    example: 10
+                  maxPageNum:
+                    type: integer
+                    example: 90
+                  totalElementsNum:
+                    type: integer
+                    example: 891
+                  ukList:
+                    items:
+                      $ref: '#/components/schemas/UKInfoDTO'
 
   # /part:
   #   get:
