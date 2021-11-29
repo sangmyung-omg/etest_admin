@@ -21,6 +21,9 @@ public class CommentVersionService {
 	@Autowired
 	CommentVersionRepo versionRepo;
 	
+	@Autowired
+	CommentUtil util;
+	
 	public boolean isExistVersion(String versionName)
 	{
 		return versionRepo.existsById(versionName);
@@ -68,7 +71,7 @@ public class CommentVersionService {
 		if(result)
 		{
 			versionRepo.saveAll(newVersionList);
-			CommentUtil.putCommentToUserBackend();
+			util.putCommentToUserBackend();
 		}
 		
 		return result;
