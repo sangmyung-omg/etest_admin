@@ -59,7 +59,6 @@ public class ManageUserService {
                 .user_uuid(user.getUserUuid())
                 .nick_name(user.getNickname())
                 .email(user.getEmail())
-                .birthday(user.getBirthday())
                 .build();
 
     }

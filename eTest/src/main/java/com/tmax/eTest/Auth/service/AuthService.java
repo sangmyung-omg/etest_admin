@@ -44,10 +44,8 @@ public class AuthService {
                         .email(signUpRequestDto.getEmail())
                         .provider(signUpRequestDto.getProvider())
                         .role(Role.USER)
-                        .name(signUpRequestDto.getName())
                         .userUuid(UUID.randomUUID().toString())
                         .providerId(signUpRequestDto.getProviderId())
-                        .birthday(signUpRequestDto.getBirthday())
                         .older_than_14(true)
                         .service_agreement(true)
                         .collect_info(true)
@@ -127,7 +125,6 @@ public class AuthService {
     }
     @Transactional
     public CMRespDto<?> login(String providerId, AuthProvider provider,String ip) {
-        System.out.println(ip);
         Optional<UserMaster> userMasterOptional =
                 userRepository.findByProviderIdAndProvider(providerId, provider);
         if (userMasterOptional.isPresent()) {
@@ -141,7 +138,6 @@ public class AuthService {
             Map<String, String> info = new HashMap<>();
             info.put("jwtToken", jwtToken);
             info.put("email", userMaster.getEmail());
-            info.put("birthday", userMaster.getBirthday().toString());
             info.put("nickname", userMaster.getNickname());
             info.put("provider", userMaster.getProvider().toString());
             info.put("providerId", userMaster.getProviderId().toString());
@@ -169,18 +165,7 @@ public class AuthService {
             } catch (ParseException e) {
                 return new CMRespDto<>(500,"LRS 전송 실패","실패");
             }
-
-            List<String> IpList = userRepository.findAllByIp();
-            if (IpList.contains(ip)) {
-                info.put("name", userMaster.getName());
-                return new CMRespDto<>(203, "관리자 로그인 성공", info);
-            }
             return new CMRespDto<>(200, "jwt 반환", info);
-        }
-
-        List<String> IpList = userRepository.findAllByIp();
-        if (IpList.contains(ip)) {
-            return new CMRespDto<>(202, "관리자 로그인 실패", ip);
         }
         return new CMRespDto<>(201, "회원 가입이 안된 유저",null);
     }

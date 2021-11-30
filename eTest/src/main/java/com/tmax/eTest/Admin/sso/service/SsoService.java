@@ -1,6 +1,5 @@
 package com.tmax.eTest.Admin.sso.service;
 
-import com.tmax.eTest.Admin.managementHistory.filter.ManagementHistoryFilter;
 import com.tmax.eTest.Auth.dto.AuthProvider;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Auth.dto.PrincipalDetails;
@@ -50,16 +49,12 @@ public class SsoService {
             try {
                 String user_id = (String) httpSession.getAttribute("user_id");
                 Optional<UserMaster> userMasterOptional = userRepository.findByUserUuid(user_id);
-                String string = "2019-01-10";
-                LocalDate date = LocalDate.parse(string, DateTimeFormatter.ISO_DATE);
                 if (!(userMasterOptional.isPresent())) {
                     UserMaster userMaster = UserMaster.builder()
                             .nickname(user_id)
                             .email(user_id)
                             .provider(AuthProvider.kakao)
                             .role(Role.MASTER)
-                            .name(user_id)
-                            .birthday(date)
                             .userUuid(user_id)
                             .providerId(user_id)
                             .older_than_14(true)
@@ -69,11 +64,11 @@ public class SsoService {
                     userRepository.save(userMaster);
                     PrincipalDetails principal = PrincipalDetails.create(userMaster);
                     String jwtToken = jwtTokenUtil.generateAccessToken(principal);
-                    return new CMRespDto<>(200, "exist user", jwtToken);
+                    return new CMRespDto<>(201, "first login", jwtToken);
                 } else {
                     PrincipalDetails principal = PrincipalDetails.create(userMasterOptional.get());
                     String jwtToken = jwtTokenUtil.generateAccessToken(principal);
-                    return new CMRespDto<>(201, "first login", jwtToken);
+                    return new CMRespDto<>(200, "exist user", jwtToken);
                 }
             } catch (IllegalArgumentException e) {
                 logger.info("IllegalArgumentException");
