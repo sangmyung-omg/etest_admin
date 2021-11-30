@@ -15,7 +15,7 @@ import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
 import static com.tmax.eTest.LRS.model.QStatement.statement;
 
 @Repository("AD-StatementRepository")
-public class StatementRepository extends UserFilterRepository {
+public class StatementRepository {
     private final JPAQueryFactory query;
 
     public StatementRepository(EntityManager entityManager) { this.query = new JPAQueryFactory(entityManager); }
@@ -28,9 +28,7 @@ public class StatementRepository extends UserFilterRepository {
                 .from(statement)
                 .innerJoin(userMaster).on(statement.userId.eq(userMaster.userUuid))
                 .where(
-                        investmentExperienceFilter(filterRepoQueryDTO.getInvestmentExperience()),
                         dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()),
-                        ageGroupFilter(filterRepoQueryDTO.getAgeGroupLowerBound(), filterRepoQueryDTO.getAgeGroupUpperBound()),
                         actionTypeFilter(actionType),
                         sourceTypeFilter(sourceType)
                 )
