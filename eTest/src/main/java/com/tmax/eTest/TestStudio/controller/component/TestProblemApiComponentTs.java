@@ -153,16 +153,28 @@ public class TestProblemApiComponentTs {
 							Set<ProblemChoice> tsChunk = new HashSet<ProblemChoice>();
 							
 							for(BaseProbChoiceDTO PC : requestInfo__.getProbChoices()) {
+								//21.11.30 수정
+								if(PC.getChoiceNum() ==null || PC.getChoiceNum().isEmpty()) {
+									continue;
+								}
+								//21.11.30
+									
 								ProblemChoice problemChoice = new ProblemChoice();
 //								Problem problemTemp = new Problem();
 //								problemTemp.setProbID(problem.getProbID());
 								problemChoice.setProbID(problemServiceETest.findOne(problem.getProbID().longValue()).get());
 //								problemChoice.setProbID(problemTemp);
 								problemChoice.setChoiceNum( Long.parseLong( PC.getChoiceNum() ) );
-								UkMaster ukMasterTemp = new UkMaster();
-								ukMasterTemp.setUkId(Integer.parseInt( PC.getUkID() ) );
-//								problemChoice.setUkId(ukServiceETest.findOneByUKId( Long.parseLong(PC.getUkID()) ));
-								problemChoice.setUkId(ukMasterTemp);
+								
+								//21.11.30 수정
+								if( !(PC.getUkID() ==null || PC.getUkID().isEmpty() ) ) {
+									UkMaster ukMasterTemp = new UkMaster();
+									ukMasterTemp.setUkId(Integer.parseInt( PC.getUkID() ) );
+//									problemChoice.setUkId(ukServiceETest.findOneByUKId( Long.parseLong(PC.getUkID()) ));
+									problemChoice.setUkId(ukMasterTemp);
+								}
+								//21.11.30
+								
 								if(PC.getChoiceScore()!=null) {
 									problemChoice.setChoiceScore( Integer.parseInt( PC.getChoiceScore() ) );
 								}
