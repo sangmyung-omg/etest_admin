@@ -1,5 +1,7 @@
-package com.tmax.eTest.Push;
+package com.tmax.eTest.Push.service;
 
+import com.tmax.eTest.Push.dto.AdminPushRequestDTO;
+import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +20,17 @@ public class PushService {
     @Value("${backend.base.uri}")
     String baseUri;
 
-    @Value("${push.api.url}")
-    String pushAPI;
+    @Value("${push.api.admin}")
+    String pushAdminAPI;
+
+    @Value("${push.api.category}")
+    String pushCategoryAPI;
 
     public Mono<String> adminPushRequest(AdminPushRequestDTO data) {
-        return WebClient.create().post().uri(baseUri + pushAPI).bodyValue(data).retrieve().bodyToMono(String.class);
+        return WebClient.create().post().uri(baseUri + pushAdminAPI).bodyValue(data).retrieve().bodyToMono(String.class);
+    }
+
+    public Mono<String> categoryPushRequest(CategoryPushRequestDTO data) {
+        return WebClient.create().post().uri(baseUri + pushCategoryAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 }
