@@ -15,7 +15,7 @@ import static com.tmax.eTest.Common.model.report.QMinitestReport.minitestReport;
 import static com.tmax.eTest.Common.model.user.QUserMaster.userMaster;
 
 @Repository
-public class MinitestReportRepository extends UserFilterRepository {
+public class MinitestReportRepository {
     private final JPAQueryFactory query;
 
     public MinitestReportRepository (EntityManager entityManager) {
@@ -29,11 +29,7 @@ public class MinitestReportRepository extends UserFilterRepository {
                     minitestReport.minitestUkMastery))
                 .from(minitestReport)
                 .join(userMaster).on(userMaster.userUuid.eq(minitestReport.userUuid))
-                .where(
-                        investmentExperienceFilter(filterRepoQueryDTO.getInvestmentExperience()),
-                        dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()),
-                        ageGroupFilter(filterRepoQueryDTO.getAgeGroupLowerBound(), filterRepoQueryDTO.getAgeGroupUpperBound())
-                )
+                .where(dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()))
                 .orderBy(minitestReport.minitestDate.asc())
                 .fetch();
     }

@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Admin Push API
+  version: 1.0.0
+  description: 푸시 요청 API
+servers:
+  - url: http://220.90.208.217:8080
+tags:
+  - name: Push
+    description: Push 보내기
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /push/admin:
+    post:
+      tags:
+        - Push
+      summary: 관리자 push
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                token:
+                  - >-
+                    dKz7V3QcRDq9qHyobwki1N:APA91bHbs_ymFN4ZTzCENb5y-SVUYV2Gd7nrnswsPAzXCNgiP19TdAPhLcrVKIxtWZfleMSMTCNsEFbbTDxNvP2ZBfND9BC7EpWexvDVIArUczFVp6WVZYusVY5CZtVteyrlj5FqAI1k
+                category: admin
+                title: push title
+                body: push body
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: admin push sent
+  /push/category:
+    post:
+      tags:
+        - Push
+      summary: 항목별 push
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                category: notice
+                title: test push title
+                body: test push body
+      responses:
+        '200':
+          description: Successful response

@@ -1,5 +1,8 @@
-package com.tmax.eTest.Push;
+package com.tmax.eTest.Push.controller;
 
+import com.tmax.eTest.Push.dto.AdminPushRequestDTO;
+import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.service.PushService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,5 +19,10 @@ public class PushController {
     @PostMapping("admin")
     public Mono<String> adminNotification(@RequestBody AdminPushRequestDTO adminPushRequestDTO) {
         return pushService.adminPushRequest(adminPushRequestDTO);
+    }
+
+    @PostMapping("category")
+    public Mono<String> categoryNotification(@RequestBody CategoryPushRequestDTO categoryPushRequestDTO) {
+        return pushService.categoryPushRequest(categoryPushRequestDTO);
     }
 }
