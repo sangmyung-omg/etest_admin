@@ -4,6 +4,7 @@ import static com.tmax.eTest.Common.model.meta.QMetaCodeMaster.metaCodeMaster;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -35,6 +36,11 @@ public class MetaCodeMasterRepositorySupport extends QuerydslRepositorySupport {
   public Map<String, String> findMetaCodeMapByIds(List<String> metaCodeIds) {
     return query.selectFrom(metaCodeMaster).where(idEq(metaCodeIds)).fetch().stream()
         .collect(Collectors.toMap(MetaCodeMaster::getMetaCodeId, MetaCodeMaster::getCodeName));
+  }
+
+  public Map<String, MetaCodeMaster> findMetaCodeMasterMapByIds(List<String> metaCodeIds) {
+    return query.selectFrom(metaCodeMaster).where(idEq(metaCodeIds)).fetch().stream()
+        .collect(Collectors.toMap(MetaCodeMaster::getMetaCodeId, Function.identity()));
   }
 
   public List<MetaCodeMaster> findMetaCodesByDomain(String domain) {

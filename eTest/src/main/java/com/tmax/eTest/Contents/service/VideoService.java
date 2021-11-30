@@ -27,6 +27,7 @@ import com.tmax.eTest.Common.repository.uk.UkMasterRepo;
 import com.tmax.eTest.Common.repository.video.HashtagRepository;
 import com.tmax.eTest.Common.repository.video.VideoCurriculumRepository;
 import com.tmax.eTest.Common.repository.video.VideoRepository;
+import com.tmax.eTest.Contents.dto.CodeDTO;
 import com.tmax.eTest.Contents.dto.CodeSet;
 import com.tmax.eTest.Contents.dto.ListDTO;
 import com.tmax.eTest.Contents.dto.SizeDTO;
@@ -300,6 +301,9 @@ public class VideoService {
       return null;
     }
     List<String> codes = codeSet.getCodes();
+    Map<String, MetaCodeMaster> metaCodeMasterMap = metaCodeMasterRepositorySupport.findMetaCodeMasterMapByIds(codes);
+    Map<String, CodeDTO> codeMap = metaCodeMasterMap.entrySet().stream()
+        .collect(Collectors.toMap(e -> e.getKey(), e -> convertMetaToDTO(e.getValue())));
     Long ukVersionId = ukVersionManager.getCurrentUkVersionId();
 
     return VideoDTO.builder().videoId(video.getVideoId()).videoSrc(video.getVideoSrc()).title(video.getTitle())
@@ -310,7 +314,7 @@ public class VideoService {
             : !commonUtils.stringNullCheck(video.getVideoSrc()) && video.getVideoSrc().contains(YOUTUBE_TYPE)
                 ? VideoType.YOUTUBE.toString()
                 : VideoType.SELF.toString())
-        .source(source).description(video.getDescription())
+        .description(video.getDescription())
         .uks(video.getVideoUks().stream()
             .map(videoUks -> videoUks.getUkMaster().getUkVersion().stream()
                 .filter(ukVersion -> ukVersion.getVersionId().equals(ukVersionId)).findAny()
@@ -322,11 +326,17 @@ public class VideoService {
         // 상세 추가
         .ukIds(video.getVideoUks().stream().map(videoUks -> Long.valueOf(videoUks.getUkMaster().getUkId()))
             .collect(Collectors.toList()))
-        .related(video.getRelated()).show(video.getShow()).classification(codes.get(1)).largeArea(codes.get(2))
-        .groupArea(codes.get(3)).detailArea(codes.get(4)).particleArea(codes.get(5)).level(codes.get(6))
-        .difficulty(codes.get(7)).source(codes.get(9)).serialNum(codeSet.getSerialNum()).views(codeSet.getViews())
+        .related(video.getRelated()).show(video.getShow()).classification(codeMap.get(codes.get(1)))
+        .largeArea(codeMap.get(codes.get(2))).groupArea(codeMap.get(codes.get(3))).detailArea(codeMap.get(codes.get(4)))
+        .particleArea(codeMap.get(codes.get(5))).level(codeMap.get(codes.get(6))).difficulty(codeMap.get(codes.get(7)))
+        .source(codeMap.get(codes.get(9))).serialNum(codeSet.getSerialNum()).views(codeSet.getViews())
         .likes(codeSet.getLikes()).disLikes(codeSet.getDisLikes()).disLikes(codeSet.getDisLikes())
         .viewDate(commonUtils.strToDate(codeSet.getViewDate())).build();
+  }
+
+  public CodeDTO convertMetaToDTO(MetaCodeMaster metaCodeMaster) {
+    return CodeDTO.builder().codeId(metaCodeMaster.getMetaCodeId()).domain(metaCodeMaster.getDomain())
+        .name(metaCodeMaster.getCodeName()).code(metaCodeMaster.getCode()).build();
   }
 
   public ListDTO.Video convertVideoToDTO(List<Video> videos) {
