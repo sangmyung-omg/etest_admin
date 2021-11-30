@@ -1,16 +1,17 @@
 package com.tmax.eTest.Contents.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class CodeDTO extends CodeCreateDTO {
-  String codeId;
-
-  @Builder
-  public CodeDTO(String domain, String code, String name, String codeId) {
-    super(domain, code, name);
-    this.codeId = codeId;
-    this.code = code;
-  }
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class CodeDTO {
+  private String codeId;
+  private String domain;
+  private String code;
+  private String name;
 }

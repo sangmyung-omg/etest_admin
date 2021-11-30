@@ -677,7 +677,7 @@ definitions:
                 type: object
                 required:
                 - choiceNum
-                - ukID
+                # - ukID
                 properties: 
                   choiceNum:
                     type: string

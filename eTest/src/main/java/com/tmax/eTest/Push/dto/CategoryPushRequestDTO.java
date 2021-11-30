@@ -1,14 +1,11 @@
-package com.tmax.eTest.Push;
+package com.tmax.eTest.Push.dto;
 
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
-public class AdminPushRequestDTO {
-    private List<String> token;
+public class CategoryPushRequestDTO {
     private String category;
     private String title;
     private String body;
