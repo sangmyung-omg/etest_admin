@@ -1,6 +1,5 @@
 package com.tmax.eTest.Admin.sso.controller;
 
-import com.tmax.eTest.Admin.managementHistory.filter.ManagementHistoryFilter;
 import com.tmax.eTest.Admin.sso.dto.SessionTestDto;
 import com.tmax.eTest.Admin.sso.service.SsoService;
 import com.tmax.eTest.Auth.dto.AuthProvider;
@@ -28,7 +27,7 @@ import java.util.Enumeration;
 
 @RestController
 public class SsoController {
-    private static final Logger logger = LoggerFactory.getLogger(ManagementHistoryFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SsoController.class);
 
 
     @Autowired

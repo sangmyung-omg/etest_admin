@@ -14,7 +14,7 @@ import java.util.List;
 import static com.tmax.eTest.Common.model.report.QDiagnosisReport.diagnosisReport;
 
 @Repository("AD-DiagnosisReportRepository")
-public class DiagnosisReportRepository extends UserFilterRepository {
+public class DiagnosisReportRepository {
     private final JPAQueryFactory query;
 
     public DiagnosisReportRepository(EntityManager entityManager) {
@@ -30,20 +30,11 @@ public class DiagnosisReportRepository extends UserFilterRepository {
                     diagnosisReport.investScore,
                     diagnosisReport.knowledgeScore))
                 .from(diagnosisReport)
-                .where(
-                        investmentExperienceFilter(filterRepoQueryDTO.getInvestmentExperience()),
-                        dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()),
-                        ageGroupFilter(filterRepoQueryDTO.getAgeGroupLowerBound(), filterRepoQueryDTO.getAgeGroupUpperBound())
-                )
+                .where(dateFilter(filterRepoQueryDTO.getDateFrom(), filterRepoQueryDTO.getDateTo()))
                 .orderBy(diagnosisReport.diagnosisDate.asc())
                 .fetch();
     }
 
-    public BooleanExpression investmentExperienceFilter(int investmentExperience) {
-        if (investmentExperience == 0)
-            return null;
-        return diagnosisReport.investPeriod.eq(investmentExperience);
-    }
     private BooleanExpression dateFilter(Timestamp dateFrom, Timestamp dateTo){
         if (dateFrom == null & dateTo == null)
             return null;
