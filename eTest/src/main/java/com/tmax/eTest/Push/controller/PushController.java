@@ -16,13 +16,23 @@ import reactor.core.publisher.Mono;
 public class PushController {
     private final PushService pushService;
 
-    @PostMapping("admin")
-    public Mono<String> adminNotification(@RequestBody AdminPushRequestDTO adminPushRequestDTO) {
-        return pushService.adminPushRequest(adminPushRequestDTO);
+    @PostMapping("admin/token")
+    public Mono<String> adminPushRequestByToken(@RequestBody AdminPushRequestDTO adminPushRequestDTO) {
+        return pushService.adminPushRequestByToken(adminPushRequestDTO);
+    }
+
+    @PostMapping("admin/user")
+    public Mono<String> adminPushRequestByUserUuid(@RequestBody AdminPushRequestDTO adminPushRequestDTO) {
+        return pushService.adminPushRequestByUserUuid(adminPushRequestDTO);
     }
 
     @PostMapping("category")
-    public Mono<String> categoryNotification(@RequestBody CategoryPushRequestDTO categoryPushRequestDTO) {
+    public Mono<String> categoryPushRequest(@RequestBody CategoryPushRequestDTO categoryPushRequestDTO) {
         return pushService.categoryPushRequest(categoryPushRequestDTO);
+    }
+
+    @PostMapping("category/user")
+    public Mono<String> categoryPushRequestByUserUuid(@RequestBody CategoryPushRequestDTO categoryPushRequestDTO) {
+        return pushService.categoryPushRequestByUserUuid(categoryPushRequestDTO);
     }
 }

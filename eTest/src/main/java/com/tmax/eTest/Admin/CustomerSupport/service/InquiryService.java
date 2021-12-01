@@ -5,6 +5,9 @@ import com.tmax.eTest.Common.model.support.Inquiry;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryDTO;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryFileDTO;
 import com.tmax.eTest.Admin.CustomerSupport.repository.InquiryRepository;
+import com.tmax.eTest.Common.model.support.Notice;
+import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.service.PushService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,13 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("CustomerSupportInquiryService")
-public class InquiryService {
+public class InquiryService extends PushService {
 
     protected final Log LOGGER = LogFactory.getLog(getClass());
 
@@ -87,7 +91,12 @@ public class InquiryService {
         inquiry.setAnswer_time(LocalDateTime.now());
 
         inquiryRepository.save(inquiry);
-
+        categoryPushRequest(CategoryPushRequestDTO.builder()
+                .category("inquiry")
+                .title("1:1문의")
+                .body("1:1 문의에 대한 답변을 확인해보세요.")
+                .build())
+                .block();
         return InquiryDTO.builder()
                 .inquiryId(inquiry.getId())
                 .type(inquiry.getType())
@@ -115,5 +124,4 @@ public class InquiryService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Inquiry with Given Id"));
         inquiryRepository.delete(inquiry);
     }
-
 }
