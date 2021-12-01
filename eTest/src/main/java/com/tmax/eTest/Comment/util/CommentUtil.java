@@ -1,5 +1,6 @@
 package com.tmax.eTest.Comment.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -10,17 +11,28 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Component
-@PropertySource("classpath:push-admin-config.properties")
+@PropertySource("classpath:application.properties")
 public class CommentUtil {
 	
-    @Value("${backend.base.uri}")
-    String userBackendUri;
+    private String userBackCommentRefreshURI = "http://220.90.208.217:8080/report/diagnosis/comment";
 	
+    @Autowired
+    public CommentUtil(
+    		@Value("${etest.user.backend.host}") String IP, 
+			@Value("${etest.user.backend.port}") String PORT)
+    {
+    	log.info("User Backend URI = "+IP+":"+PORT);
+    	
+    	this.userBackCommentRefreshURI = String.format("http://%s:%s/report/diagnosis/comment", IP, PORT);
+    }	
+
+    
+    
 	public void putCommentToUserBackend()
 	{
-		ResponseSpec response = WebClient.create().put().uri(userBackendUri + "/report/diagnosis/comment").retrieve();
+		ResponseSpec response = WebClient.create().put().uri(userBackCommentRefreshURI).retrieve();
 		
-		log.info("put to " + userBackendUri + "/report/diagnosis/comment");
+		log.info("put to " + userBackCommentRefreshURI);
 		if(response != null)
 			log.info(response.bodyToMono(Boolean.class).block());
 	}

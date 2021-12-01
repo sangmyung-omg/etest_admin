@@ -4,13 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +20,9 @@ import com.tmax.eTest.Comment.dto.CommentDTO;
 import com.tmax.eTest.Comment.dto.CommentMapDTO;
 import com.tmax.eTest.Comment.service.CommentService;
 import com.tmax.eTest.Comment.service.CommentVersionService;
+import com.tmax.eTest.Comment.util.CommentUtil;
 import com.tmax.eTest.Comment.util.VersionGenerator;
-import com.tmax.eTest.Push.PushService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -42,6 +36,9 @@ public class CommentController {
 	
 	@Autowired
 	CommentVersionService versionService;
+	
+	@Autowired
+	CommentUtil util;
 
 	
 	@GetMapping(value="", produces = "application/json; charset=utf-8")
@@ -71,7 +68,10 @@ public class CommentController {
 		int savedListSize = commentService.saveComment(commentList);
 		
 		if(savedListSize == commentList.size())
-			return ResponseEntity.ok(savedListSize);
+		{
+			util.putCommentToUserBackend();
+			return ResponseEntity.ok(savedListSize);	
+		}
 		else
 			return ResponseEntity.internalServerError().body("Succeed save comment num = "+ savedListSize);
 	}
@@ -82,7 +82,10 @@ public class CommentController {
 			@RequestParam("versionName") String versionName) throws Exception{
 	
 		if(versionService.changeActivateVersion(versionName))
+		{
+			util.putCommentToUserBackend();
 			return ResponseEntity.ok(true);
+		}
 		else
 			return ResponseEntity.internalServerError().body("Check versionName. Not Invalid. Now versionName is "
 					+ versionName);
