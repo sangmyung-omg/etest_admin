@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.tmax.eTest.Common.model.uk.UkDescriptionVersion;
 import com.tmax.eTest.Common.model.uk.VersionMaster;
@@ -133,10 +134,19 @@ public class VersionService {
     public boolean deleteVersionInfo(Long versionId) {
         // UK_DESCRIPTION_VERSION 에서 삭제x
         ukVersionRepo.deleteAllByVersionId(versionId);
-        // VERSION_MASTER 에서 삭제
-        versionRepo.deleteById(versionId);
-
-        return true;
+        // VERSION_MASTER 에서 데이터 row 자체는 남겨두고, IS_DELETED 컬럼만 1로 변경 - 새 버전 생성 시 버전 num 알기 위해
+        // versionRepo.deleteById(versionId);
+        Optional<VersionMaster> queryResult = versionRepo.findById(versionId);
+        if (queryResult.isPresent()) {
+            VersionMaster versionInfo = queryResult.get();
+            versionInfo.setIsDeleted("1");
+            versionRepo.save(versionInfo);
+            log.info("Successfully set is_deleted = 1 for version id = " + Long.toString(versionId));
+            return true;
+        } else {
+            log.info("Version info not found for version id = " + Long.toString(versionId));
+            return false;
+        }
     }
 
     public String applyDefaultVersion(Long versionId) throws NotFoundException {

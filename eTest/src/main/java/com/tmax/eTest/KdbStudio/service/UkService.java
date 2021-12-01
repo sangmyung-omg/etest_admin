@@ -35,7 +35,8 @@ public class UkService {
     public List<UkGetOutputDTO> getUkInfo(Integer versionId) {
         List<UkGetOutputDTO> ukList = new ArrayList<UkGetOutputDTO>();
         
-        List<UkDescriptionVersion> allUkList = ukVersionRepo.findByVersionIdOrderByUkId(new Long(versionId));
+        // List<UkDescriptionVersion> allUkList = ukVersionRepo.findByVersionIdOrderByUkId(new Long(versionId));
+        List<UkDescriptionVersion> allUkList = ukVersionRepo.findByVersionIdFetchJoin(new Long(versionId));
 
         for (UkDescriptionVersion ukInfo : allUkList) {
             List<UkRelatedVideoDTO> videoList = new ArrayList<UkRelatedVideoDTO>();
