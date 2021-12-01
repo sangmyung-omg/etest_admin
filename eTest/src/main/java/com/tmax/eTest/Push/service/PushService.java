@@ -20,17 +20,31 @@ public class PushService {
     @Value("${backend.base.uri}")
     String baseUri;
 
-    @Value("${push.api.admin}")
-    String pushAdminAPI;
+    @Value("${push.api.admin.token}")
+    String pushAdminTokenAPI;
+
+    @Value("${push.api.admin.user}")
+    String pushAdminUserAPI;
 
     @Value("${push.api.category}")
     String pushCategoryAPI;
 
-    public Mono<String> adminPushRequest(AdminPushRequestDTO data) {
-        return WebClient.create().post().uri(baseUri + pushAdminAPI).bodyValue(data).retrieve().bodyToMono(String.class);
+    @Value("${push.api.category.user}")
+    String pushCategoryUserAPI;
+
+    public Mono<String> adminPushRequestByToken(AdminPushRequestDTO data) {
+        return WebClient.create().post().uri(baseUri + pushAdminTokenAPI).bodyValue(data).retrieve().bodyToMono(String.class);
+    }
+
+    public Mono<String> adminPushRequestByUserUuid(AdminPushRequestDTO data) {
+        return WebClient.create().post().uri(baseUri + pushAdminUserAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 
     public Mono<String> categoryPushRequest(CategoryPushRequestDTO data) {
         return WebClient.create().post().uri(baseUri + pushCategoryAPI).bodyValue(data).retrieve().bodyToMono(String.class);
+    }
+
+    public Mono<String> categoryPushRequestByUserUuid(CategoryPushRequestDTO data) {
+        return WebClient.create().post().uri(baseUri + pushCategoryUserAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 }
