@@ -364,6 +364,12 @@ definitions:
             properties: 
               curriculumID:
                 type: string
+              chapter:
+                type: string
+              section:
+                type: string
+              subsection:
+                type: string
               subject:
                 type: string
               status:
