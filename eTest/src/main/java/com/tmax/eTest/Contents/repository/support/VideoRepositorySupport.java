@@ -8,6 +8,7 @@ import static com.tmax.eTest.Common.model.video.QVideoBookmark.videoBookmark;
 import static com.tmax.eTest.Common.model.video.QVideoHashtag.videoHashtag;
 import static com.tmax.eTest.Common.model.video.QVideoUkRel.videoUkRel;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +90,10 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
     return query.select(video).from(video).fetchCount();
   }
 
+  public Long findUpdateVideoSize(Date from, Date to) {
+    return query.select(video).from(video).where(checkUpdate(from, to)).fetchCount();
+  }
+
   public List<Video> findVideosByCurriculum(Long curriculumId, SortType sort, String keyword) {
     return multipleFetchJoin().where(curriculumEq(curriculumId)).where(checkKeyword(keyword))
         .orderBy(getVideoSortedColumn(sort)).distinct().fetch();
@@ -129,6 +134,13 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
 
   private BooleanExpression curriculumEq(Long curriculumId) {
     return commonUtils.objectNullcheck(curriculumId) ? null : video.videoCurriculum.curriculumId.eq(curriculumId);
+  }
+
+  private BooleanExpression checkUpdate(Date from, Date to) {
+    if (commonUtils.objectNullcheck(from) || commonUtils.objectNullcheck(to))
+      throw new ContentsException(ErrorCode.PUSH_ERROR, "Date is Null");
+    String show = "1";
+    return video.registerDate.between(from, to).and(video.show.eq(show));
   }
 
   private BooleanExpression checkKeyword(String keyword) {

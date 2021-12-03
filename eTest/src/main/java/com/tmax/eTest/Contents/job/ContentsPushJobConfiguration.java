@@ -1,21 +1,14 @@
 package com.tmax.eTest.Contents.job;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import com.tmax.eTest.Common.model.stat.HitStat;
-import com.tmax.eTest.Common.repository.stat.HitStatRepository;
+import com.tmax.eTest.Contents.repository.support.VideoRepositorySupport;
 import com.tmax.eTest.Contents.util.CommonUtils;
-import com.tmax.eTest.Contents.util.LRSUtils;
-import com.tmax.eTest.LRS.dto.GetStatementInfoDTO;
-import com.tmax.eTest.LRS.dto.StatementDTO;
-import com.tmax.eTest.LRS.util.LRSAPIManager;
+import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.service.PushService;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -38,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-public class StatJobConfiguration extends DefaultBatchConfigurer {
+public class ContentsPushJobConfiguration extends DefaultBatchConfigurer {
 
   // For Spring batch job to apply Tibero
   ////////////////////////////////////////////////////////////////
@@ -71,16 +64,13 @@ public class StatJobConfiguration extends DefaultBatchConfigurer {
   public StepBuilderFactory stepBuilderFactory;
 
   @Autowired
-  private LRSUtils lrsUtils;
-
-  @Autowired
   private CommonUtils commonUtils;
 
   @Autowired
-  private LRSAPIManager lrsapiManager;
+  private PushService pushService;
 
   @Autowired
-  private HitStatRepository hitStatRepository;
+  private VideoRepositorySupport videoRepositorySupport;
 
   @Bean
   public Job statJob() {
@@ -93,31 +83,19 @@ public class StatJobConfiguration extends DefaultBatchConfigurer {
         .tasklet((contribution, chunkContext) -> {
 
           LocalDate now = LocalDate.parse(chunkContext.getStepContext().getJobParameters().get("now").toString());
-          Timestamp nowDate = Timestamp.valueOf(now.atStartOfDay());
-          Timestamp tomorrowDate = Timestamp.valueOf(now.plusDays(1).atStartOfDay());
+          Date nowDate = Date.valueOf(now);
+          Date lastWeekDate = Date.valueOf(now.minusWeeks(1));
           log.info("Job Date: " + nowDate);
 
-          // lrsService.init("/StatementList");
-          // LRSGetStatementDTO lrsGetStatementDTO = lrsService.makeGetStatement(nowDate,
-          // tomorrowDate);
-          // List<LRSStatementDTO> lrsStatementDTOs =
-          // lrsService.getStatementList(lrsGetStatementDTO);
+          Long update = videoRepositorySupport.findUpdateVideoSize(lastWeekDate, nowDate);
 
-          GetStatementInfoDTO getStatementInfoDTO = lrsUtils.makeGetStatement(nowDate, tomorrowDate);
-          List<StatementDTO> statementDTOs = lrsapiManager.getStatementList(getStatementInfoDTO);
-          Map<String, Long> counterMap = statementDTOs.stream()
-              .filter(e -> e.getActionType().equals(LRSUtils.ACTION_TYPE.enter.name()))
-              .collect(Collectors.groupingBy(e -> e.getSourceType(), Collectors.counting()));
-          log.info("StateMent Size : " + counterMap.size());
+          String category = "content";
+          String title = "금융투자 콘텐츠몰";
+          String body = String.format("신규 콘텐츠 %d건이 업데이트 되었습니다.", update);
 
-          Date date = new Date(nowDate.getTime());
-          if (!hitStatRepository.existsByStatDate(date))
-            hitStatRepository.save(HitStat.builder().statDate(date).build());
-
-          hitStatRepository.updateHit(date, commonUtils.zeroIfNull(counterMap.get(LRSUtils.SOURCE_TYPE.video.name())),
-              commonUtils.zeroIfNull(counterMap.get(LRSUtils.SOURCE_TYPE.textbook.name())),
-              commonUtils.zeroIfNull(counterMap.get(LRSUtils.SOURCE_TYPE.wiki.name())),
-              commonUtils.zeroIfNull(counterMap.get(LRSUtils.SOURCE_TYPE.article.name())));
+          pushService
+              .categoryPushRequest(CategoryPushRequestDTO.builder().category(category).title(title).body(body).build())
+              .block();
 
           log.info("Job Success!");
           return RepeatStatus.FINISHED;

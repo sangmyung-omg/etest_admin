@@ -20,15 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @EnableScheduling
-public class StatJobScheduler {
+public class ContentsPushJobScheduler {
 
   @Autowired
   private JobLauncher jobLauncher;
 
   @Autowired
-  private StatJobConfiguration statJobConfiguration;
+  private ContentsPushJobConfiguration statJobConfiguration;
 
-  @Scheduled(cron = "0 59 * * * *")
+  @Scheduled(cron = "0 0 13 ? * FRI")
   public void runJob() {
 
     Map<String, JobParameter> confMap = new HashMap<String, JobParameter>();
