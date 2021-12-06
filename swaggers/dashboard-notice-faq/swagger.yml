@@ -1,0 +1,1997 @@
+openapi: 3.0.0
+info:
+  title: 대시보드/공지사항/자주묻는질문
+  version: 1.0.0
+servers:
+  - url: http://220.90.208.226:8080
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /submaster/dashboard/overall:
+    post:
+      tags:
+        - default
+      summary: 대시보드 전체 현황
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                dateFrom: '2021-09-28T03:31:57'
+                dateTo: '2021-09-30T03:31:57'
+                gender: null
+                ageGroup: null
+                investmentExperience: null
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Tue, 02 Nov 2021 02:14:17 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                accessorCollect: 657
+                memberRegistered: 0
+                memberTotal: 6
+                diagnosisTotal: 29
+                diagnosis: 0
+                minitest: 29
+                giScoreLegend:
+                  - 80점 이상
+                  - 60~79점
+                  - 41~60점
+                  - 40점 이하
+                giScoreRatio:
+                  - 0
+                  - 0
+                  - 0
+                  - 0
+                minitestScoreLegend:
+                  - 80점 이상
+                  - 60~79점
+                  - 41~60점
+                  - 40점 이하
+                minitestScoreRatio:
+                  - 0
+                  - 0
+                  - 9
+                  - 20
+                serviceUsageRatio:
+                  diagnosis: 0
+                  minitest: 0.35802469135802467
+                  video: 0.2716049382716049
+                  article: 0.024691358024691357
+                  textbook: 0.345679012345679
+  /submaster/dashboard/member:
+    post:
+      tags:
+        - default
+      summary: 대시보드 회원 현황
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                dateFrom: '2021-09-16T03:31:57'
+                dateTo: '2021-09-16T03:31:57'
+                gender: null
+                ageGroup: null
+                investmentExperience: null
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Tue, 02 Nov 2021 02:21:19 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                accessor:
+                  time:
+                    - '1:00'
+                    - '2:00'
+                    - '3:00'
+                    - '4:00'
+                    - '5:00'
+                    - '6:00'
+                    - '7:00'
+                    - '8:00'
+                    - '9:00'
+                    - '10:00'
+                    - '11:00'
+                    - '12:00'
+                    - '13:00'
+                    - '14:00'
+                    - '15:00'
+                    - '16:00'
+                    - '17:00'
+                    - '18:00'
+                    - '19:00'
+                    - '20:00'
+                    - '21:00'
+                    - '22:00'
+                    - '23:00'
+                  collect:
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 3
+                    - 3
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                    - 4
+                memberChange:
+                  time:
+                    - '1:00'
+                    - '2:00'
+                    - '3:00'
+                    - '4:00'
+                    - '5:00'
+                    - '6:00'
+                    - '7:00'
+                    - '8:00'
+                    - '9:00'
+                    - '10:00'
+                    - '11:00'
+                    - '12:00'
+                    - '13:00'
+                    - '14:00'
+                    - '15:00'
+                    - '16:00'
+                    - '17:00'
+                    - '18:00'
+                    - '19:00'
+                    - '20:00'
+                    - '21:00'
+                    - '22:00'
+                    - '23:00'
+                  memberTotal:
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                    - 6
+                  memberRegistered:
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+  /submaster/dashboard/diagnosis:
+    post:
+      tags:
+        - default
+      summary: 대시보드 진단 현황
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                dateFrom: '2021-09-16T03:31:57'
+                dateTo: '2021-09-16T03:31:57'
+                gender: null
+                ageGroup: null
+                investmentExperience: null
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Tue, 02 Nov 2021 02:17:35 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 대시보드 진단 현황 - 기간
+                  value:
+                    diagnosisPerTime:
+                      time:
+                        - 9-16
+                        - 9-17
+                        - 9-18
+                        - 9-19
+                        - 9-20
+                        - 9-21
+                        - 9-22
+                        - 9-23
+                        - 9-24
+                        - 9-25
+                        - 9-26
+                        - 9-27
+                        - 9-28
+                        - 9-29
+                        - 9-30
+                      diagnosisMember:
+                        - 1
+                        - 1
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                      diagnosisNotMember:
+                        - 1
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                      minitest:
+                        - 1
+                        - 1
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 5
+                        - 0
+                        - 1
+                        - 28
+                    diagnosisInfo:
+                      - time: 9-16
+                        diagnosisAndMinitest: 3
+                        diagnosisTotal: 2
+                        diagnosisTotalRatio: 0.6666666666666666
+                        diagnosisMember: 1
+                        diagnosisMemberRatio: 0.5
+                        diagnosisNotMember: 1
+                        diagnosisNotMemberRatio: 0.5
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-17
+                        diagnosisAndMinitest: 2
+                        diagnosisTotal: 1
+                        diagnosisTotalRatio: 0.5
+                        diagnosisMember: 1
+                        diagnosisMemberRatio: 1
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-18
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-19
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-20
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-21
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-22
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-23
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-24
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-25
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-26
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-27
+                        diagnosisAndMinitest: 5
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-28
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-29
+                        diagnosisAndMinitest: 1
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: 9-30
+                        diagnosisAndMinitest: 28
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                    diagnosisStatus:
+                      diagnosisCount: 3
+                      scoreLegend:
+                        - 80점 이상
+                        - 60~79점
+                        - 41~60점
+                        - 40점 이하
+                      scoreRatio:
+                        - 0
+                        - 0.3333333333333333
+                        - 0.6666666666666666
+                        - 0
+                      averageScore: 60.333333333333336
+                      categoryName:
+                        - 위험대응
+                        - 행동편향
+                        - 지식이해
+                      categoryAverageScore:
+                        - 85.33333333333333
+                        - 72.33333333333333
+                        - 33.333333333333336
+                    minitestStatus:
+                      diagnosisCount: 36
+                      scoreLegend:
+                        - 80점 이상
+                        - 60~79점
+                        - 41~60점
+                        - 40점 이하
+                      scoreRatio:
+                        - 0
+                        - 0
+                        - 0.3333333333333333
+                        - 0.6666666666666666
+                      averageScore: 38.416666666666664
+                      categoryName:
+                        - 리스크관리 및 행동편향
+                        - 금융투자 이해&금융투자 기본
+                        - 금융투자상품 - 주식
+                        - 금융투자상품 가치평가
+                        - 금융투자상품 보유관리
+                      categoryAverageScore:
+                        - 44.686720284722234
+                        - 38.71672745967742
+                        - 35.94933282160806
+                        - 37.384093123611116
+                        - 38.33200301094892
+                example-1:
+                  summary: 대시보드 진단 현황 - 오늘
+                  value:
+                    diagnosisPerTime:
+                      time:
+                        - '1:00'
+                        - '2:00'
+                        - '3:00'
+                        - '4:00'
+                        - '5:00'
+                        - '6:00'
+                        - '7:00'
+                        - '8:00'
+                        - '9:00'
+                        - '10:00'
+                        - '11:00'
+                        - '12:00'
+                        - '13:00'
+                        - '14:00'
+                        - '15:00'
+                        - '16:00'
+                        - '17:00'
+                        - '18:00'
+                        - '19:00'
+                        - '20:00'
+                        - '21:00'
+                        - '22:00'
+                        - '23:00'
+                      diagnosisMember:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 1
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                      diagnosisNotMember:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 1
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                      minitest:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 1
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                    diagnosisInfo:
+                      - time: '1:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '2:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '3:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '4:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '5:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '6:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '7:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '8:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '9:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '10:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '11:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '12:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '13:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '14:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '15:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '16:00'
+                        diagnosisAndMinitest: 2
+                        diagnosisTotal: 1
+                        diagnosisTotalRatio: 0.5
+                        diagnosisMember: 1
+                        diagnosisMemberRatio: 1
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '17:00'
+                        diagnosisAndMinitest: 1
+                        diagnosisTotal: 1
+                        diagnosisTotalRatio: 1
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 1
+                        diagnosisNotMemberRatio: 1
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '18:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '19:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '20:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '21:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '22:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                      - time: '23:00'
+                        diagnosisAndMinitest: 0
+                        diagnosisTotal: 0
+                        diagnosisTotalRatio: 0
+                        diagnosisMember: 0
+                        diagnosisMemberRatio: 0
+                        diagnosisNotMember: 0
+                        diagnosisNotMemberRatio: 0
+                        minitest: 0
+                        minitestRatio: 0
+                    diagnosisStatus:
+                      diagnosisCount: 2
+                      scoreLegend:
+                        - 80점 이상
+                        - 60~79점
+                        - 41~60점
+                        - 40점 이하
+                      scoreRatio:
+                        - 0
+                        - 0
+                        - 1
+                        - 0
+                      averageScore: 54
+                      categoryName:
+                        - 위험대응
+                        - 행동편향
+                        - 지식이해
+                      categoryAverageScore:
+                        - 81.5
+                        - 58.5
+                        - 31
+                    minitestStatus:
+                      diagnosisCount: 1
+                      scoreLegend:
+                        - 80점 이상
+                        - 60~79점
+                        - 41~60점
+                        - 40점 이하
+                      scoreRatio:
+                        - 0
+                        - 0
+                        - 1
+                        - 0
+                      averageScore: 52
+                      categoryName:
+                        - 리스크관리 및 행동편향
+                        - 금융투자 이해&금융투자 기본
+                        - 금융투자상품 - 주식
+                        - 금융투자상품 가치평가
+                        - 금융투자상품 보유관리
+                      categoryAverageScore:
+                        - 47.30039275
+                        - 31.201299833333337
+                        - 56.696612
+                        - 58.832992
+                        - 64.07788
+  /submaster/dashboard/content:
+    post:
+      tags:
+        - default
+      summary: 대시보드 컨텐츠 조회 현황
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                dateFrom: '2021-09-27T03:31:57'
+                dateTo: '2021-10-03T03:31:57'
+                gender: null
+                ageGroup: null
+                investmentExperience: null
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Tue, 02 Nov 2021 02:19:28 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                contentViews:
+                  time:
+                    - 9-27
+                    - 9-28
+                    - 9-29
+                    - 9-30
+                    - 10-1
+                    - 10-2
+                    - 10-3
+                  viewsVideo:
+                    - 0
+                    - 2
+                    - 16
+                    - 4
+                    - 0
+                    - 0
+                    - 0
+                  viewsArticle:
+                    - 0
+                    - 2
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                  viewsTextbook:
+                    - 0
+                    - 11
+                    - 2
+                    - 15
+                    - 0
+                    - 0
+                    - 0
+                contentViewsInfo:
+                  - time: 9-27
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: 9-28
+                    viewsTotal: 15
+                    viewsVideo: 2
+                    viewsVideoRatio: 0.13333333333333333
+                    viewsArticle: 2
+                    viewsArticleRatio: 0.13333333333333333
+                    viewsTextbook: 11
+                    viewsTextbookRatio: 0.7333333333333333
+                  - time: 9-29
+                    viewsTotal: 18
+                    viewsVideo: 16
+                    viewsVideoRatio: 0.8888888888888888
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 2
+                    viewsTextbookRatio: 0.1111111111111111
+                  - time: 9-30
+                    viewsTotal: 19
+                    viewsVideo: 4
+                    viewsVideoRatio: 0.21052631578947367
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 15
+                    viewsTextbookRatio: 0.7894736842105263
+                  - time: 10-1
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: 10-2
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: 10-3
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+  /master/notice:
+    post:
+      tags:
+        - default
+      summary: 공지 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                draft: 0
+                title: 공지생성테스트 21-12-01
+                content: test content
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:30:13 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 6
+                draft: 0
+                title: test title
+                content: test content
+                views: null
+                dateAdd: '2021-10-21T05:30:13.433+00:00'
+                dateEdit: null
+    get:
+      tags:
+        - default
+      summary: 공지 조회
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '6'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:30:47 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 6
+                draft: 0
+                title: test title
+                content: test content
+                views: null
+                dateAdd: '2021-10-21T05:30:13.433+00:00'
+                dateEdit: null
+    put:
+      tags:
+        - default
+      summary: 공지 수정
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                draft: 1
+                title: new test title
+                content: new test content
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '4'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:31:46 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 4
+                draft: 1
+                title: new test title
+                content: new test content
+                views: null
+                dateAdd: '2021-10-07T07:21:57.107+00:00'
+                dateEdit: '2021-10-21T05:31:46.034+00:00'
+    delete:
+      tags:
+        - default
+      summary: 공지 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '4'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: text/plain;charset=UTF-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '14'
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:31:57 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: notice deleted
+  /master/notice/all:
+    get:
+      tags:
+        - default
+      summary: 공지 전체 조회
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          example: title
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:31:14 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - id: 4
+                  draft: 0
+                  title: test title
+                  content: test content
+                  views: null
+                  dateAdd: '2021-10-07T07:21:57.107+00:00'
+                  dateEdit: null
+                - id: 5
+                  draft: 1
+                  title: new test title
+                  content: new test content
+                  views: null
+                  dateAdd: null
+                  dateEdit: '2021-10-07T08:49:50.349+00:00'
+                - id: 6
+                  draft: 0
+                  title: test title
+                  content: test content
+                  views: null
+                  dateAdd: '2021-10-21T05:30:13.433+00:00'
+                  dateEdit: null
+  /master/faq:
+    post:
+      tags:
+        - default
+      summary: 자주묻는질문 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                draft: 0
+                category: d
+                title: test title
+                content: test content
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:32:08 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 13
+                category: d
+                draft: 0
+                title: test title
+                content: test content
+                views: null
+                dateAdd: '2021-10-21T05:32:08.714+00:00'
+                dateEdit: null
+    get:
+      tags:
+        - default
+      summary: 자주묻는질문 조회
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '13'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:32:28 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 13
+                category: d
+                draft: 0
+                title: test title
+                content: test content
+                views: null
+                dateAdd: '2021-10-21T05:32:08.714+00:00'
+                dateEdit: null
+    put:
+      tags:
+        - default
+      summary: 자주묻는질문 수정
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                draft: 1
+                category: new_c
+                title: new test title
+                content: new test content
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '13'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:33:00 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 13
+                category: new_c
+                draft: 1
+                title: new test title
+                content: new test content
+                views: null
+                dateAdd: '2021-10-21T05:32:08.714+00:00'
+                dateEdit: '2021-10-21T05:33:00.455+00:00'
+    delete:
+      tags:
+        - default
+      summary: 자주묻는질문 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '13'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: text/plain;charset=UTF-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '11'
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:33:10 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: faq deleted
+  /master/faq/all:
+    get:
+      tags:
+        - default
+      summary: 자주묻는질문 전체 조회
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: categories
+          in: query
+          schema:
+            type: string
+          example: a, b
+        - name: search
+          in: query
+          schema:
+            type: integer
+          example: '11'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Vary:
+              schema:
+                type: string
+                example: Access-Control-Request-Headers
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-XSS-Protection:
+              schema:
+                type: string
+                example: 1; mode=block
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Expires:
+              schema:
+                type: integer
+                example: '0'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Thu, 21 Oct 2021 05:32:38 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - id: 10
+                  category: b
+                  draft: 0
+                  title: test title 11
+                  content: test content
+                  views: null
+                  dateAdd: '2021-10-08T04:22:38.960+00:00'
+                  dateEdit: null
