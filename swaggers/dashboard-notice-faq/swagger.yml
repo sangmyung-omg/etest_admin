@@ -4,11 +4,16 @@ info:
   version: 1.0.0
 servers:
   - url: http://220.90.208.226:8080
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
+security:
+  - bearerAuth: []
+  - bearer: []
+  - bearer: []
+  - bearer: []
+tags: []
+externalDocs:
+  url: ''
+  description: ''
+warnings: []
 paths:
   /submaster/dashboard/overall:
     post:
@@ -2342,14 +2347,5 @@ components:
       style: form
       schema:
         type: number
-security:
-  - bearer: []
-  - bearer: []
-  - bearer: []
-  - bearer: []
-tags: []
-externalDocs:
-  url: ''
-  description: ''
-warnings: []
+
 
