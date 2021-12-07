@@ -162,6 +162,8 @@ public class VersionService {
         versionRepo.saveAll(Arrays.asList(currentDefault, newDefault));
         String message = "Successfully applied given version to default.";
 
+        versionManager.setCurrentUkVersionId(versionId);
+        
         return message;
     }
 }
