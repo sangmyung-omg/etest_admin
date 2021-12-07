@@ -67,13 +67,15 @@ public class CommentController {
 		
 		int savedListSize = commentService.saveComment(commentList);
 		
-		if(savedListSize == commentList.size())
+		if(commentList.size() == 0)
+			return ResponseEntity.internalServerError().body("Please check input. CommentList size is 0.");
+		else if(savedListSize == commentList.size() && savedListSize != 0)
 		{
 			util.putCommentToUserBackend();
 			return ResponseEntity.ok(savedListSize);	
 		}
 		else
-			return ResponseEntity.internalServerError().body("Succeed save comment num = "+ savedListSize);
+			return ResponseEntity.internalServerError().body("Save fail. Succeed save comment num = "+ savedListSize);
 	}
 	
 	@PutMapping(value="/activateVersion", produces = "application/json; charset=utf-8")

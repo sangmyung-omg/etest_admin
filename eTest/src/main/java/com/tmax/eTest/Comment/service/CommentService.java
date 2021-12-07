@@ -51,26 +51,37 @@ public class CommentService {
 		// TODO Auto-generated method stub
 		List<CommentInfo> modelList = new ArrayList<>();
 		
-		for(CommentDTO comment : commentList)
+		if(commentList.size() != 0)
 		{
-			CommentKey key = new CommentKey(comment.getVersionName(), comment.getSeqNum());
-			
-			Optional<CommentInfo> opt = commentRepo.findById(key);
-			
-			if(opt.isPresent())
+			for(CommentDTO comment : commentList)
 			{
-				CommentInfo saveInfo = opt.get();
-				saveInfo.setCommentText(comment.getCommentText());
-				modelList.add(saveInfo);
+				CommentKey key = new CommentKey(comment.getVersionName(), comment.getSeqNum());
+				
+				Optional<CommentInfo> opt = commentRepo.findById(key);
+				
+				if(opt.isPresent())
+				{
+					CommentInfo saveInfo = opt.get();
+					saveInfo.setCommentText(comment.getCommentText());
+					modelList.add(saveInfo);
+				}
+				else
+					log.error("Error in save comment process. " + comment.toString());
+				
 			}
-			else
-				log.error("Error in save comment process. " + comment.toString());
 			
+			log.info(modelList.toString());
+			
+			return commentRepo.saveAll(modelList).size();
+		}
+		else
+		{
+			log.info("save comment list size is 0! please check");
+			
+			return 0;
 		}
 		
-		log.info(modelList.toString());
 		
-		return commentRepo.saveAll(modelList).size();
 	}
 	
 	public boolean makeDefaultComment(String newVersion)
