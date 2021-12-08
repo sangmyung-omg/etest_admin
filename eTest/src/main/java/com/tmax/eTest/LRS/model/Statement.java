@@ -10,6 +10,7 @@ import com.tmax.eTest.LRS.util.JWTUtil;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Entity
 @Table(name="STATEMENT")
 @NoArgsConstructor
+@Log4j2
 public class Statement {
 	
 	@Id
@@ -67,8 +69,8 @@ public class Statement {
 		try {
 			timestampObj = new Timestamp(dateFormat.parse(timestampStr).getTime());
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO Auto-generated catch block			
+			log.info("TimeStamp Convert Fail. In Statement "+ timestampStr);
 		}
 		
 		return timestampObj;

@@ -21,10 +21,12 @@ import com.tmax.eTest.LRS.model.StatementSpecs;
 import com.tmax.eTest.LRS.repository.StatementRepository;
 import com.tmax.eTest.LRS.util.JWTUtil;
 
+import lombok.extern.log4j.Log4j2;
+
 
 @Service
+@Log4j2
 public class StatementService {
-	 private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	@Autowired
 	private StatementRepository statementRepo;
@@ -38,10 +40,10 @@ public class StatementService {
 				try {
 					statementRepo.save(dao);
 				}
-				catch(Exception e){ 
+				catch(IllegalArgumentException e){ 
 					// error!
-					logger.error("saveStatementList error : "+e.toString());
-					logger.error("error statement info : " 
+					log.error("saveStatementList error : "+e.toString());
+					log.error("error statement info : " 
 							+input.getUserId()+" "
 							+input.getActionType()+" "
 							+input.getUserAnswer()+" "
@@ -68,7 +70,7 @@ public class StatementService {
 				StatementSpecs.searchStatement(searchInfo, isAscTimestamp, checkIsNotDeleted));
 		List<StatementDTO> result = new ArrayList<StatementDTO>();
 		
-		logger.info(result.toString());
+		log.info(result.toString());
 
 		int recentNum = (searchInfo.getRecentStatementNum() != null)
 				?searchInfo.getRecentStatementNum()
@@ -105,15 +107,9 @@ public class StatementService {
 	{
 		String userID = null;
 		
-		try {
-			userID = JWTUtil.getJWTPayloadField(userIdToken, "userID");
-			logger.info("setStatementDisable userID : "+userID);
-		}
-		catch(Exception e)
-		{
-			logger.info("setStatementDisable error : " + e.toString());
-		}
-		
+		userID = JWTUtil.getJWTPayloadField(userIdToken, "userID");
+		log.info("setStatementDisable userID : "+userID);
+
 		if(userID != null)
 		{
 			GetStatementInfoDTO searchInfo = new GetStatementInfoDTO();
