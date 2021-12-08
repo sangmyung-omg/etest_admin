@@ -1,19 +1,13 @@
 package com.tmax.eTest.Auth.jwt;
 
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.tmax.eTest.Auth.dto.PrincipalDetails;
 import com.tmax.eTest.Auth.repository.UserRepository;
 import com.tmax.eTest.Common.model.user.UserMaster;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -22,7 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 public class JwtCommonAuthorizationFilter extends BasicAuthenticationFilter {
     private JwtTokenUtil jwtTokenUtil;
@@ -44,7 +39,7 @@ public class JwtCommonAuthorizationFilter extends BasicAuthenticationFilter {
         // If header does not contain BEARER or is null delegate to Spring impl and exit
         if (header == null || !header.startsWith("Bearer")) {
 
-            logger.info("header가 null이거나 Bearer type이 아닙니다"+header);
+            logger.info("header가 null이거나 Bearer type이 아닙니다" + header);
             chain.doFilter(request, response);
             return;
         }
@@ -58,13 +53,14 @@ public class JwtCommonAuthorizationFilter extends BasicAuthenticationFilter {
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
         String email = null;
         String token = request.getHeader("Authorization")
-                .replace("Bearer ",""); //Bear 다음에 한칸 뛰어야한다
+                .replace("Bearer ", ""); //Bear 다음에 한칸 뛰어야한다
         if (token != null) {
             try {
                 Map<String, Object> parseInfo = jwtTokenUtil.getUserParseInfo(token);
-                email = (String)parseInfo.get("email");
+                email = (String) parseInfo.get("email");
 
             } catch (ExpiredJwtException e) {
+                logger.debug("token maybe expired");
             }
             if (email != null) {
                 Optional<UserMaster> userMasterOptional = userRepository.findByEmail(email);
