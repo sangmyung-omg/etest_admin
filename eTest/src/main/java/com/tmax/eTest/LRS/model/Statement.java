@@ -98,14 +98,7 @@ public class Statement {
         
         this.statementDate = timeStringToTimestampObj(this.timestamp);
         
-        String jwtRes = null;
-        try {
-        	jwtRes = JWTUtil.getJWTPayloadField(dto.getUserId(), "userID");
-        }
-        catch(Exception e)
-        {
-        	System.out.println("StatementDAO - userID is not jwt ID");
-        }
+        String jwtRes =  JWTUtil.getJWTPayloadField(dto.getUserId(), "userID");
         
         this.userId = (jwtRes==null)?dto.getUserId():jwtRes;
         
