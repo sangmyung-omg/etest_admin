@@ -140,7 +140,7 @@ public class VersionController {
             String message = versionService.applyDefaultVersion(new Long(versionId));
             map.put("message", message);
             return new ResponseEntity<>(map, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
             map.put("error", "error : No data found for the version id " + Long.toString(versionId));
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }

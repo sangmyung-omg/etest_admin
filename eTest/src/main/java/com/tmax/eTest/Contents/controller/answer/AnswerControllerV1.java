@@ -1,5 +1,6 @@
 package com.tmax.eTest.Contents.controller.answer;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.netty.handler.codec.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import com.tmax.eTest.Auth.jwt.JwtTokenUtil;
@@ -98,9 +99,13 @@ public class AnswerControllerV1 {
 				Map<String, Object> parseInfo = jwtTokenUtil.getUserParseInfo(token);
 				userId = parseInfo.get("userUuid").toString();
 				logText += "Token exists. Registered user. / user UUID = " + userId;
-			} catch (Exception e) {															// 토큰 파싱 에러
-				log.info("error : cannot parse jwt token, " + e.getMessage());
-				result.put("error", e.getMessage());
+			} catch (NullPointerException e) {															
+				log.info("error : cannot parse jwt token, NullPointerException occurred");
+				result.put("error", "error : cannot parse jwt token, NullPointerException occurred");
+				return new ResponseEntity<>(result, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			} catch (JwtException e) {														// 토큰 파싱 에러
+				log.info("error : cannot parse jwt token, jwtException occurred");
+				result.put("error", "error : cannot parse jwt token, jwtException occurred");
 				return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -118,6 +123,12 @@ public class AnswerControllerV1 {
 					lrsbody.get(i).setIsCorrect(1);
 				} else if (isCorrect == -1) {
 					lrsbody.get(i).setIsCorrect(null);
+				} else if (isCorrect == 404) {
+					result.put("error", "Solution not found for the probId = " + Integer.toString(probId));
+					return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+				} else if (isCorrect == 500) {
+					result.put("error", "Solution info json parsing error occurred for the probId = " + Integer.toString(probId));
+					return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
 			if (dto.getUserId().equalsIgnoreCase("")) {			// 비회원 자가진단이라면, 유저의 아이디가 없이 넘어옴. 근데, 나중 가입 고려해서 임의의 uuid 세팅.
@@ -182,15 +193,11 @@ public class AnswerControllerV1 {
 		log.info("probIdList : " + probIdList.toString());
 
 		List<CustomizedSolutionDTO> solutions = new ArrayList<CustomizedSolutionDTO>();
-		try {
-			Map<Integer, CustomizedSolutionDTO> data = answerServices.getMultipleSolutions(probIdList);
-			log.info("Solution queryResult length : " + Integer.toString(data.size()));
-			for (Integer probId : probIdList) {
-				data.get(probId).setUserAnswer(probAnswerMap.get(probId));
-				solutions.add(data.get(probId));
-			}
-		}catch(Exception e) {
-			output.put("resultMessage", "error : "+e.getMessage());
+		Map<Integer, CustomizedSolutionDTO> data = answerServices.getMultipleSolutions(probIdList);
+		log.info("Solution queryResult length : " + Integer.toString(data.size()));
+		for (Integer probId : probIdList) {
+			data.get(probId).setUserAnswer(probAnswerMap.get(probId));
+			solutions.add(data.get(probId));
 		}
 		
 		output.put("resultMessage", "Successfully returned");
@@ -240,9 +247,13 @@ public class AnswerControllerV1 {
 				Map<String, Object> parseInfo = jwtTokenUtil.getUserParseInfo(token);
 				userId = parseInfo.get("userUuid").toString();
 				logText += "Token exists. Registered user. / user UUID = " + userId;
-			} catch (Exception e) {															// 토큰 파싱 에러
-				log.info("error : cannot parse jwt token, " + e.getMessage());
-				result.put("error", e.getMessage());
+			} catch (NullPointerException e) {
+				log.info("error : NullPointerException occurred.");
+				result.put("error", "NullPointerException occurred.");
+				return new ResponseEntity<>(result, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+		 	} catch (JwtException e) {															// 토큰 파싱 에러
+				log.info("error : cannot parse jwt token, JwtException occurred.");
+				result.put("error", "cannot parse jwt token, JwtException occurred.");
 				return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -270,9 +281,9 @@ public class AnswerControllerV1 {
 				result.put("resultMessage", "error: some of LRS updates are not successfully proceeded");
 				return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-		} catch (Exception e) {
-			log.info("error: " + e.getMessage());
-			result.put("resultMessage", "error: " + e.getMessage());
+		} catch (ParseException e) {
+			log.info("error: ParseException occurred.");
+			result.put("resultMessage", "error: ParseException occurred.");
 			return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 

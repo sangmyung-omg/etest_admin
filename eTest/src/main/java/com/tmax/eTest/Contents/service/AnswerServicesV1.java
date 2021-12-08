@@ -1,5 +1,7 @@
 package com.tmax.eTest.Contents.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,15 +55,21 @@ public class AnswerServicesV1 implements AnswerServicesBase {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 
-		try {
-			data = getProblemSolution(probId);
-		} catch (Exception e) {
-			log.info(e.toString());
-			return 0;
+		data = getProblemSolution(probId);
+		if (data.size() == 0) {
+			log.info("Problem info not found for probId = " + Integer.toString(probId));
+			return 404;
 		}
+
 		String inputString = data.get("solution").toString();
 		JSONParser parser = new JSONParser();
-		JSONArray jsonArray = (JSONArray) parser.parse(inputString);
+		JSONArray jsonArray = new JSONArray();
+		try {
+			jsonArray = (JSONArray) parser.parse(inputString);
+		} catch (ParseException e) {
+			log.info("Json parsing error occurred for solution info of probId = " + Integer.toString(probId));
+			return 500;
+		}
 		// log.info("json : " + jsonArray.toJSONString() + ", " + Integer.toString(probId));
 
 		String correctAnswer = "";
@@ -185,8 +194,14 @@ public class AnswerServicesV1 implements AnswerServicesBase {
 				}
 				solutionInfo.setSolution(componentList);
 				solutionMap.put(dto.getProbID(), solutionInfo);
-			} catch (Exception e) {
-				log.error("error: " + e.getMessage());
+			} catch (ParseException e) {
+				log.info("error: jsonParseException occurred.");
+			} catch (ClassCastException e) {
+				log.info("error: CastException occurred. cannot convert error.");
+			} catch (FileNotFoundException e) {
+				log.info("error: FileNotFoundException occurred.");
+			} catch (IOException e) {
+				log.info("error: IOException occurred. cannot convert error.");
 			}
 		}
 		return solutionMap;
