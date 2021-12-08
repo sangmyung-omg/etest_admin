@@ -166,6 +166,12 @@ public class AnswerControllerV1 {
 		log.info("Getting LRS statement list......");
 		List<StatementDTO> lrsQuery = lrsApiManager.getStatementList(input);
 
+		if (lrsQuery.size() == 0) {
+			log.info("No LRS record for the setId = " + setId);
+			output.put("error", "No LRS record for the setId = " + setId);
+			return output;
+		}
+
 		List<Integer> probIdList = new ArrayList<Integer>();
 		Map<Integer, List<String>> probAnswerMap = new HashMap<Integer, List<String>>();
 		
@@ -195,6 +201,12 @@ public class AnswerControllerV1 {
 		List<CustomizedSolutionDTO> solutions = new ArrayList<CustomizedSolutionDTO>();
 		Map<Integer, CustomizedSolutionDTO> data = answerServices.getMultipleSolutions(probIdList);
 		log.info("Solution queryResult length : " + Integer.toString(data.size()));
+		if (data.size() == 0) {
+			log.info("No solution infos found for probIdList = " + probIdList.toString());
+			output.put("error", "No solution infos found for probIdList = " + probIdList.toString());
+			output.put("solutions", new ArrayList<CustomizedSolutionDTO>());
+			return output;
+		}
 		for (Integer probId : probIdList) {
 			data.get(probId).setUserAnswer(probAnswerMap.get(probId));
 			solutions.add(data.get(probId));
