@@ -116,7 +116,7 @@ public class FileController {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ContentsException(ErrorCode.FILE_ERROR);
 		}
 
 		return new ResponseEntity<>(ret, HttpStatus.OK);
