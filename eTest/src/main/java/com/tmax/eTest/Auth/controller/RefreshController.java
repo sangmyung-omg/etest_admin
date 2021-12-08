@@ -71,8 +71,6 @@ public class RefreshController {
             map.put("success", false);
             map.put("msg", "your refresh token does not exist.");
         }
-
-        log.info("m: " + m);
         return map;
     }
 }

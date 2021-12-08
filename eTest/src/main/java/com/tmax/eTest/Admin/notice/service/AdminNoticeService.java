@@ -51,6 +51,9 @@ public class AdminNoticeService extends PushService {
     public Notice editNotice(Long id, Notice newNotice) {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = getNotice(id);
+        if (notice == null) {
+            throw new IllegalArgumentException("notice is null");
+        }
         ColumnNullPropertiesHandler.copyNonNullProperties(newNotice, notice);
         notice.setDateEdit(currentDateTime);
         return adminNoticeRepository.save(notice);
@@ -62,6 +65,9 @@ public class AdminNoticeService extends PushService {
 
     public void updateNoticeViews(Long id) {
         Notice notice = getNotice(id);
+        if (notice == null) {
+            throw new IllegalArgumentException("notice is null");
+        }
         notice.setViews(notice.getViews() + 1);
         adminNoticeRepository.save(notice);
     }
