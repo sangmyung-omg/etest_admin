@@ -827,8 +827,8 @@ definitions:
                   type: string
                 subject:
                   type: string
-                # status:
-                #   type: string
+                status:
+                  type: string
 
   GetProblemImageDTOOut:
     type: object
