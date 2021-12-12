@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,9 +92,12 @@ public class InquiryService extends PushService {
         inquiry.setAnswer_time(LocalDateTime.now());
 
         inquiryRepository.save(inquiry);
-        categoryPushRequest(CategoryPushRequestDTO.builder()
+        List<String> userUuidList = new ArrayList<>();
+        userUuidList.add(inquiry.getUserMaster().getUserUuid());
+        categoryPushRequestByUserUuid(CategoryPushRequestDTO.builder()
                 .category("inquiry")
                 .title("1:1문의")
+                .userUuid(userUuidList)
                 .body("1:1 문의에 대한 답변을 확인해보세요.")
                 .build())
                 .block();
