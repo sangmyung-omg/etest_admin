@@ -10,6 +10,6 @@ public class UkRelatedVideoDTO {
     private String videoSrc;
     private String title;
     private String imgSrc;
-    private float totalTime;
+    private Float totalTime;
     private Integer views;    
 }

@@ -50,7 +50,8 @@ public class UkService {
                                                                 .externalLink(ukInfo.getExternalLink())
                                                                 .updateDate(ukInfo.getEditDate())
                                                                 .build();
-            log.info("DTO uk_id : " + Integer.toString(template.getUkId()));
+            if (template.getUkId() % 100 == 0) 
+                log.info("Gathering info of DTO uk_id : " + Integer.toString(template.getUkId()));
             // video & article info
             for (VideoUkRel video : ukInfo.getUkMaster().getVideoUks()) {
                 if (video.getVideo().getType().equalsIgnoreCase("VIDEO")) {
@@ -81,7 +82,8 @@ public class UkService {
 
             ukList.add(template);
         }
-
+        log.info("Completed gathering uk infos : " + Integer.toString(allUkList.get(allUkList.size()-1).getUkId().intValue()));
+        
         return ukList;
     }
 

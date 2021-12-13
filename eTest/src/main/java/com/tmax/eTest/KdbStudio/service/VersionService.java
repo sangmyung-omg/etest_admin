@@ -58,6 +58,9 @@ public class VersionService {
         // get the latest version id
         Long newVersionId = versionManager.getLatestUkVersionId() + 1;
 
+        // get the currently default version id
+        Long defaultVersionId = versionManager.getCurrentUkVersionId();
+
         // save the new version
         VersionMaster newVersion = new VersionMaster();
 
@@ -71,6 +74,31 @@ public class VersionService {
 
         versionRepo.save(newVersion);
         log.info("Successfully saved new version info " + Long.toString(newVersionId));
+
+        // get uks of existing version and save with new version id (891 rows)
+        List<UkDescriptionVersion> ukVersionList = ukVersionRepo.findByVersionIdOrderByUkId(defaultVersionId);
+        if (ukVersionList.size() == 0) {
+            log.info("No UK list info for the default UK version id = " + Long.toString(defaultVersionId) + ". Please check the current default UK version id again.");
+            return new Long(-10);
+        }
+
+        List<UkDescriptionVersion> newVersionUkList = new ArrayList<UkDescriptionVersion>();
+        log.info("Copy and Save default UK list to newly created version.");
+        for (UkDescriptionVersion ukInfo : ukVersionList) {
+            UkDescriptionVersion newUkVersion = new UkDescriptionVersion();
+            newUkVersion.setUkId(ukInfo.getUkId());
+            newUkVersion.setUkName(ukInfo.getUkName());
+            newUkVersion.setUkDescription(ukInfo.getUkDescription());
+            newUkVersion.setExternalLink(ukInfo.getExternalLink());
+            newUkVersion.setEditDate(ukInfo.getEditDate());
+            newUkVersion.setVersionId(newVersionId);
+            // ukVersionRepo.save(newUkVersion);
+            newVersionUkList.add(newUkVersion);
+            if (ukInfo.getUkId() % 200 == 0)
+                log.info("Progress : " + Long.toString(ukInfo.getUkId()) + " / " + Integer.toString(ukVersionList.size()));
+        }
+        ukVersionRepo.saveAll(newVersionUkList);
+        log.info("Total # of UKs being copied : " + Integer.toString(newVersionUkList.size()));
 
         // Set latest version id into util module
         versionManager.setLatestUkVersionId(newVersionId);
@@ -92,7 +120,12 @@ public class VersionService {
     }
 
     public Long insertCopiedVersion(Long versionId, VersionCreateInputDTO input) throws NotFoundException {
-        // get the latest version id and new id
+        // check if exists duplicated versionNum
+        if (versionRepo.findByVersionNum(input.getVersionNum()).isPresent()) {
+            return new Long(-1);
+        }
+
+        // get the latest version id and set new id
         Long newVersionId = versionManager.getLatestUkVersionId() + 1;
 
         // get existing version object
@@ -109,9 +142,17 @@ public class VersionService {
         newVersion.setIsDeleted("0");
         versionRepo.save(newVersion);
 
+        log.info("Successfully created new version info " + Long.toString(newVersionId));
+
         // get uks of existing version and save with new version id (891 rows)
         List<UkDescriptionVersion> ukVersionList = ukVersionRepo.findByVersionIdOrderByUkId(versionId);
+        if (ukVersionList.size() == 0) {
+            log.info("No UK list info for the version id = " + Long.toString(versionId) + ". Please check the UK version id again.");
+            return new Long(-10);
+        }
+
         List<UkDescriptionVersion> newVersionUkList = new ArrayList<UkDescriptionVersion>();
+        log.info("Copy and Save default UK list to newly created version.");
         for (UkDescriptionVersion ukInfo : ukVersionList) {
             UkDescriptionVersion newUkVersion = new UkDescriptionVersion();
             newUkVersion.setUkId(ukInfo.getUkId());
@@ -121,9 +162,12 @@ public class VersionService {
             newUkVersion.setEditDate(ukInfo.getEditDate());
             newUkVersion.setVersionId(newVersionId);
             newVersionUkList.add(newUkVersion);
-        }
 
+            if (ukInfo.getUkId() % 200 == 0)
+                log.info("Progress : " + Long.toString(ukInfo.getUkId()) + " / " + Integer.toString(ukVersionList.size()));
+        }
         ukVersionRepo.saveAll(newVersionUkList);
+        log.info("Total # of UKs being copied : " + Integer.toString(newVersionUkList.size()));
 
         // Set latest version id into util module
         versionManager.setLatestUkVersionId(newVersionId);
