@@ -9,9 +9,9 @@ import com.tmax.eTest.Comment.util.CommentUtil.CommentType;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 @Data
 @NoArgsConstructor
 public class CommentMapDTO {

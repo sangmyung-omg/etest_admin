@@ -23,9 +23,9 @@ import com.tmax.eTest.Comment.service.CommentVersionService;
 import com.tmax.eTest.Comment.util.CommentUtil;
 import com.tmax.eTest.Comment.util.VersionGenerator;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/comment")

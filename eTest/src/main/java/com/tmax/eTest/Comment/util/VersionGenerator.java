@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 import com.tmax.eTest.Common.model.comment.CommentVersionInfo;
 import com.tmax.eTest.Common.repository.comment.CommentVersionRepo;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Log4j2
+@Slf4j
 public class VersionGenerator {
 	@Autowired
 	CommentVersionRepo versionRepo;

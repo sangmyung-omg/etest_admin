@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 @Component
 @PropertySource("classpath:application.properties")
 public class CommentUtil {
@@ -34,7 +34,7 @@ public class CommentUtil {
 		
 		log.info("put to " + userBackCommentRefreshURI);
 		if(response != null)
-			log.info(response.bodyToMono(Boolean.class).block());
+			log.info(response.bodyToMono(Boolean.class).block().toString());
 	}
 	
 	public enum CommentType{
