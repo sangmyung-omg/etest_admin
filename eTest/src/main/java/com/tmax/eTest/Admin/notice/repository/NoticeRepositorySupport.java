@@ -12,10 +12,10 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class AdminNoticeRepositorySupport extends QuerydslRepositorySupport {
+public class NoticeRepositorySupport extends QuerydslRepositorySupport {
     private final JPAQueryFactory query;
 
-    public AdminNoticeRepositorySupport(EntityManager entityManager) {
+    public NoticeRepositorySupport(EntityManager entityManager) {
         super(Notice.class);
         this.query = new JPAQueryFactory(entityManager);
     }

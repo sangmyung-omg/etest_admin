@@ -1,6 +1,8 @@
 package com.tmax.eTest.Admin.notice.controller;
 
-import com.tmax.eTest.Admin.notice.service.AdminNoticeService;
+import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Admin.notice.service.NoticeService;
+import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.Notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +13,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("master")
-public class AdminNoticeController {
-    private final AdminNoticeService adminNoticeService;
+public class NoticeController {
+    private final NoticeService noticeService;
 
     /**
      * 공지사항 생성
-     * @param notice    공지사항 정보
      */
     @PostMapping("notice")
-    public ResponseEntity<Notice> createNotice(@RequestBody Notice notice) {
-        return ResponseEntity.ok(adminNoticeService.createNotice(notice));
+    public CMRespDto<?> createNotice(@ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) {
+        return noticeService.createNotice(createNoticeRequestDto);
     }
 
     /**
@@ -29,7 +30,7 @@ public class AdminNoticeController {
      */
     @GetMapping("notice")
     public ResponseEntity<Notice> getNotice(@RequestParam Long id) {
-        return ResponseEntity.ok(adminNoticeService.getNotice(id));
+        return ResponseEntity.ok(noticeService.getNotice(id));
     }
 
     /**
@@ -37,7 +38,7 @@ public class AdminNoticeController {
      */
     @GetMapping("notice/all")
     public ResponseEntity<List<Notice>> getAllNotice(String search) {
-        return ResponseEntity.ok(adminNoticeService.getAllNotice(search));
+        return ResponseEntity.ok(noticeService.getAllNotice(search));
     }
 
     /**
@@ -47,7 +48,7 @@ public class AdminNoticeController {
      */
     @PutMapping("notice")
     public ResponseEntity<Notice> editNotice(@RequestParam Long id, @RequestBody Notice notice) {
-        return ResponseEntity.ok(adminNoticeService.editNotice(id, notice));
+        return ResponseEntity.ok(noticeService.editNotice(id, notice));
     }
 
     /**
@@ -56,16 +57,15 @@ public class AdminNoticeController {
      */
     @DeleteMapping("notice")
     public String deleteNotice(@RequestParam Long id) {
-        adminNoticeService.deleteNotice(id);
+        noticeService.deleteNotice(id);
         return "notice deleted";
     }
 
     /**
      * 공지사항 임시저장
-     * @param notice    공지사항 정보
      */
     @PostMapping("notice/draft")
-    public ResponseEntity<Notice> draftNotice(@RequestBody Notice notice) {
-        return ResponseEntity.ok(adminNoticeService.draftNotice(notice));
+    public CMRespDto<?> draftNotice(@ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) {
+        return noticeService.draftNotice(createNoticeRequestDto);
     }
 }

@@ -1208,79 +1208,25 @@ paths:
       summary: 공지 생성
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
-              example:
-                draft: 0
-                title: 공지생성테스트 21-12-01
-                content: test content
+              properties:
+                title:
+                  type: string
+                  example: test notice title
+                content:
+                  type: string
+                  example: test notice content
+                image:
+                  type: string
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:30:13 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
+          description: Successful response
           content:
-            application/json:
-              schema:
-                type: object
-              example:
-                id: 6
-                draft: 0
-                title: test title
-                content: test content
-                views: null
-                dateAdd: '2021-10-21T05:30:13.433+00:00'
-                dateEdit: null
+            application/json: {}
     get:
       tags:
         - default
@@ -1292,7 +1238,7 @@ paths:
           in: query
           schema:
             type: integer
-          example: '6'
+          example: '46'
       responses:
         '200':
           description: OK
@@ -1336,7 +1282,7 @@ paths:
             Date:
               schema:
                 type: string
-                example: Thu, 21 Oct 2021 05:30:47 GMT
+                example: Mon, 13 Dec 2021 08:11:51 GMT
             Keep-Alive:
               schema:
                 type: string
@@ -1350,13 +1296,14 @@ paths:
               schema:
                 type: object
               example:
-                id: 6
+                id: 46
                 draft: 0
-                title: test title
-                content: test content
-                views: null
-                dateAdd: '2021-10-21T05:30:13.433+00:00'
-                dateEdit: null
+                title: test notice title
+                content: test notice content
+                views: 0
+                imageUrl: null
+                dateAdd: '2021-12-13T07:57:36.659+00:00'
+                dateEdit: '2021-12-13T07:57:36.659+00:00'
     put:
       tags:
         - default
@@ -1377,7 +1324,7 @@ paths:
           in: query
           schema:
             type: integer
-          example: '4'
+          example: '45'
       responses:
         '200':
           description: OK
@@ -1421,7 +1368,7 @@ paths:
             Date:
               schema:
                 type: string
-                example: Thu, 21 Oct 2021 05:31:46 GMT
+                example: Mon, 13 Dec 2021 08:10:49 GMT
             Keep-Alive:
               schema:
                 type: string
@@ -1435,13 +1382,14 @@ paths:
               schema:
                 type: object
               example:
-                id: 4
+                id: 45
                 draft: 1
                 title: new test title
                 content: new test content
-                views: null
-                dateAdd: '2021-10-07T07:21:57.107+00:00'
-                dateEdit: '2021-10-21T05:31:46.034+00:00'
+                views: 0
+                imageUrl: null
+                dateAdd: '2021-12-13T07:55:40.122+00:00'
+                dateEdit: '2021-12-13T08:10:49.579+00:00'
     delete:
       tags:
         - default
@@ -1511,6 +1459,32 @@ paths:
               schema:
                 type: string
               example: notice deleted
+  /master/notice/draft:
+    post:
+      tags:
+        - default
+      summary: 공지 임시저장
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: draft notice title
+                content:
+                  type: string
+                  example: draft notice content
+                image:
+                  type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /master/notice/all:
     get:
       tags:
@@ -1567,7 +1541,7 @@ paths:
             Date:
               schema:
                 type: string
-                example: Thu, 21 Oct 2021 05:31:14 GMT
+                example: Mon, 13 Dec 2021 08:12:44 GMT
             Keep-Alive:
               schema:
                 type: string
@@ -1581,27 +1555,30 @@ paths:
               schema:
                 type: object
               example:
-                - id: 4
-                  draft: 0
-                  title: test title
-                  content: test content
-                  views: null
-                  dateAdd: '2021-10-07T07:21:57.107+00:00'
-                  dateEdit: null
-                - id: 5
+                - id: 45
                   draft: 1
                   title: new test title
                   content: new test content
-                  views: null
-                  dateAdd: null
-                  dateEdit: '2021-10-07T08:49:50.349+00:00'
-                - id: 6
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-13T07:55:40.122+00:00'
+                  dateEdit: '2021-12-13T08:10:49.579+00:00'
+                - id: 46
                   draft: 0
-                  title: test title
-                  content: test content
-                  views: null
-                  dateAdd: '2021-10-21T05:30:13.433+00:00'
-                  dateEdit: null
+                  title: test notice title
+                  content: test notice content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-13T07:57:36.659+00:00'
+                  dateEdit: '2021-12-13T07:57:36.659+00:00'
+                - id: 48
+                  draft: 1
+                  title: test notice title
+                  content: test notice content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-13T08:07:49.884+00:00'
+                  dateEdit: '2021-12-13T08:07:49.884+00:00'
   /master/faq:
     post:
       tags:
