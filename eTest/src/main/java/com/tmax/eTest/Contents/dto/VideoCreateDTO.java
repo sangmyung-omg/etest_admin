@@ -40,9 +40,9 @@ public class VideoCreateDTO {
   private String level;
   private String difficulty;
   private String source;
-  private Integer views;
-  private Integer likes;
-  private Integer disLikes;
+  private Integer views = 0;
+  private Integer likes = 0;
+  private Integer disLikes = 0;
   @DateTimeFormat(iso = ISO.DATE)
   private Date viewDate;
 }

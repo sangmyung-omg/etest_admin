@@ -34,7 +34,7 @@ public class CommonUtils {
   }
 
   public String dateToStr(Date date) {
-    return sdf.format(date);
+    return objectNullcheck(date) ? "" : sdf.format(date);
   }
 
   public Date strToDate(String str) {
