@@ -1,6 +1,9 @@
 package com.tmax.eTest.Admin.faq.controller;
 
+import com.tmax.eTest.Admin.faq.dto.CreateFaqDto;
 import com.tmax.eTest.Admin.faq.service.AdminFaqService;
+import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +19,10 @@ public class AdminFaqController {
 
     /**
      * 자주 묻는 질문 생성
-     * @param faq    자주 묻는 질문 정보
      */
     @PostMapping("faq")
-    public ResponseEntity<FAQ> createFaq(@RequestBody FAQ faq) {
-        return ResponseEntity.ok(adminFaqService.createFaq(faq));
+    public CMRespDto<?> createFaq(@ModelAttribute CreateFaqDto createFaqDto) {
+        return adminFaqService.createFaq(createFaqDto);
     }
 
     /**
@@ -63,10 +65,9 @@ public class AdminFaqController {
 
     /**
      * 자주 묻는 질문 임시저장
-     * @param faq   자주 묻는 질문 정보
      */
     @PostMapping("faq/draft")
-    public ResponseEntity<FAQ> draftFaq(@RequestBody FAQ faq) {
-        return ResponseEntity.ok(adminFaqService.draftFaq(faq));
+    public CMRespDto<?> draftFaq(@ModelAttribute CreateFaqDto createFaqDto) {
+        return adminFaqService.draftFaq(createFaqDto);
     }
 }

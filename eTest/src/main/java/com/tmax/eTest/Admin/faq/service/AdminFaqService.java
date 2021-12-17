@@ -1,39 +1,125 @@
 package com.tmax.eTest.Admin.faq.service;
 
-import com.tmax.eTest.Admin.faq.repository.AdminFaqRepository;
+import com.tmax.eTest.Admin.faq.dto.CreateFaqDto;
+import com.tmax.eTest.Admin.faq.repository.FaqRepository;
 import com.tmax.eTest.Admin.faq.repository.AdminFaqRepositorySupport;
+import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
+import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
+import com.tmax.eTest.Common.model.support.Notice;
+import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AdminFaqService {
     private static final Logger logger = LoggerFactory.getLogger(AdminFaqService.class);
-    private final AdminFaqRepository adminFaqRepository;
+    private final FaqRepository faqRepository;
     private final AdminFaqRepositorySupport adminFaqRepositorySupport;
 
-    public FAQ createFaq(FAQ faq) {
+    @Value("${file.path}")
+    private String rootPath;
+
+    @Transactional
+    public CMRespDto<?> createFaq(CreateFaqDto createFaqDto) {
+        String noticeImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
-        faq.setDraft(0);
-        faq.setDateAdd(currentDateTime);
-        return adminFaqRepository.save(faq);
+        FAQ faq = null;
+        if (createFaqDto.getImage() != null) {
+            String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
+            String imageUrlString = noticeImageFolderURL + imageName;
+            Path imageUrlPath = Paths.get(imageUrlString);
+            faq =
+                    FAQ.builder()
+                            .category(createFaqDto.getCategory())
+                            .title(createFaqDto.getTitle())
+                            .content(createFaqDto.getContent())
+                            .draft(1)
+                            .views((long) 0)
+                            .dateAdd(currentDateTime)
+                            .dateEdit(currentDateTime)
+                            .imageUrl(imageUrlString)
+                            .build();
+            try {
+                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("faq image save error");
+            }
+            faqRepository.save(faq);
+        }
+        if (createFaqDto.getImage() == null) {
+            faq = FAQ.builder()
+                    .category(createFaqDto.getCategory())
+                    .title(createFaqDto.getTitle())
+                    .content(createFaqDto.getContent())
+                    .draft(1)
+                    .views((long) 0)
+                    .dateAdd(currentDateTime)
+                    .dateEdit(currentDateTime)
+                    .build();
+            faqRepository.save(faq);
+        }
+        return new CMRespDto<>(200, "success", faq);
     }
 
-    public FAQ draftFaq(FAQ faq) {
-        faq.setDraft(1);
-        return adminFaqRepository.save(faq);
+    @Transactional
+    public CMRespDto<?> draftFaq(CreateFaqDto createFaqDto) {
+        String noticeImageFolderURL = rootPath + "faq/";
+        Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
+        FAQ faq = null;
+        if (createFaqDto.getImage() != null) {
+            String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
+            String imageUrlString = noticeImageFolderURL + imageName;
+            Path imageUrlPath = Paths.get(imageUrlString);
+            faq =
+                    FAQ.builder()
+                            .category(createFaqDto.getCategory())
+                            .title(createFaqDto.getTitle())
+                            .content(createFaqDto.getContent())
+                            .draft(1)
+                            .views((long) 0)
+                            .dateAdd(currentDateTime)
+                            .dateEdit(currentDateTime)
+                            .imageUrl(imageUrlString)
+                            .build();
+            try {
+                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("faq image save error");
+            }
+            faqRepository.save(faq);
+        }
+        if (createFaqDto.getImage() == null) {
+            faq = FAQ.builder()
+                    .category(createFaqDto.getCategory())
+                    .title(createFaqDto.getTitle())
+                    .content(createFaqDto.getContent())
+                    .draft(1)
+                    .views((long) 0)
+                    .dateAdd(currentDateTime)
+                    .dateEdit(currentDateTime)
+                    .build();
+            faqRepository.save(faq);
+        }
+        return new CMRespDto<>(200, "success", faq);
     }
 
     public FAQ getFaq(Long id) {
-        if (adminFaqRepository.findById(id).isPresent())
-            return adminFaqRepository.findById(id).get();
+        if (faqRepository.findById(id).isPresent())
+            return faqRepository.findById(id).get();
         return null;
     }
 
@@ -53,11 +139,11 @@ public class AdminFaqService {
             throw new IllegalArgumentException("currentDateTime is null");
         }
         faq.setDateEdit(currentDateTime);
-        return adminFaqRepository.save(faq);
+        return faqRepository.save(faq);
     }
 
     public void deleteFaq(Long id) {
-        adminFaqRepository.deleteById(id);
+        faqRepository.deleteById(id);
     }
 
     public void updateFaqViews(Long id) {
@@ -66,6 +152,6 @@ public class AdminFaqService {
             throw new IllegalArgumentException("id have no faq");
         }
         faq.setViews(faq.getViews() + 1);
-        adminFaqRepository.save(faq);
+        faqRepository.save(faq);
     }
 }
