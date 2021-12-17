@@ -1,7 +1,7 @@
 package com.tmax.eTest.Support.faq.controller;
 
 import com.tmax.eTest.Support.faq.dto.CreateFaqDto;
-import com.tmax.eTest.Support.faq.service.AdminFaqService;
+import com.tmax.eTest.Support.faq.service.FaqService;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +13,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("master")
-public class AdminFaqController {
-    private final AdminFaqService adminFaqService;
+public class FaqController {
+    private final FaqService faqService;
 
     /**
      * 자주 묻는 질문 생성
      */
     @PostMapping("faq")
     public CMRespDto<?> createFaq(@ModelAttribute CreateFaqDto createFaqDto) {
-        return adminFaqService.createFaq(createFaqDto);
+        return faqService.createFaq(createFaqDto);
     }
 
     /**
@@ -30,7 +30,7 @@ public class AdminFaqController {
      */
     @GetMapping("faq")
     public ResponseEntity<FAQ> getFaq(@RequestParam Long id) {
-        return ResponseEntity.ok(adminFaqService.getFaq(id));
+        return ResponseEntity.ok(faqService.getFaq(id));
     }
 
     /**
@@ -39,7 +39,7 @@ public class AdminFaqController {
     @GetMapping("faq/all")
     public ResponseEntity<List<FAQ>> getAllFaq
     (@RequestParam(required = false) List<String> categories, @RequestParam(required = false) String search) {
-        return ResponseEntity.ok(adminFaqService.getAllFaq(categories, search));
+        return ResponseEntity.ok(faqService.getAllFaq(categories, search));
     }
 
     /**
@@ -49,7 +49,7 @@ public class AdminFaqController {
      */
     @PutMapping("faq")
     public ResponseEntity<FAQ> editFaq(@RequestParam Long id, @RequestBody FAQ faq) {
-        return ResponseEntity.ok(adminFaqService.editFaq(id, faq));
+        return ResponseEntity.ok(faqService.editFaq(id, faq));
     }
 
     /**
@@ -58,7 +58,7 @@ public class AdminFaqController {
      */
     @DeleteMapping("faq")
     public String deleteFaq(@RequestParam Long id) {
-        adminFaqService.deleteFaq(id);
+        faqService.deleteFaq(id);
         return "faq deleted";
     }
 
@@ -67,6 +67,6 @@ public class AdminFaqController {
      */
     @PostMapping("faq/draft")
     public CMRespDto<?> draftFaq(@ModelAttribute CreateFaqDto createFaqDto) {
-        return adminFaqService.draftFaq(createFaqDto);
+        return faqService.draftFaq(createFaqDto);
     }
 }

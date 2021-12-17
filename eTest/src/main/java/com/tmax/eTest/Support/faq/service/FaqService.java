@@ -2,7 +2,7 @@ package com.tmax.eTest.Support.faq.service;
 
 import com.tmax.eTest.Support.faq.dto.CreateFaqDto;
 import com.tmax.eTest.Support.faq.repository.FaqRepository;
-import com.tmax.eTest.Support.faq.repository.AdminFaqRepositorySupport;
+import com.tmax.eTest.Support.faq.repository.FaqRepositorySupport;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
@@ -22,10 +22,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AdminFaqService {
-    private static final Logger logger = LoggerFactory.getLogger(AdminFaqService.class);
+public class FaqService {
+    private static final Logger logger = LoggerFactory.getLogger(FaqService.class);
     private final FaqRepository faqRepository;
-    private final AdminFaqRepositorySupport adminFaqRepositorySupport;
+    private final FaqRepositorySupport faqRepositorySupport;
 
     @Value("${file.path}")
     private String rootPath;
@@ -44,7 +44,7 @@ public class AdminFaqService {
                             .category(createFaqDto.getCategory())
                             .title(createFaqDto.getTitle())
                             .content(createFaqDto.getContent())
-                            .draft(1)
+                            .draft(0)
                             .views((long) 0)
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
@@ -121,7 +121,7 @@ public class AdminFaqService {
     }
 
     public List<FAQ> getAllFaq(List<String> categories, String search) {
-        return adminFaqRepositorySupport.faqList(categories, search);
+        return faqRepositorySupport.faqList(categories, search);
     }
 
     public FAQ editFaq(Long id, FAQ newFaq) {
