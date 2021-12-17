@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.notice.repository;
+package com.tmax.eTest.Support.notice.repository;
 
 import static com.tmax.eTest.Common.model.support.QNotice.notice;
 

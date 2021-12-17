@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.faq.repository;
+package com.tmax.eTest.Support.faq.repository;
 
 import static com.tmax.eTest.Common.model.support.QFAQ.fAQ;
 

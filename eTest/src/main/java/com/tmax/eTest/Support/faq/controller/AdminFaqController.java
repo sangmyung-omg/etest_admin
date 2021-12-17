@@ -1,8 +1,7 @@
-package com.tmax.eTest.Admin.faq.controller;
+package com.tmax.eTest.Support.faq.controller;
 
-import com.tmax.eTest.Admin.faq.dto.CreateFaqDto;
-import com.tmax.eTest.Admin.faq.service.AdminFaqService;
-import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Support.faq.dto.CreateFaqDto;
+import com.tmax.eTest.Support.faq.service.AdminFaqService;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
 import lombok.RequiredArgsConstructor;

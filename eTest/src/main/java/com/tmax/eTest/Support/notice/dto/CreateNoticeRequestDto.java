@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.notice.dto;
+package com.tmax.eTest.Support.notice.dto;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

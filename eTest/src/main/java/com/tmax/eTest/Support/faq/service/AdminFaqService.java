@@ -1,14 +1,11 @@
-package com.tmax.eTest.Admin.faq.service;
+package com.tmax.eTest.Support.faq.service;
 
-import com.tmax.eTest.Admin.faq.dto.CreateFaqDto;
-import com.tmax.eTest.Admin.faq.repository.FaqRepository;
-import com.tmax.eTest.Admin.faq.repository.AdminFaqRepositorySupport;
-import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Support.faq.dto.CreateFaqDto;
+import com.tmax.eTest.Support.faq.repository.FaqRepository;
+import com.tmax.eTest.Support.faq.repository.AdminFaqRepositorySupport;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
-import com.tmax.eTest.Common.model.support.Notice;
-import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
