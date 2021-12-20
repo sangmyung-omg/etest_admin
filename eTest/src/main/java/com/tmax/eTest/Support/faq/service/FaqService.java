@@ -74,12 +74,12 @@ public class FaqService {
 
     @Transactional
     public CMRespDto<?> draftFaq(CreateFaqDto createFaqDto) {
-        String noticeImageFolderURL = rootPath + "faq/";
+        String faqImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
         if (createFaqDto.getImage() != null) {
             String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
-            String imageUrlString = noticeImageFolderURL + imageName;
+            String imageUrlString = faqImageFolderURL + imageName;
             Path imageUrlPath = Paths.get(imageUrlString);
             faq =
                     FAQ.builder()
