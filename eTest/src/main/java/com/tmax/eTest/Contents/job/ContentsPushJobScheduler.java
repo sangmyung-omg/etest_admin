@@ -28,7 +28,8 @@ public class ContentsPushJobScheduler {
   @Autowired
   private ContentsPushJobConfiguration statJobConfiguration;
 
-  @Scheduled(cron = "0 0 13 ? * FRI")
+  // @Scheduled(cron = "0 0 13 ? * FRI")
+  @Scheduled(cron = "0 0 13 ? * TUE")
   public void runJob() {
 
     Map<String, JobParameter> confMap = new HashMap<String, JobParameter>();
