@@ -1,7 +1,7 @@
-package com.tmax.eTest.Admin.notice.controller;
+package com.tmax.eTest.Support.notice.controller;
 
-import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
-import com.tmax.eTest.Admin.notice.service.NoticeService;
+import com.tmax.eTest.Support.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Support.notice.service.NoticeService;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.Notice;
 import lombok.RequiredArgsConstructor;

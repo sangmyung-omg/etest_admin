@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.faq.repository;
+package com.tmax.eTest.Support.faq.repository;
 
 import static com.tmax.eTest.Common.model.support.QFAQ.fAQ;
 
@@ -13,10 +13,10 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class AdminFaqRepositorySupport extends QuerydslRepositorySupport {
+public class FaqRepositorySupport extends QuerydslRepositorySupport {
     private final JPAQueryFactory query;
 
-    public AdminFaqRepositorySupport(EntityManager entityManager) {
+    public FaqRepositorySupport(EntityManager entityManager) {
         super(FAQ.class);
         this.query = new JPAQueryFactory(entityManager);
     }

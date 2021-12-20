@@ -1,8 +1,8 @@
-package com.tmax.eTest.Admin.notice.service;
+package com.tmax.eTest.Support.notice.service;
 
-import com.tmax.eTest.Admin.notice.dto.CreateNoticeRequestDto;
-import com.tmax.eTest.Admin.notice.repository.NoticeRepository;
-import com.tmax.eTest.Admin.notice.repository.NoticeRepositorySupport;
+import com.tmax.eTest.Support.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Support.notice.repository.NoticeRepository;
+import com.tmax.eTest.Support.notice.repository.NoticeRepositorySupport;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.Notice;
