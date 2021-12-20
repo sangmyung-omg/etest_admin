@@ -4,21 +4,15 @@ info:
   version: 1.0.0
 servers:
   - url: http://220.90.208.226:8080
-security:
-  - bearerAuth: []
-  - bearer: []
-  - bearer: []
-  - bearer: []
 tags: []
 externalDocs:
   url: ''
   description: ''
-warnings: []
 paths:
   /submaster/dashboard/overall:
     post:
       tags:
-        - default
+        - 대시보드
       summary: 대시보드 전체 현황
       requestBody:
         content:
@@ -31,60 +25,9 @@ paths:
                 gender: null
                 ageGroup: null
                 investmentExperience: null
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Tue, 02 Nov 2021 02:14:17 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -125,7 +68,7 @@ paths:
   /submaster/dashboard/member:
     post:
       tags:
-        - default
+        - 대시보드
       summary: 대시보드 회원 현황
       requestBody:
         content:
@@ -138,60 +81,9 @@ paths:
                 gender: null
                 ageGroup: null
                 investmentExperience: null
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Tue, 02 Nov 2021 02:21:19 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -322,7 +214,7 @@ paths:
   /submaster/dashboard/diagnosis:
     post:
       tags:
-        - default
+        - 대시보드
       summary: 대시보드 진단 현황
       requestBody:
         content:
@@ -335,60 +227,9 @@ paths:
                 gender: null
                 ageGroup: null
                 investmentExperience: null
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Tue, 02 Nov 2021 02:17:35 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -1039,7 +880,7 @@ paths:
   /submaster/dashboard/content:
     post:
       tags:
-        - default
+        - 대시보드
       summary: 대시보드 컨텐츠 조회 현황
       requestBody:
         content:
@@ -1052,60 +893,9 @@ paths:
                 gender: null
                 ageGroup: null
                 investmentExperience: null
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Tue, 02 Nov 2021 02:19:28 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -1204,7 +994,7 @@ paths:
   /master/notice:
     post:
       tags:
-        - default
+        - 공지사항
       summary: 공지 생성
       requestBody:
         content:
@@ -1220,19 +1010,30 @@ paths:
                   example: test notice content
                 image:
                   type: string
-      security:
-        - bearerAuth: []
+                  format: binary
       responses:
         '200':
-          description: Successful response
+          description: OK
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: success
+                data:
+                  id: 51
+                  draft: 0
+                  title: test notice title
+                  content: test notice content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-20T04:44:35.797+00:00'
+                  dateEdit: '2021-12-20T04:44:35.797+00:00'
     get:
       tags:
-        - default
+        - 공지사항
       summary: 공지 조회
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: query
@@ -1242,55 +1043,6 @@ paths:
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Mon, 13 Dec 2021 08:11:51 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -1306,7 +1058,7 @@ paths:
                 dateEdit: '2021-12-13T07:57:36.659+00:00'
     put:
       tags:
-        - default
+        - 공지사항
       summary: 공지 수정
       requestBody:
         content:
@@ -1317,8 +1069,6 @@ paths:
                 draft: 1
                 title: new test title
                 content: new test content
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: query
@@ -1328,55 +1078,6 @@ paths:
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Mon, 13 Dec 2021 08:10:49 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -1392,10 +1093,8 @@ paths:
                 dateEdit: '2021-12-13T08:10:49.579+00:00'
     delete:
       tags:
-        - default
+        - 공지사항
       summary: 공지 삭제
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: query
@@ -1405,55 +1104,6 @@ paths:
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: text/plain;charset=UTF-8
-            Content-Length:
-              schema:
-                type: integer
-                example: '14'
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:31:57 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             text/plain:
               schema:
@@ -1462,7 +1112,7 @@ paths:
   /master/notice/draft:
     post:
       tags:
-        - default
+        - 공지사항
       summary: 공지 임시저장
       requestBody:
         content:
@@ -1478,20 +1128,31 @@ paths:
                   example: draft notice content
                 image:
                   type: string
-      security:
-        - bearerAuth: []
+                  format: binary
       responses:
         '200':
-          description: Successful response
+          description: OK
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: success
+                data:
+                  id: 52
+                  draft: 1
+                  title: draft notice title
+                  content: draft notice content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-20T04:45:14.335+00:00'
+                  dateEdit: '2021-12-20T04:45:14.335+00:00'
   /master/notice/all:
     get:
       tags:
-        - default
+        - 공지사항
       summary: 공지 전체 조회
-      security:
-        - bearerAuth: []
       parameters:
         - name: search
           in: query
@@ -1501,55 +1162,6 @@ paths:
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Mon, 13 Dec 2021 08:12:44 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
@@ -1582,325 +1194,94 @@ paths:
   /master/faq:
     post:
       tags:
-        - default
+        - 자주묻는질문
       summary: 자주묻는질문 생성
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
-              example:
-                draft: 0
-                category: d
-                title: test title
-                content: test content
-      security:
-        - bearerAuth: []
+              properties:
+                category:
+                  type: string
+                  example: 이용문의
+                title:
+                  type: string
+                  example: test faq title
+                content:
+                  type: string
+                  example: test faq content
+                image:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:32:08 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
                 type: object
               example:
-                id: 13
-                category: d
-                draft: 0
-                title: test title
-                content: test content
-                views: null
-                dateAdd: '2021-10-21T05:32:08.714+00:00'
-                dateEdit: null
-    get:
+                code: 200
+                message: success
+                data:
+                  id: 33
+                  category: 이용문의
+                  draft: 1
+                  title: test faq title
+                  content: test faq content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-20T04:46:32.255+00:00'
+                  dateEdit: '2021-12-20T04:46:32.255+00:00'
+  /master/faq/draft:
+    post:
       tags:
-        - default
-      summary: 자주묻는질문 조회
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: query
-          schema:
-            type: integer
-          example: '13'
-      responses:
-        '200':
-          description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:32:28 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                id: 13
-                category: d
-                draft: 0
-                title: test title
-                content: test content
-                views: null
-                dateAdd: '2021-10-21T05:32:08.714+00:00'
-                dateEdit: null
-    put:
-      tags:
-        - default
-      summary: 자주묻는질문 수정
+        - 자주묻는질문
+      summary: 자주묻는질문 임시저장
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
-              example:
-                draft: 1
-                category: new_c
-                title: new test title
-                content: new test content
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: query
-          schema:
-            type: integer
-          example: '13'
+              properties:
+                category:
+                  type: string
+                  example: draft category
+                title:
+                  type: string
+                  example: draft faq title
+                content:
+                  type: string
+                  example: draft faq content
+                image:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:33:00 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
                 type: object
               example:
-                id: 13
-                category: new_c
-                draft: 1
-                title: new test title
-                content: new test content
-                views: null
-                dateAdd: '2021-10-21T05:32:08.714+00:00'
-                dateEdit: '2021-10-21T05:33:00.455+00:00'
-    delete:
-      tags:
-        - default
-      summary: 자주묻는질문 삭제
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: query
-          schema:
-            type: integer
-          example: '13'
-      responses:
-        '200':
-          description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: text/plain;charset=UTF-8
-            Content-Length:
-              schema:
-                type: integer
-                example: '11'
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:33:10 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: faq deleted
+                code: 200
+                message: success
+                data:
+                  id: 34
+                  category: draft category
+                  draft: 1
+                  title: draft faq title
+                  content: draft faq content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-20T04:47:32.564+00:00'
+                  dateEdit: '2021-12-20T04:47:32.564+00:00'
   /master/faq/all:
     get:
       tags:
-        - default
+        - 자주묻는질문
       summary: 자주묻는질문 전체 조회
-      security:
-        - bearerAuth: []
       parameters:
         - name: categories
           in: query
@@ -1915,55 +1296,6 @@ paths:
       responses:
         '200':
           description: OK
-          headers:
-            Vary:
-              schema:
-                type: string
-                example: Access-Control-Request-Headers
-            X-Content-Type-Options:
-              schema:
-                type: string
-                example: nosniff
-            X-XSS-Protection:
-              schema:
-                type: string
-                example: 1; mode=block
-            Cache-Control:
-              schema:
-                type: string
-                example: no-cache, no-store, max-age=0, must-revalidate
-            Pragma:
-              schema:
-                type: string
-                example: no-cache
-            Expires:
-              schema:
-                type: integer
-                example: '0'
-            X-Frame-Options:
-              schema:
-                type: string
-                example: DENY
-            Content-Type:
-              schema:
-                type: string
-                example: application/json
-            Transfer-Encoding:
-              schema:
-                type: string
-                example: chunked
-            Date:
-              schema:
-                type: string
-                example: Thu, 21 Oct 2021 05:32:38 GMT
-            Keep-Alive:
-              schema:
-                type: string
-                example: timeout=60
-            Connection:
-              schema:
-                type: string
-                example: keep-alive
           content:
             application/json:
               schema:
