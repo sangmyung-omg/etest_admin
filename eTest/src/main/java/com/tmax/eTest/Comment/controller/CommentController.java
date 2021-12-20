@@ -124,21 +124,23 @@ public class CommentController {
 	public ResponseEntity<?> makeNewCommentVersion(
 			HttpServletRequest request) throws Exception{
 
+		String selectedVersion = versionService.getSelectedVersion();
 		String newVersionName = VersionGenerator.getVersionName();
 		
 		if(versionService.isExistVersion(newVersionName))
 			return ResponseEntity.internalServerError().body("Check newVersionName. It already exists. newVersionName is "
 					+ newVersionName);
 		
-		if(!commentService.makeDefaultComment(newVersionName)
+		if( !versionService.isExistVersion(selectedVersion) 
+			|| !commentService.copyComment(selectedVersion, newVersionName)
 			|| !versionService.makeVersion(newVersionName))
 		{
 			// rollback
 			commentService.deleteCommentByVersion(newVersionName);
 			versionService.deleteByVersion(newVersionName);
 			
-			return ResponseEntity.internalServerError().body("Something wrong! in make comment with new version name! "
-					+ newVersionName);
+			return ResponseEntity.internalServerError().body("Check selectedVersion. Not Invalid. selectedVersion is "
+					+ selectedVersion);
 		}
 	
 		
