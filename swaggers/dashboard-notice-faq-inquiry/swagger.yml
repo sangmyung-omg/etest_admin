@@ -1227,13 +1227,95 @@ paths:
                 data:
                   id: 33
                   category: 이용문의
-                  draft: 1
+                  draft: 0
                   title: test faq title
                   content: test faq content
                   views: 0
                   imageUrl: null
                   dateAdd: '2021-12-20T04:46:32.255+00:00'
                   dateEdit: '2021-12-20T04:46:32.255+00:00'
+    get:
+      tags:
+        - 자주묻는질문
+      summary: 자주묻는질문 조회
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '34'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 34
+                category: draft category
+                draft: 1
+                title: draft faq title
+                content: draft faq content
+                views: 0
+                imageUrl: null
+                dateAdd: '2021-12-20T04:47:32.564+00:00'
+                dateEdit: '2021-12-20T04:47:32.564+00:00'
+    put:
+      tags:
+        - 자주묻는질문
+      summary: 자주묻는질문 수정
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                draft: 1
+                category: new_c
+                title: new faq title
+                content: new faq content
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '33'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 33
+                category: new_c
+                draft: 1
+                title: new faq title
+                content: new faq content
+                views: 0
+                imageUrl: null
+                dateAdd: '2021-12-20T04:46:32.255+00:00'
+                dateEdit: '2021-12-20T05:17:39.621+00:00'
+    delete:
+      tags:
+        - 자주묻는질문
+      summary: 자주묻는질문 삭제
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '33'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: faq deleted
   /master/faq/draft:
     post:
       tags:
@@ -1287,12 +1369,12 @@ paths:
           in: query
           schema:
             type: string
-          example: a, b
+          description: 분류
         - name: search
           in: query
           schema:
-            type: integer
-          example: '11'
+            type: string
+          description: 검색
       responses:
         '200':
           description: OK
@@ -1301,14 +1383,15 @@ paths:
               schema:
                 type: object
               example:
-                - id: 10
-                  category: b
-                  draft: 0
-                  title: test title 11
-                  content: test content
-                  views: null
-                  dateAdd: '2021-10-08T04:22:38.960+00:00'
-                  dateEdit: null
+                - id: 34
+                  category: draft category
+                  draft: 1
+                  title: draft faq title
+                  content: draft faq content
+                  views: 0
+                  imageUrl: null
+                  dateAdd: '2021-12-20T04:47:32.564+00:00'
+                  dateEdit: '2021-12-20T04:47:32.564+00:00'
   /submaster/customerSupport/inquiries:
     get:
       summary: 문의 리스트
