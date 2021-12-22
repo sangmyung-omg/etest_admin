@@ -1,5 +1,6 @@
 package com.tmax.eTest.Admin.sso.service;
 
+import com.tmax.eTest.Admin.sso.dto.GetTokenResponseDto;
 import com.tmax.eTest.Auth.dto.AuthProvider;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Auth.dto.PrincipalDetails;
@@ -63,12 +64,18 @@ public class SsoService {
                             .build();
                     userRepository.save(userMaster);
                     PrincipalDetails principal = PrincipalDetails.create(userMaster);
-                    String jwtToken = jwtTokenUtil.generateAccessToken(principal);
-                    return new CMRespDto<>(201, "first login", jwtToken);
+                    GetTokenResponseDto getTokenResponseDto = GetTokenResponseDto.builder()
+                            .jwtToken(jwtTokenUtil.generateAccessToken(principal))
+                            .user_id(user_id)
+                            .build();
+                    return new CMRespDto<>(201, "first login", getTokenResponseDto);
                 } else {
                     PrincipalDetails principal = PrincipalDetails.create(userMasterOptional.get());
-                    String jwtToken = jwtTokenUtil.generateAccessToken(principal);
-                    return new CMRespDto<>(200, "exist user", jwtToken);
+                    GetTokenResponseDto getTokenResponseDto = GetTokenResponseDto.builder()
+                            .jwtToken(jwtTokenUtil.generateAccessToken(principal))
+                            .user_id(user_id)
+                            .build();
+                    return new CMRespDto<>(200, "exist user", getTokenResponseDto);
                 }
             } catch (IllegalArgumentException e) {
                 logger.info("IllegalArgumentException");
