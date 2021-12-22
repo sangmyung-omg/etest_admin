@@ -29,7 +29,7 @@ public class ContentsPushJobScheduler {
   private ContentsPushJobConfiguration statJobConfiguration;
 
   // @Scheduled(cron = "0 0 13 ? * FRI")
-  @Scheduled(cron = "0 0 13 ? * WED")
+  @Scheduled(cron = "0 0 17 ? * WED")
   public void runJob() {
 
     Map<String, JobParameter> confMap = new HashMap<String, JobParameter>();
