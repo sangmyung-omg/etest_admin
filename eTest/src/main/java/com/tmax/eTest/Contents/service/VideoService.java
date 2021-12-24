@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +21,7 @@ import com.tmax.eTest.Common.model.meta.MetaCodeMaster;
 import com.tmax.eTest.Common.model.uk.UkMaster;
 import com.tmax.eTest.Common.model.video.Hashtag;
 import com.tmax.eTest.Common.model.video.Video;
+import com.tmax.eTest.Common.model.video.VideoBookmark;
 import com.tmax.eTest.Common.model.video.VideoCurriculum;
 import com.tmax.eTest.Common.model.video.VideoHashtag;
 import com.tmax.eTest.Common.model.video.VideoHit;
@@ -132,7 +135,8 @@ public class VideoService {
   }
 
   public VideoDTO getVideo(String videoId) {
-    Video video = videoRePositorySupport.findVideoById(videoId);
+    Video video = videoRepository.findById(videoId).orElseThrow(
+        () -> new ContentsException(ErrorCode.DB_ERROR, "VideoId doesn't exist in Video Table"));
     return convertVideoToDTO(video);
   }
 
@@ -150,11 +154,8 @@ public class VideoService {
     return new SizeDTO(videoRePositorySupport.findVideoSize());
   }
 
-  @Transactional
-  public VideoDTO createVideo(VideoCreateDTO videoCreateDTO) {
+  private Video makeVideo(VideoCreateDTO videoCreateDTO, String videoId) {
     VideoType videoType = VideoType.findBy(videoCreateDTO.getVideoType());
-    makeSerialNum(videoCreateDTO);
-    String videoId = makeVideoId(videoCreateDTO, videoType);
     VideoCurriculum videoCurriculum = videoCurriculumRepository.findByCodeId(videoCreateDTO.getGroupArea());
     Long curriculumId = videoCurriculum.getCurriculumId();
     BigInteger sequence = makeSequence(videoCreateDTO, videoType);
@@ -173,11 +174,9 @@ public class VideoService {
         .registerDate(videoCreateDTO.getRegisterDate()).endDate(videoCreateDTO.getEndDate()).sequence(sequence)
         .codeSet(codeSet).type(type).related(videoCreateDTO.getRelated()).show(videoCreateDTO.getShow())
         .videoCurriculum(videoCurriculum).build();
-    VideoHit videoHit = VideoHit.builder().videoId(videoId).hit(0).build();
-    video.setVideoHit(videoHit);
     List<UkMaster> uks = getUks(videoCreateDTO.getUkIds());
     for (UkMaster uk : uks) {
-      VideoUkRel videoUk = VideoUkRel.builder().videoId(videoId).ukId(uk.getUkId().longValue()).ukMaster(uk).build();
+      VideoUkRel videoUk = VideoUkRel.builder().videoId(videoId).ukId(Long.valueOf(uk.getUkId())).ukMaster(uk).build();
       video.addUk(videoUk);
     }
     List<Hashtag> hashtags = getHashtags(videoCreateDTO.getHashtags());
@@ -186,31 +185,66 @@ public class VideoService {
           .hashtag(hashtag).build();
       video.addHashTag(videoHashtag);
     }
+    return video;
+  }
 
-    Video create = null;
+  private Video makeVideo(VideoCreateDTO videoCreateDTO, String videoId, VideoHit prevVideoHit,
+      Set<VideoBookmark> prevVideoBookmarks) {
+    Video video = makeVideo(videoCreateDTO, videoId);
+    VideoHit videoHit = VideoHit.builder().video(video).videoId(videoId).hit(prevVideoHit.getHit()).build();
+    Set<VideoBookmark> videoBookmarks = new LinkedHashSet<VideoBookmark>();
+    prevVideoBookmarks.stream().forEach(e -> videoBookmarks
+        .add(VideoBookmark.builder().video(video).videoId(videoId).userUuid(e.getUserUuid()).build()));
+    video.setVideoBookmarks(videoBookmarks);
+    video.setVideoHit(videoHit);
+    return video;
+  }
+
+  @Transactional
+  public VideoDTO createVideo(VideoCreateDTO videoCreateDTO) {
+    String videoId = makeVideoId(videoCreateDTO);
+    Video video = makeVideo(videoCreateDTO, videoId);
+    VideoHit videoHit = VideoHit.builder().videoId(videoId).hit(0).build();
+    video.setVideoHit(videoHit);
     if (videoRepository.existsById(videoId))
       throw new ContentsException(ErrorCode.DB_ERROR, "Code already exists in Video Table");
-    else
-      create = videoRepository.save(video);
-    return convertVideoToDTO(create);
+    else {
+      Video create = videoRepository.save(video);
+      return convertVideoToDTO(create);
+    }
   }
 
   @Transactional
   public SuccessDTO deleteVideo(String videoId) {
     videoRepository.delete(videoRepository.findById(videoId)
-        .orElseThrow(() -> new ContentsException(ErrorCode.DB_ERROR, "Code doesn't exist in Video Table")));
+        .orElseThrow(() -> new ContentsException(ErrorCode.DB_ERROR, "VideoId doesn't exist in Video Table")));
     return new SuccessDTO(true);
   }
 
   @Transactional
   public VideoDTO updateVideo(String videoId, VideoCreateDTO videoCreateDTO) {
-    deleteVideo(videoId);
-    return createVideo(videoCreateDTO);
+    String updateVideoId = makeVideoId(videoCreateDTO);
+    Video curVideo = videoRepository.findById(videoId).orElseThrow(
+        () -> new ContentsException(ErrorCode.DB_ERROR, "VideoId doesn't exist in Video Table"));
+    VideoHit videoHit = curVideo.getVideoHit();
+    Set<VideoBookmark> videoBookmarks = curVideo.getVideoBookmarks();
+    Video video = null;
+
+    if (videoId.substring(0, videoId.length() -
+        9).equals(updateVideoId.substring(0, videoId.length() - 9))) {
+      log.info("Code 유지");
+      video = makeVideo(videoCreateDTO, videoId, videoHit, videoBookmarks);
+    } else {
+      log.info("Code 변경 -> Prev Id: " + videoId + " | Cur Id: " + updateVideoId);
+      deleteVideo(videoId);
+      video = makeVideo(videoCreateDTO, updateVideoId, videoHit, videoBookmarks);
+    }
+    Video update = videoRepository.save(video);
+    return convertVideoToDTO(update);
   }
 
   public void makeSerialNum(VideoCreateDTO videoCreateDTO) {
     String serialNum = String.format("%09d", Integer.parseInt(videoRepository.findMaxSerialNum()) + 1);
-    log.info(serialNum);
     videoCreateDTO.setSerialNum(serialNum);
   }
 
@@ -222,8 +256,9 @@ public class VideoService {
   public List<Hashtag> getHashtags(List<String> hashtagNames) {
     if (commonUtils.objectNullcheck(hashtagNames) || hashtagNames.size() == 0)
       return new ArrayList<Hashtag>();
-
+    log.info("TTTT");
     List<Hashtag> hashtags = hashtagRepository.findByNameIn(hashtagNames);
+    log.info("TTTT");
     List<String> exists = hashtags.stream().map(e -> e.getName()).collect(Collectors.toList());
     List<Hashtag> addHashtags = hashtagNames.stream().filter(e -> !exists.contains(e))
         .map(e -> Hashtag.builder().name(e).build()).collect(Collectors.toList());
@@ -243,7 +278,9 @@ public class VideoService {
     throw new ContentsException(ErrorCode.CODE_ERROR, "GET CODE ERROR");
   }
 
-  public String makeVideoId(VideoCreateDTO videoCreateDTO, VideoType videoType) {
+  public String makeVideoId(VideoCreateDTO videoCreateDTO) {
+    VideoType videoType = VideoType.findBy(videoCreateDTO.getVideoType());
+    makeSerialNum(videoCreateDTO);
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(videoCreateDTO.getRegisterDate());
     return getCode(videoType.getType()) + Integer.toString(calendar.get(Calendar.YEAR)) + getCode(videoType.getOrigin())

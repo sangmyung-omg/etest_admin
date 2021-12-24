@@ -31,7 +31,8 @@ public class Hashtag {
   private Long hashtagId;
   private String name;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "hashtag", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "hashtag", cascade = CascadeType.ALL, orphanRemoval = false)
   private Set<VideoHashtag> videoHashtags = new LinkedHashSet<VideoHashtag>();
 
 }

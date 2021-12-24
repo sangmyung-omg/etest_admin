@@ -64,7 +64,7 @@ public class Video {
   private Set<VideoBookmark> videoBookmarks = new LinkedHashSet<VideoBookmark>();
 
   @Builder.Default
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = false)
   private Set<VideoUkRel> videoUks = new LinkedHashSet<VideoUkRel>();
 
   public void addUk(VideoUkRel videoUk) {
@@ -73,7 +73,7 @@ public class Video {
   }
 
   @Builder.Default
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = false)
   private Set<VideoHashtag> videoHashtags = new LinkedHashSet<VideoHashtag>();
 
   public void addHashTag(VideoHashtag videoHashtag) {

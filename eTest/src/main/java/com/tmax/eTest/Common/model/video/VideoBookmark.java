@@ -15,6 +15,7 @@ import com.tmax.eTest.Contents.util.CommonUtils;
 import org.springframework.data.domain.Persistable;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @IdClass(VideoBookmarkId.class)
 public class VideoBookmark implements Persistable<VideoBookmarkId> {

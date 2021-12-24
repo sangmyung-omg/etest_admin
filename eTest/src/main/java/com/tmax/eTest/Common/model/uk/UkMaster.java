@@ -37,13 +37,13 @@ public class UkMaster {
 	@OneToMany(mappedBy = "ukId")
 	private List<ProblemUKRelation> problemUkRels = new ArrayList<ProblemUKRelation>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ukMaster", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ukMaster", cascade = CascadeType.ALL, orphanRemoval = false)
 	private Set<VideoUkRel> videoUks = new LinkedHashSet<VideoUkRel>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ukMaster", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ukMaster", cascade = CascadeType.ALL, orphanRemoval = false)
 	private Set<WikiUkRel> wikiUks = new LinkedHashSet<WikiUkRel>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ukMaster", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ukMaster", cascade = CascadeType.ALL, orphanRemoval = false)
 	private Set<ArticleUkRel> articleUks = new LinkedHashSet<ArticleUkRel>();
 
 	@OneToMany(mappedBy = "ukId")
