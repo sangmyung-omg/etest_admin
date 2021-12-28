@@ -57,7 +57,7 @@ public class InquiryController {
 
         String admin_uuid = principalDetails.getUserUuid();
         String admin_nickname = principalDetails.getNickname();
-        InquiryDTO inquiry = inquiryService.answerInquiry(id,admin_uuid, admin_nickname, inquiryAnswerDTO.getAnswer());
+        InquiryDTO inquiry = inquiryService.answerInquiry(id,admin_uuid, admin_nickname, inquiryAnswerDTO);
         return ResponseEntity.ok().body(inquiry);
     }
 

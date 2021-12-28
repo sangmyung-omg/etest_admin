@@ -76,17 +76,30 @@ public class InquiryService extends PushService {
                 .build();
     }
 
-    public InquiryDTO answerInquiry(Long id,String admin_uuid, String admin_nickname, String answer){
-        if (StringUtils.isEmpty(answer)){
+    public InquiryDTO answerInquiry(Long id, String admin_uuid, String admin_nickname, InquiryAnswerDTO inquiryAnswerDTO){
+        if (StringUtils.isEmpty(inquiryAnswerDTO.getAnswer())){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Answer cannot be null or emtpy");
+        }
+        if (inquiryAnswerDTO.getDraft() == null){
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Draft cannot be null or emtpy");
         }
 
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Inquiry with Given Id"));
 
         inquiry.setAdminUuid(admin_uuid);
-        inquiry.setAnswer(answer);
-        inquiry.setStatus("답변완료");
+        inquiry.setAnswer(inquiryAnswerDTO.getAnswer());
+
+        if (inquiryAnswerDTO.getDraft() == 1){
+            inquiry.setStatus("임시저장");
+        }
+        else if (inquiryAnswerDTO.getDraft() == 0){
+            inquiry.setStatus("답변완료");
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Draft must be 0 or 1");
+        }
+
         inquiry.setAnswer_time(LocalDateTime.now());
 
         inquiryRepository.save(inquiry);

@@ -9,4 +9,5 @@ import javax.validation.constraints.NotNull;
 @Data
 public class InquiryAnswerDTO {
     String answer;
+    Integer draft;
 }
