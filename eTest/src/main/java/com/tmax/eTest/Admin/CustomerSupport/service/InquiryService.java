@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,7 +34,8 @@ public class InquiryService extends PushService {
 
     public List<InquiryDTO> getInquiryList(){
 
-        List<Inquiry> inquiryList= inquiryRepository.findAll();
+        //add sorting
+        List<Inquiry> inquiryList= inquiryRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
 
         //TODO adminnickname fix
         return inquiryList.stream()
