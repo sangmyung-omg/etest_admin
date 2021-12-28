@@ -175,13 +175,10 @@ public class ProblemApiComponentTs {
 		
 						}
 					}
-					// 		
-					if(baseProblemSetDTO.getProblem().getImgSrcListIn()!=null
-							&& baseProblemSetDTO.getProblem().getImgToEditSrcListIn()!=null) {	
-						
+					// 								
+					if(baseProblemSetDTO.getProblem().getImgSrcListIn()!=null) {
 						File folder = new File( pathUtilEtest.getDirPath()
-												+ File.separator + baseProblemSetDTO.getProblem().getProbID() );
-						
+								+ File.separator + baseProblemSetDTO.getProblem().getProbID() );
 						if( folder.exists() ){
 							List<String> willDelImgData = new ArrayList<String>();
 							for( String imgSrc__ : folder.list() ) {
@@ -192,12 +189,13 @@ public class ProblemApiComponentTs {
 							}
 							imageFileServerApiComponentETest.deleteImgSrcsOfProbIDServiceComponent(LongProbId, willDelImgData );
 						}
-//						Boolean isSuccess = imageFileServerApiComponentETest
-//								.assignImgFileListServiceComponent(request.getUserID(), LongProbId, requestInfo__.getProblem().getImgSrcListIn());
-						Boolean isSuccess = imageFileServerApiComponentETest
-								.assignImgFileListServiceComponent(userID, LongProbId, baseProblemSetDTO.getProblem().getImgToEditSrcListIn());
-					
 					}
+					if(baseProblemSetDTO.getProblem().getImgToEditSrcListIn()!=null) {
+//							Boolean isSuccess = imageFileServerApiComponentETest
+//							.assignImgFileListServiceComponent(request.getUserID(), LongProbId, requestInfo__.getProblem().getImgSrcListIn());
+						Boolean isSuccess = imageFileServerApiComponentETest
+						.assignImgFileListServiceComponent(userID, LongProbId, baseProblemSetDTO.getProblem().getImgToEditSrcListIn());							
+					}					
 					
 				}else {
 					throw new NoDataExceptionTs("Problem",LongProbId.toString());
