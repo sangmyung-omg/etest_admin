@@ -47,7 +47,7 @@ public class NoticeController {
      * 공지사항 생성
      */
     @PostMapping("notice")
-    public CMRespDto<?> createNotice(@ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) {
+    public CMRespDto<?> createNotice(@ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) throws Exception {
         return noticeService.createNotice(createNoticeRequestDto);
     }
 

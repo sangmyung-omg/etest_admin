@@ -1,14 +1,15 @@
 package com.tmax.eTest.Support.notice.service;
 
-import com.tmax.eTest.Support.notice.dto.CreateNoticeRequestDto;
-import com.tmax.eTest.Support.notice.repository.NoticeRepository;
-import com.tmax.eTest.Support.notice.repository.NoticeRepositorySupport;
 import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.Notice;
 import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
+import com.tmax.eTest.Support.notice.dto.CreateNoticeRequestDto;
+import com.tmax.eTest.Support.notice.repository.NoticeRepository;
+import com.tmax.eTest.Support.notice.repository.NoticeRepositorySupport;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,7 +56,7 @@ public class NoticeService extends PushService {
     }
 
     @Transactional
-    public CMRespDto<?> createNotice(CreateNoticeRequestDto createNoticeRequestDto) {
+    public CMRespDto<?> createNotice(CreateNoticeRequestDto createNoticeRequestDto) throws Exception {
         String noticeImageFolderURL = rootPath + "notice/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = null;
@@ -61,6 +64,16 @@ public class NoticeService extends PushService {
             String imageName = UUID.randomUUID() + "_" + createNoticeRequestDto.getImage().getOriginalFilename();
             String imageUrlString = noticeImageFolderURL + imageName;
             Path imageUrlPath = Paths.get(imageUrlString);
+            try {
+                Files.write(imageUrlPath, createNoticeRequestDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("notice image save error");
+            }
+            File f = new File(imageUrlString);
+            FileInputStream fis = new FileInputStream(f);
+            byte byteArray[] = new byte[(int) f.length()];
+            fis.read(byteArray);
+            String imageEncoding = Base64.encodeBase64String(byteArray);
             notice =
                     Notice.builder()
                             .title(createNoticeRequestDto.getTitle())
@@ -70,12 +83,8 @@ public class NoticeService extends PushService {
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
                             .imageUrl(imageUrlString)
+                            .imageEncoding(imageEncoding)
                             .build();
-            try {
-                Files.write(imageUrlPath, createNoticeRequestDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("notice image save error");
-            }
             noticeRepository.save(notice);
         }
         if (createNoticeRequestDto.getImage() == null) {
