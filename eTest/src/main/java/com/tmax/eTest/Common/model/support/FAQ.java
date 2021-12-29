@@ -37,6 +37,9 @@ public class FAQ {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "image_encoding")
+    private String imageEncoding;
+
     @Column(name = "date_add")
     private Timestamp dateAdd;
 

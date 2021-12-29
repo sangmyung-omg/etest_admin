@@ -47,7 +47,7 @@ public class FaqController {
      * 자주 묻는 질문 생성
      */
     @PostMapping("faq")
-    public CMRespDto<?> createFaq(@ModelAttribute CreateFaqDto createFaqDto) {
+    public CMRespDto<?> createFaq(@ModelAttribute CreateFaqDto createFaqDto) throws IOException {
         return faqService.createFaq(createFaqDto);
     }
 

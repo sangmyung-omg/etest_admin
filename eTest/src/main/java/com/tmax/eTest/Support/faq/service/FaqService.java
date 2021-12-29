@@ -7,6 +7,7 @@ import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,7 +59,7 @@ public class FaqService {
     }
 
     @Transactional
-    public CMRespDto<?> createFaq(CreateFaqDto createFaqDto) {
+    public CMRespDto<?> createFaq(CreateFaqDto createFaqDto) throws IOException {
         String faqImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
@@ -62,6 +67,17 @@ public class FaqService {
             String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
             String imageUrlString = faqImageFolderURL + imageName;
             Path imageUrlPath = Paths.get(imageUrlString);
+
+            try {
+                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("faq image save error");
+            }
+            File f = new File(imageUrlString);
+            FileInputStream fis = new FileInputStream(f);
+            byte byteArray[] = new byte[(int) f.length()];
+            fis.read(byteArray);
+            String imageEncoding = Base64.encodeBase64String(byteArray);
             faq =
                     FAQ.builder()
                             .category(createFaqDto.getCategory())
@@ -72,12 +88,8 @@ public class FaqService {
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
                             .imageUrl(imageUrlString)
+                            .imageEncoding(imageEncoding)
                             .build();
-            try {
-                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("faq image save error");
-            }
             faqRepository.save(faq);
         }
         if (createFaqDto.getImage() == null) {
