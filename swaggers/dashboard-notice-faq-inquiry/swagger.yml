@@ -1191,6 +1191,20 @@ paths:
                   imageUrl: null
                   dateAdd: '2021-12-13T08:07:49.884+00:00'
                   dateEdit: '2021-12-13T08:07:49.884+00:00'
+  /notice/image:
+    get:
+      tags:
+        - 공지사항
+      summary: 공지사항 이미지
+      parameters:
+        - name: fileName
+          in: query
+          schema:
+            type: string
+          example: e12df221-e765-4a9e-80a6-c90e6bb08e63_테스트 그림.jpg
+      responses:
+        '200':
+          description: Successful response
   /master/faq:
     post:
       tags:
@@ -1392,6 +1406,20 @@ paths:
                   imageUrl: null
                   dateAdd: '2021-12-20T04:47:32.564+00:00'
                   dateEdit: '2021-12-20T04:47:32.564+00:00'
+  /faq/image:
+    get:
+      tags:
+        - 자주묻는질문
+      summary: 자주묻는질문 이미지
+      parameters:
+        - name: fileName
+          in: query
+          schema:
+            type: string
+          example: e12df221-e765-4a9e-80a6-c90e6bb08e63_테스트 그림.jpg
+      responses:
+        '200':
+          description: Successful response
   /submaster/customerSupport/inquiries:
     get:
       summary: 문의 리스트

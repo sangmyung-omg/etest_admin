@@ -9,7 +9,13 @@ import com.tmax.eTest.Common.model.support.Notice;
 import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +34,23 @@ public class NoticeService extends PushService {
 
     @Value("${file.path}")
     private String rootPath;
+
+    public ResponseEntity<Resource> getNoticeImage(String fileName) {
+        String filePathString = rootPath + "/notice/";
+        Path filePath = Paths.get(filePathString + fileName);
+        HttpHeaders header = new HttpHeaders();
+        Tika tika = new Tika();
+        String mimeType;
+        try {
+            mimeType = tika.detect(filePath);
+            header.add("Content-Type", mimeType);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("mimeType error");
+        }
+
+        Resource resource = new FileSystemResource(filePath);
+        return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+    }
 
     @Transactional
     public CMRespDto<?> createNotice(CreateNoticeRequestDto createNoticeRequestDto) {
