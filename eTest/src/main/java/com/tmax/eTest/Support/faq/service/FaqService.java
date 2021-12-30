@@ -108,7 +108,7 @@ public class FaqService {
     }
 
     @Transactional
-    public CMRespDto<?> draftFaq(CreateFaqDto createFaqDto) {
+    public CMRespDto<?> draftFaq(CreateFaqDto createFaqDto) throws IOException {
         String faqImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
@@ -116,6 +116,16 @@ public class FaqService {
             String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
             String imageUrlString = faqImageFolderURL + imageName;
             Path imageUrlPath = Paths.get(imageUrlString);
+            try {
+                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("faq image save error");
+            }
+            File f = new File(imageUrlString);
+            FileInputStream fis = new FileInputStream(f);
+            byte byteArray[] = new byte[(int) f.length()];
+            fis.read(byteArray);
+            String imageEncoding = Base64.encodeBase64String(byteArray);
             faq =
                     FAQ.builder()
                             .category(createFaqDto.getCategory())
@@ -126,6 +136,7 @@ public class FaqService {
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
                             .imageUrl(imageUrlString)
+                            .imageEncoding(imageEncoding)
                             .build();
             try {
                 Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
@@ -159,17 +170,39 @@ public class FaqService {
         return faqRepositorySupport.faqList(categories, search);
     }
 
-    public FAQ editFaq(Long id, FAQ newFaq) {
+    public FAQ editFaq(Long id, CreateFaqDto createFaqDto) throws IOException {
+        String faqImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = getFaq(id);
         if (faq == null) {
             logger.debug("faq is null");
             throw new IllegalArgumentException("faq is null");
         }
-        ColumnNullPropertiesHandler.copyNonNullProperties(newFaq, faq);
-        if (currentDateTime == null) {
-            throw new IllegalArgumentException("currentDateTime is null");
+        if (createFaqDto.getCategory() != null)
+            faq.setCategory(createFaqDto.getCategory());
+        if (createFaqDto.getTitle() != null)
+            faq.setTitle(createFaqDto.getTitle());
+        if (createFaqDto.getContent() != null)
+            faq.setContent(createFaqDto.getContent());
+        if (createFaqDto.getImage() != null){
+            String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
+            String imageUrlString = faqImageFolderURL + imageName;
+            Path imageUrlPath = Paths.get(imageUrlString);
+            try {
+                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("notice image save error");
+            }
+            File f = new File(imageUrlString);
+            FileInputStream fis = new FileInputStream(f);
+            byte byteArray[] = new byte[(int) f.length()];
+            fis.read(byteArray);
+            String imageEncoding = Base64.encodeBase64String(byteArray);
+            faq.setImageUrl(imageUrlString);
+            faq.setImageEncoding(imageEncoding);
         }
+        if (currentDateTime == null)
+            throw new IllegalArgumentException("currentDateTime is null");
         faq.setDateEdit(currentDateTime);
         return faqRepository.save(faq);
     }

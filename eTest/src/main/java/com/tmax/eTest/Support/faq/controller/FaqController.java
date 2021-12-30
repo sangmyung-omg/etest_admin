@@ -72,11 +72,10 @@ public class FaqController {
     /**
      * 자주 묻는 질문 수정
      * @param id        수정할 자주 묻는 질문 id
-     * @param faq    자주 묻는 질문 정보
      */
     @PutMapping("faq")
-    public ResponseEntity<FAQ> editFaq(@RequestParam Long id, @RequestBody FAQ faq) {
-        return ResponseEntity.ok(faqService.editFaq(id, faq));
+    public ResponseEntity<FAQ> editFaq(@RequestParam Long id, @ModelAttribute CreateFaqDto createFaqDto) throws IOException {
+        return ResponseEntity.ok(faqService.editFaq(id, createFaqDto));
     }
 
     /**
@@ -93,7 +92,7 @@ public class FaqController {
      * 자주 묻는 질문 임시저장
      */
     @PostMapping("faq/draft")
-    public CMRespDto<?> draftFaq(@ModelAttribute CreateFaqDto createFaqDto) {
+    public CMRespDto<?> draftFaq(@ModelAttribute CreateFaqDto createFaqDto) throws IOException {
         return faqService.draftFaq(createFaqDto);
     }
 }
