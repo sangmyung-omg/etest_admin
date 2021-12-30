@@ -260,6 +260,8 @@ public class VideoService {
   }
 
   public List<UkMaster> getUks(List<Long> uks) {
+    if (commonUtils.objectNullcheck(uks) || uks.size() == 0)
+      return new ArrayList<UkMaster>();
     List<Integer> ukIds = uks.stream().map(e -> (int) (long) e).collect(Collectors.toList());
     return ukMasterRepo.findByUkIdIn(ukIds);
   }
