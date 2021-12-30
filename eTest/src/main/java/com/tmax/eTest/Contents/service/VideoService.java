@@ -166,8 +166,9 @@ public class VideoService {
     } catch (JsonProcessingException e) {
       throw new ContentsException(ErrorCode.CODE_ERROR);
     }
+    String videoSrc = makeVideoSrc(videoCreateDTO.getVideoSrc());
 
-    Video video = Video.builder().videoId(videoId).videoSrc(videoCreateDTO.getVideoSrc())
+    Video video = Video.builder().videoId(videoId).videoSrc(videoSrc)
         .title(videoCreateDTO.getTitle()).imgSrc(videoCreateDTO.getImgSrc()).curriculumId(curriculumId)
         .totalTime(videoCreateDTO.getTotalTime()).startTime(videoCreateDTO.getStartTime())
         .endTime(videoCreateDTO.getEndTime()).createDate(videoCreateDTO.getCreateDate())
@@ -186,6 +187,15 @@ public class VideoService {
       video.addHashTag(videoHashtag);
     }
     return video;
+  }
+
+  private String makeVideoSrc(String url) {
+    final String youtubeEmbededStr = "https://www.youtube.com/embed/";
+    if (url.contains("youtu.be")) {
+      String[] temp = url.split("/");
+      return youtubeEmbededStr + temp[temp.length - 1];
+    } else
+      return url;
   }
 
   private Video makeVideo(VideoCreateDTO videoCreateDTO, String videoId, VideoHit prevVideoHit,
@@ -233,6 +243,7 @@ public class VideoService {
     if (videoId.substring(0, videoId.length() -
         9).equals(updateVideoId.substring(0, videoId.length() - 9))) {
       log.info("Code 유지");
+
       video = makeVideo(videoCreateDTO, videoId, videoHit, videoBookmarks);
     } else {
       log.info("Code 변경 -> Prev Id: " + videoId + " | Cur Id: " + updateVideoId);
