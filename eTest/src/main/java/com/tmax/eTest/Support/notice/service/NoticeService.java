@@ -1,6 +1,5 @@
 package com.tmax.eTest.Support.notice.service;
 
-import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.Notice;
 import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
@@ -22,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -108,7 +108,7 @@ public class NoticeService extends PushService {
     }
 
     @Transactional
-    public CMRespDto<?> draftNotice(CreateNoticeRequestDto createNoticeRequestDto) {
+    public CMRespDto<?> draftNotice(CreateNoticeRequestDto createNoticeRequestDto) throws IOException {
         String noticeImageFolderURL = rootPath + "notice/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = null;
@@ -116,6 +116,16 @@ public class NoticeService extends PushService {
             String imageName = UUID.randomUUID() + "_" + createNoticeRequestDto.getImage().getOriginalFilename();
             String imageUrlString = noticeImageFolderURL + imageName;
             Path imageUrlPath = Paths.get(imageUrlString);
+            try {
+                Files.write(imageUrlPath, createNoticeRequestDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("notice image save error");
+            }
+            File f = new File(imageUrlString);
+            FileInputStream fis = new FileInputStream(f);
+            byte byteArray[] = new byte[(int) f.length()];
+            fis.read(byteArray);
+            String imageEncoding = Base64.encodeBase64String(byteArray);
             notice =
                     Notice.builder()
                             .title(createNoticeRequestDto.getTitle())
@@ -125,12 +135,9 @@ public class NoticeService extends PushService {
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
                             .imageUrl(imageUrlString)
+                            .imageEncoding(imageEncoding)
                             .build();
-            try {
-                Files.write(imageUrlPath, createNoticeRequestDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("notice image save error");
-            }
+
             noticeRepository.save(notice);
         }
         if (createNoticeRequestDto.getImage() == null) {
@@ -157,13 +164,33 @@ public class NoticeService extends PushService {
         return noticeRepositorySupport.noticeList(search);
     }
 
-    public Notice editNotice(Long id, Notice newNotice) {
+    public Notice editNotice(Long id, CreateNoticeRequestDto createNoticeRequestDto) throws IOException {
+        String noticeImageFolderURL = rootPath + "notice/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = getNotice(id);
-        if (notice == null) {
+        if (notice == null)
             throw new IllegalArgumentException("notice is null");
+        if (createNoticeRequestDto.getTitle() != null)
+            notice.setTitle(createNoticeRequestDto.getTitle());
+        if (createNoticeRequestDto.getContent() != null)
+            notice.setContent(createNoticeRequestDto.getContent());
+        if (createNoticeRequestDto.getImage() != null){
+            String imageName = UUID.randomUUID() + "_" + createNoticeRequestDto.getImage().getOriginalFilename();
+            String imageUrlString = noticeImageFolderURL + imageName;
+            Path imageUrlPath = Paths.get(imageUrlString);
+            try {
+                Files.write(imageUrlPath, createNoticeRequestDto.getImage().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("notice image save error");
+            }
+            File f = new File(imageUrlString);
+            FileInputStream fis = new FileInputStream(f);
+            byte byteArray[] = new byte[(int) f.length()];
+            fis.read(byteArray);
+            String imageEncoding = Base64.encodeBase64String(byteArray);
+            notice.setImageUrl(imageUrlString);
+            notice.setImageEncoding(imageEncoding);
         }
-        ColumnNullPropertiesHandler.copyNonNullProperties(newNotice, notice);
         notice.setDateEdit(currentDateTime);
         return noticeRepository.save(notice);
     }
