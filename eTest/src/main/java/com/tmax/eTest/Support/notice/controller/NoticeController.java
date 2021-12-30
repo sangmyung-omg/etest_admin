@@ -70,12 +70,10 @@ public class NoticeController {
 
     /**
      * 공지사항 수정
-     * @param id        수정할 공지사항 id
-     * @param notice    공지사항 정보
      */
     @PutMapping("notice")
-    public ResponseEntity<Notice> editNotice(@RequestParam Long id, @RequestBody Notice notice) {
-        return ResponseEntity.ok(noticeService.editNotice(id, notice));
+    public ResponseEntity<Notice> editNotice(@RequestParam Long id, @ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) throws IOException {
+        return ResponseEntity.ok(noticeService.editNotice(id, createNoticeRequestDto));
     }
 
     /**
@@ -92,7 +90,7 @@ public class NoticeController {
      * 공지사항 임시저장
      */
     @PostMapping("notice/draft")
-    public CMRespDto<?> draftNotice(@ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) {
+    public CMRespDto<?> draftNotice(@ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) throws IOException {
         return noticeService.draftNotice(createNoticeRequestDto);
     }
 }

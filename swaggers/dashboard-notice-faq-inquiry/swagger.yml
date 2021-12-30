@@ -1062,13 +1062,19 @@ paths:
       summary: 공지 수정
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
-              example:
-                draft: 1
-                title: new test title
-                content: new test content
+              properties:
+                title:
+                  type: string
+                  example: test notice title
+                content:
+                  type: string
+                  example: test notice content
+                image:
+                  type: string
+                  format: binary
       parameters:
         - name: id
           in: query
@@ -1281,14 +1287,19 @@ paths:
       summary: 자주묻는질문 수정
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
-              example:
-                draft: 1
-                category: new_c
-                title: new faq title
-                content: new faq content
+              properties:
+                title:
+                  type: string
+                  example: test notice title
+                content:
+                  type: string
+                  example: test notice content
+                image:
+                  type: string
+                  format: binary
       parameters:
         - name: id
           in: query
