@@ -1,10 +1,10 @@
-package com.tmax.eTest.Admin.dashboard.repository;
+package com.tmax.eTest.Dashboard.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.tmax.eTest.Admin.dashboard.dto.FilterRepoQueryDTO;
-import com.tmax.eTest.Admin.dashboard.dto.StatementDashboardDTO;
+import com.tmax.eTest.Dashboard.dto.FilterRepoQueryDTO;
+import com.tmax.eTest.Dashboard.dto.StatementDashboardDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

@@ -1,12 +1,12 @@
-package com.tmax.eTest.Admin.dashboard.service;
+package com.tmax.eTest.Dashboard.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tmax.eTest.Admin.dashboard.dto.*;
-import com.tmax.eTest.Admin.dashboard.repository.DiagnosisReportRepository;
-import com.tmax.eTest.Admin.dashboard.repository.MinitestReportRepository;
-import com.tmax.eTest.Admin.dashboard.repository.StatementRepository;
+import com.tmax.eTest.Dashboard.dto.*;
+import com.tmax.eTest.Dashboard.repository.DiagnosisReportRepository;
+import com.tmax.eTest.Dashboard.repository.MinitestReportRepository;
+import com.tmax.eTest.Dashboard.repository.StatementRepository;
 import com.tmax.eTest.Auth.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

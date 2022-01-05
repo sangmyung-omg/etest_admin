@@ -1,7 +1,7 @@
-package com.tmax.eTest.Admin.dashboard.controller;
+package com.tmax.eTest.Dashboard.controller;
 
-import com.tmax.eTest.Admin.dashboard.dto.*;
-import com.tmax.eTest.Admin.dashboard.service.DashboardService;
+import com.tmax.eTest.Dashboard.dto.*;
+import com.tmax.eTest.Dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
