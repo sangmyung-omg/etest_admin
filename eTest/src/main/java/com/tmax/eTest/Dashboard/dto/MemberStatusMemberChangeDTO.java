@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberStatusMemberChangeDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] memberTotal;
     private int[] memberRegistered;
 //    private int[] memberWithdrawn;

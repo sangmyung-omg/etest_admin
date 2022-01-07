@@ -13,10 +13,11 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class FilterRepoQueryDTO {
+    private String timeUnit;
     private Timestamp dateFrom;
     private Timestamp dateTo;
-    private String gender;
-    private LocalDate ageGroupLowerBound;
-    private LocalDate ageGroupUpperBound;
-    private int investmentExperience;
+//    private String gender;
+//    private LocalDate ageGroupLowerBound;
+//    private LocalDate ageGroupUpperBound;
+//    private int investmentExperience;
 }

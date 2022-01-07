@@ -8,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class CollectDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] collect;
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContentViewsDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] viewsVideo;
     private int[] viewsArticle;
     private int[] viewsTextbook;

@@ -8,11 +8,9 @@ import java.time.LocalDateTime;
 @Data
 @Getter
 public class FilterDTO {
+    private String timeUnit; // hour, day, week, month
     private LocalDateTime dateFrom;
     private LocalDateTime dateTo;
-    private String gender;
-    private Integer ageGroup;
-    private int investmentExperience;
 }
 
 

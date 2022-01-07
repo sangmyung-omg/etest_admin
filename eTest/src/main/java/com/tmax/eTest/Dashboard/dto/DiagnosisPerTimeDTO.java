@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class DiagnosisPerTimeDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] diagnosisMember;
     private int[] diagnosisNotMember;
     private int[] minitest;
