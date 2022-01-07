@@ -22,12 +22,14 @@ paths:
               example:
                 dateFrom: '2021-09-28T03:31:57'
                 dateTo: '2021-09-30T03:31:57'
-                gender: null
-                ageGroup: null
-                investmentExperience: null
       responses:
         '200':
           description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
           content:
             application/json:
               schema:
@@ -76,434 +78,26 @@ paths:
             schema:
               type: object
               example:
-                dateFrom: '2021-09-16T03:31:57'
-                dateTo: '2021-09-16T03:31:57'
-                gender: null
-                ageGroup: null
-                investmentExperience: null
+                timeUnit: hour
+                dateFrom: '2022-01-07T03:31:57'
+                dateTo: '2022-01-07T03:31:57'
       responses:
         '200':
           description: OK
-          content:
-            application/json:
+          headers:
+            Content-Type:
               schema:
-                type: object
-              example:
-                accessor:
-                  time:
-                    - '1:00'
-                    - '2:00'
-                    - '3:00'
-                    - '4:00'
-                    - '5:00'
-                    - '6:00'
-                    - '7:00'
-                    - '8:00'
-                    - '9:00'
-                    - '10:00'
-                    - '11:00'
-                    - '12:00'
-                    - '13:00'
-                    - '14:00'
-                    - '15:00'
-                    - '16:00'
-                    - '17:00'
-                    - '18:00'
-                    - '19:00'
-                    - '20:00'
-                    - '21:00'
-                    - '22:00'
-                    - '23:00'
-                  collect:
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 3
-                    - 3
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                    - 4
-                memberChange:
-                  time:
-                    - '1:00'
-                    - '2:00'
-                    - '3:00'
-                    - '4:00'
-                    - '5:00'
-                    - '6:00'
-                    - '7:00'
-                    - '8:00'
-                    - '9:00'
-                    - '10:00'
-                    - '11:00'
-                    - '12:00'
-                    - '13:00'
-                    - '14:00'
-                    - '15:00'
-                    - '16:00'
-                    - '17:00'
-                    - '18:00'
-                    - '19:00'
-                    - '20:00'
-                    - '21:00'
-                    - '22:00'
-                    - '23:00'
-                  memberTotal:
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                    - 6
-                  memberRegistered:
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-                    - 0
-  /submaster/dashboard/diagnosis:
-    post:
-      tags:
-        - 대시보드
-      summary: 대시보드 진단 현황
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                dateFrom: '2021-09-16T03:31:57'
-                dateTo: '2021-09-16T03:31:57'
-                gender: null
-                ageGroup: null
-                investmentExperience: null
-      responses:
-        '200':
-          description: OK
+                type: string
+                example: application/json
           content:
             application/json:
               schema:
                 type: object
               examples:
                 example-0:
-                  summary: 대시보드 진단 현황 - 기간
+                  summary: hour
                   value:
-                    diagnosisPerTime:
-                      time:
-                        - 9-16
-                        - 9-17
-                        - 9-18
-                        - 9-19
-                        - 9-20
-                        - 9-21
-                        - 9-22
-                        - 9-23
-                        - 9-24
-                        - 9-25
-                        - 9-26
-                        - 9-27
-                        - 9-28
-                        - 9-29
-                        - 9-30
-                      diagnosisMember:
-                        - 1
-                        - 1
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                      diagnosisNotMember:
-                        - 1
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                      minitest:
-                        - 1
-                        - 1
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 5
-                        - 0
-                        - 1
-                        - 28
-                    diagnosisInfo:
-                      - time: 9-16
-                        diagnosisAndMinitest: 3
-                        diagnosisTotal: 2
-                        diagnosisTotalRatio: 0.6666666666666666
-                        diagnosisMember: 1
-                        diagnosisMemberRatio: 0.5
-                        diagnosisNotMember: 1
-                        diagnosisNotMemberRatio: 0.5
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-17
-                        diagnosisAndMinitest: 2
-                        diagnosisTotal: 1
-                        diagnosisTotalRatio: 0.5
-                        diagnosisMember: 1
-                        diagnosisMemberRatio: 1
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-18
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-19
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-20
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-21
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-22
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-23
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-24
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-25
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-26
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-27
-                        diagnosisAndMinitest: 5
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-28
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-29
-                        diagnosisAndMinitest: 1
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: 9-30
-                        diagnosisAndMinitest: 28
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                    diagnosisStatus:
-                      diagnosisCount: 3
-                      scoreLegend:
-                        - 80점 이상
-                        - 60~79점
-                        - 41~60점
-                        - 40점 이하
-                      scoreRatio:
-                        - 0
-                        - 0.3333333333333333
-                        - 0.6666666666666666
-                        - 0
-                      averageScore: 60.333333333333336
-                      categoryName:
-                        - 위험대응
-                        - 행동편향
-                        - 지식이해
-                      categoryAverageScore:
-                        - 85.33333333333333
-                        - 72.33333333333333
-                        - 33.333333333333336
-                    minitestStatus:
-                      diagnosisCount: 36
-                      scoreLegend:
-                        - 80점 이상
-                        - 60~79점
-                        - 41~60점
-                        - 40점 이하
-                      scoreRatio:
-                        - 0
-                        - 0
-                        - 0.3333333333333333
-                        - 0.6666666666666666
-                      averageScore: 38.416666666666664
-                      categoryName:
-                        - 리스크관리 및 행동편향
-                        - 금융투자 이해&금융투자 기본
-                        - 금융투자상품 - 주식
-                        - 금융투자상품 가치평가
-                        - 금융투자상품 보유관리
-                      categoryAverageScore:
-                        - 44.686720284722234
-                        - 38.71672745967742
-                        - 35.94933282160806
-                        - 37.384093123611116
-                        - 38.33200301094892
-                example-1:
-                  summary: 대시보드 진단 현황 - 오늘
-                  value:
-                    diagnosisPerTime:
+                    accessor:
                       time:
                         - '1:00'
                         - '2:00'
@@ -528,7 +122,128 @@ paths:
                         - '21:00'
                         - '22:00'
                         - '23:00'
-                      diagnosisMember:
+                      secondaryTime:
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                      collect:
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                        - 102
+                    memberChange:
+                      time:
+                        - '1:00'
+                        - '2:00'
+                        - '3:00'
+                        - '4:00'
+                        - '5:00'
+                        - '6:00'
+                        - '7:00'
+                        - '8:00'
+                        - '9:00'
+                        - '10:00'
+                        - '11:00'
+                        - '12:00'
+                        - '13:00'
+                        - '14:00'
+                        - '15:00'
+                        - '16:00'
+                        - '17:00'
+                        - '18:00'
+                        - '19:00'
+                        - '20:00'
+                        - '21:00'
+                        - '22:00'
+                        - '23:00'
+                      secondaryTime:
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                      memberTotal:
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                      memberRegistered:
                         - 0
                         - 0
                         - 0
@@ -536,6 +251,325 @@ paths:
                         - 0
                         - 0
                         - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                example-1:
+                  summary: hour (today)
+                  value:
+                    accessor:
+                      time:
+                        - '1:00'
+                        - '2:00'
+                        - '3:00'
+                        - '4:00'
+                        - '5:00'
+                        - '6:00'
+                        - '7:00'
+                        - '8:00'
+                        - '9:00'
+                        - '10:00'
+                        - '11:00'
+                        - '12:00'
+                        - '13:00'
+                      secondaryTime:
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                      collect:
+                        - 1492
+                        - 1492
+                        - 1492
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                        - 1493
+                    memberChange:
+                      time:
+                        - '1:00'
+                        - '2:00'
+                        - '3:00'
+                        - '4:00'
+                        - '5:00'
+                        - '6:00'
+                        - '7:00'
+                        - '8:00'
+                        - '9:00'
+                        - '10:00'
+                        - '11:00'
+                        - '12:00'
+                        - '13:00'
+                      secondaryTime:
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                      memberTotal:
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                      memberRegistered:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                example-2:
+                  summary: day
+                  value:
+                    accessor:
+                      time:
+                        - 2022.09.26
+                        - 2022.09.27
+                        - 2022.09.28
+                        - 2022.09.29
+                        - 2022.09.30
+                        - 2022.10.01
+                        - 2022.10.02
+                        - 2022.10.03
+                        - 2022.10.04
+                        - 2022.10.05
+                        - 2022.10.06
+                        - 2022.10.07
+                        - 2022.10.08
+                        - 2022.10.09
+                        - 2022.10.10
+                        - 2022.10.11
+                        - 2022.10.12
+                        - 2022.10.13
+                        - 2022.10.14
+                        - 2022.10.15
+                        - 2022.10.16
+                        - 2022.10.17
+                        - 2022.10.18
+                        - 2022.10.19
+                        - 2022.10.20
+                        - 2022.10.21
+                        - 2022.10.22
+                        - 2022.10.23
+                        - 2022.10.24
+                        - 2022.10.25
+                        - 2022.10.26
+                      secondaryTime:
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                      collect:
+                        - 102
+                        - 207
+                        - 409
+                        - 588
+                        - 780
+                        - 1066
+                        - 1066
+                        - 1066
+                        - 1066
+                        - 1279
+                        - 1425
+                        - 1426
+                        - 1432
+                        - 1432
+                        - 1432
+                        - 1432
+                        - 1432
+                        - 1432
+                        - 1433
+                        - 1436
+                        - 1436
+                        - 1436
+                        - 1437
+                        - 1441
+                        - 1445
+                        - 1446
+                        - 1446
+                        - 1446
+                        - 1446
+                        - 1454
+                        - 1456
+                    memberChange:
+                      time:
+                        - 2022.09.26
+                        - 2022.09.27
+                        - 2022.09.28
+                        - 2022.09.29
+                        - 2022.09.30
+                        - 2022.10.01
+                        - 2022.10.02
+                        - 2022.10.03
+                        - 2022.10.04
+                        - 2022.10.05
+                        - 2022.10.06
+                        - 2022.10.07
+                        - 2022.10.08
+                        - 2022.10.09
+                        - 2022.10.10
+                        - 2022.10.11
+                        - 2022.10.12
+                        - 2022.10.13
+                        - 2022.10.14
+                        - 2022.10.15
+                        - 2022.10.16
+                        - 2022.10.17
+                        - 2022.10.18
+                        - 2022.10.19
+                        - 2022.10.20
+                        - 2022.10.21
+                        - 2022.10.22
+                        - 2022.10.23
+                        - 2022.10.24
+                        - 2022.10.25
+                        - 2022.10.26
+                      secondaryTime:
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                        - null
+                      memberTotal:
+                        - 3
+                        - 4
+                        - 4
+                        - 4
+                        - 4
+                        - 4
+                        - 4
+                        - 4
+                        - 4
+                        - 4
+                        - 5
+                        - 5
+                        - 5
+                        - 5
+                        - 5
+                        - 5
+                        - 5
+                        - 5
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                      memberRegistered:
+                        - 0
+                        - 1
                         - 0
                         - 0
                         - 0
@@ -552,46 +586,6 @@ paths:
                         - 0
                         - 0
                         - 0
-                      diagnosisNotMember:
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 1
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                      minitest:
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
                         - 1
                         - 0
                         - 0
@@ -600,283 +594,251 @@ paths:
                         - 0
                         - 0
                         - 0
-                    diagnosisInfo:
-                      - time: '1:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '2:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '3:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '4:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '5:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '6:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '7:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '8:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '9:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '10:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '11:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '12:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '13:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '14:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '15:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '16:00'
-                        diagnosisAndMinitest: 2
-                        diagnosisTotal: 1
-                        diagnosisTotalRatio: 0.5
-                        diagnosisMember: 1
-                        diagnosisMemberRatio: 1
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '17:00'
-                        diagnosisAndMinitest: 1
-                        diagnosisTotal: 1
-                        diagnosisTotalRatio: 1
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 1
-                        diagnosisNotMemberRatio: 1
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '18:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '19:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '20:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '21:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '22:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                      - time: '23:00'
-                        diagnosisAndMinitest: 0
-                        diagnosisTotal: 0
-                        diagnosisTotalRatio: 0
-                        diagnosisMember: 0
-                        diagnosisMemberRatio: 0
-                        diagnosisNotMember: 0
-                        diagnosisNotMemberRatio: 0
-                        minitest: 0
-                        minitestRatio: 0
-                    diagnosisStatus:
-                      diagnosisCount: 2
-                      scoreLegend:
-                        - 80점 이상
-                        - 60~79점
-                        - 41~60점
-                        - 40점 이하
-                      scoreRatio:
                         - 0
                         - 0
-                        - 1
-                        - 0
-                      averageScore: 54
-                      categoryName:
-                        - 위험대응
-                        - 행동편향
-                        - 지식이해
-                      categoryAverageScore:
-                        - 81.5
-                        - 58.5
-                        - 31
-                    minitestStatus:
-                      diagnosisCount: 1
-                      scoreLegend:
-                        - 80점 이상
-                        - 60~79점
-                        - 41~60점
-                        - 40점 이하
-                      scoreRatio:
                         - 0
                         - 0
-                        - 1
                         - 0
-                      averageScore: 52
-                      categoryName:
-                        - 리스크관리 및 행동편향
-                        - 금융투자 이해&금융투자 기본
-                        - 금융투자상품 - 주식
-                        - 금융투자상품 가치평가
-                        - 금융투자상품 보유관리
-                      categoryAverageScore:
-                        - 47.30039275
-                        - 31.201299833333337
-                        - 56.696612
-                        - 58.832992
-                        - 64.07788
+                example-3:
+                  summary: week
+                  value:
+                    accessor:
+                      time:
+                        - 2021.11.07 ~ 2021.11.07
+                        - 2021.11.08 ~ 2021.11.14
+                        - 2021.11.15 ~ 2021.11.21
+                        - 2021.11.22 ~ 2021.11.28
+                        - 2021.11.29 ~ 2021.12.05
+                        - 2021.12.06 ~ 2021.12.12
+                        - 2021.12.13 ~ 2021.12.19
+                        - 2021.12.20 ~ 2021.12.26
+                        - 2021.12.27 ~ 2022.01.02
+                        - 2022.01.03 ~ 2022.01.07
+                      secondaryTime:
+                        - 11월 1주차
+                        - 11월 2주차
+                        - 11월 3주차
+                        - 11월 4주차
+                        - 12월 1주차
+                        - 12월 2주차
+                        - 12월 3주차
+                        - 12월 4주차
+                        - 12월 5주차
+                        - 1월 1주차
+                      collect:
+                        - 1463
+                        - 1467
+                        - 1467
+                        - 1471
+                        - 1474
+                        - 1477
+                        - 1480
+                        - 1481
+                        - 1483
+                        - 1493
+                    memberChange:
+                      time:
+                        - 2021.11.07 ~ 2021.11.07
+                        - 2021.11.08 ~ 2021.11.14
+                        - 2021.11.15 ~ 2021.11.21
+                        - 2021.11.22 ~ 2021.11.28
+                        - 2021.11.29 ~ 2021.12.05
+                        - 2021.12.06 ~ 2021.12.12
+                        - 2021.12.13 ~ 2021.12.19
+                        - 2021.12.20 ~ 2021.12.26
+                        - 2021.12.27 ~ 2022.01.02
+                        - 2022.01.03 ~ 2022.01.07
+                      secondaryTime:
+                        - 11월 1주차
+                        - 11월 2주차
+                        - 11월 3주차
+                        - 11월 4주차
+                        - 12월 1주차
+                        - 12월 2주차
+                        - 12월 3주차
+                        - 12월 4주차
+                        - 12월 5주차
+                        - 1월 1주차
+                      memberTotal:
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                        - 6
+                      memberRegistered:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                example-4:
+                  summary: month
+                  value:
+                    accessor:
+                      time:
+                        - 2021.12.20 ~ 2021.12.31
+                        - 2022.01.01 ~ 2022.01.31
+                        - 2022.02.01 ~ 2022.02.11
+                      secondaryTime:
+                        - 12월
+                        - 1월
+                        - 2월
+                      collect:
+                        - 1483
+                        - 1492
+                        - 1492
+                    memberChange:
+                      time:
+                        - 2021.12.20 ~ 2021.12.31
+                        - 2022.01.01 ~ 2022.01.31
+                        - 2022.02.01 ~ 2022.02.11
+                      secondaryTime:
+                        - 12월
+                        - 1월
+                        - 2월
+                      memberTotal:
+                        - 6
+                        - 6
+                        - 6
+                      memberRegistered:
+                        - 0
+                        - 0
+                        - 0
+  /submaster/dashboard/diagnosis:
+    post:
+      tags:
+        - 대시보드
+      summary: 대시보드 진단 현황
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                timeUnit: month
+                dateFrom: '2021-09-25T03:31:57'
+                dateTo: '2021-11-11T03:31:57'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                diagnosisPerTime:
+                  time:
+                    - 2021.09.25 ~ 2021.09.30
+                    - 2021.10.01 ~ 2021.10.30
+                    - 2021.10.31 ~ 2021.11.11
+                  secondaryTime:
+                    - 9월
+                    - 10월
+                    - 11월
+                  diagnosisMember:
+                    - 0
+                    - 4
+                    - 2
+                  diagnosisNotMember:
+                    - 0
+                    - 3
+                    - 1
+                  minitest:
+                    - 34
+                    - 0
+                    - 0
+                diagnosisInfo:
+                  - time: 2021.09.25 ~ 2021.09.30
+                    diagnosisAndMinitest: 34
+                    diagnosisTotal: 0
+                    diagnosisTotalRatio: 0
+                    diagnosisMember: 0
+                    diagnosisMemberRatio: 0
+                    diagnosisNotMember: 0
+                    diagnosisNotMemberRatio: 0
+                    minitest: 0
+                    minitestRatio: 0
+                  - time: 2021.10.01 ~ 2021.10.30
+                    diagnosisAndMinitest: 7
+                    diagnosisTotal: 7
+                    diagnosisTotalRatio: 1
+                    diagnosisMember: 4
+                    diagnosisMemberRatio: 0.5714285714285714
+                    diagnosisNotMember: 3
+                    diagnosisNotMemberRatio: 0.42857142857142855
+                    minitest: 0
+                    minitestRatio: 0
+                  - time: 2021.10.31 ~ 2021.11.11
+                    diagnosisAndMinitest: 3
+                    diagnosisTotal: 3
+                    diagnosisTotalRatio: 1
+                    diagnosisMember: 2
+                    diagnosisMemberRatio: 0.6666666666666666
+                    diagnosisNotMember: 1
+                    diagnosisNotMemberRatio: 0.3333333333333333
+                    minitest: 0
+                    minitestRatio: 0
+                diagnosisStatus:
+                  diagnosisCount: 10
+                  scoreLegend:
+                    - 80점 이상
+                    - 60~79점
+                    - 41~60점
+                    - 40점 이하
+                  scoreRatio:
+                    - 0
+                    - 0.2
+                    - 0.8
+                    - 0
+                  averageScore: 57.8
+                  categoryName:
+                    - 위험대응
+                    - 행동편향
+                    - 지식이해
+                  categoryAverageScore:
+                    - 83
+                    - 66.5
+                    - 33.2
+                minitestStatus:
+                  diagnosisCount: 34
+                  scoreLegend:
+                    - 80점 이상
+                    - 60~79점
+                    - 41~60점
+                    - 40점 이하
+                  scoreRatio:
+                    - 0
+                    - 0
+                    - 0.3235294117647059
+                    - 0.6764705882352942
+                  averageScore: 38.294117647058826
+                  categoryName:
+                    - 리스크관리 및 행동편향
+                    - 금융투자 이해&금융투자 기본
+                    - 금융투자상품 - 주식
+                    - 금융투자상품 가치평가
+                    - 금융투자상품 보유관리
+                  categoryAverageScore:
+                    - 44.811470007352945
+                    - 39.59339689316239
+                    - 35.299197701058226
+                    - 36.9483346651515
+                    - 37.81041238076923
   /submaster/dashboard/content:
     post:
       tags:
@@ -888,14 +850,17 @@ paths:
             schema:
               type: object
               example:
-                dateFrom: '2021-09-27T03:31:57'
-                dateTo: '2021-10-03T03:31:57'
-                gender: null
-                ageGroup: null
-                investmentExperience: null
+                timeUnit: hour
+                dateFrom: '2022-01-07T03:31:57'
+                dateTo: '2022-01-07T03:31:57'
       responses:
         '200':
           description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
           content:
             application/json:
               schema:
@@ -903,24 +868,56 @@ paths:
               example:
                 contentViews:
                   time:
-                    - 9-27
-                    - 9-28
-                    - 9-29
-                    - 9-30
-                    - 10-1
-                    - 10-2
-                    - 10-3
+                    - '1:00'
+                    - '2:00'
+                    - '3:00'
+                    - '4:00'
+                    - '5:00'
+                    - '6:00'
+                    - '7:00'
+                    - '8:00'
+                    - '9:00'
+                    - '10:00'
+                    - '11:00'
+                    - '12:00'
+                    - '13:00'
+                  secondaryTime:
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
+                    - null
                   viewsVideo:
                     - 0
-                    - 2
-                    - 16
-                    - 4
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
                     - 0
                     - 0
                     - 0
                   viewsArticle:
                     - 0
-                    - 2
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
                     - 0
                     - 0
                     - 0
@@ -928,14 +925,20 @@ paths:
                     - 0
                   viewsTextbook:
                     - 0
-                    - 11
-                    - 2
-                    - 15
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
+                    - 0
                     - 0
                     - 0
                     - 0
                 contentViewsInfo:
-                  - time: 9-27
+                  - time: '1:00'
                     viewsTotal: 0
                     viewsVideo: 0
                     viewsVideoRatio: 0
@@ -943,31 +946,7 @@ paths:
                     viewsArticleRatio: 0
                     viewsTextbook: 0
                     viewsTextbookRatio: 0
-                  - time: 9-28
-                    viewsTotal: 15
-                    viewsVideo: 2
-                    viewsVideoRatio: 0.13333333333333333
-                    viewsArticle: 2
-                    viewsArticleRatio: 0.13333333333333333
-                    viewsTextbook: 11
-                    viewsTextbookRatio: 0.7333333333333333
-                  - time: 9-29
-                    viewsTotal: 18
-                    viewsVideo: 16
-                    viewsVideoRatio: 0.8888888888888888
-                    viewsArticle: 0
-                    viewsArticleRatio: 0
-                    viewsTextbook: 2
-                    viewsTextbookRatio: 0.1111111111111111
-                  - time: 9-30
-                    viewsTotal: 19
-                    viewsVideo: 4
-                    viewsVideoRatio: 0.21052631578947367
-                    viewsArticle: 0
-                    viewsArticleRatio: 0
-                    viewsTextbook: 15
-                    viewsTextbookRatio: 0.7894736842105263
-                  - time: 10-1
+                  - time: '2:00'
                     viewsTotal: 0
                     viewsVideo: 0
                     viewsVideoRatio: 0
@@ -975,7 +954,7 @@ paths:
                     viewsArticleRatio: 0
                     viewsTextbook: 0
                     viewsTextbookRatio: 0
-                  - time: 10-2
+                  - time: '3:00'
                     viewsTotal: 0
                     viewsVideo: 0
                     viewsVideoRatio: 0
@@ -983,7 +962,79 @@ paths:
                     viewsArticleRatio: 0
                     viewsTextbook: 0
                     viewsTextbookRatio: 0
-                  - time: 10-3
+                  - time: '4:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '5:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '6:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '7:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '8:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '9:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '10:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '11:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '12:00'
+                    viewsTotal: 0
+                    viewsVideo: 0
+                    viewsVideoRatio: 0
+                    viewsArticle: 0
+                    viewsArticleRatio: 0
+                    viewsTextbook: 0
+                    viewsTextbookRatio: 0
+                  - time: '13:00'
                     viewsTotal: 0
                     viewsVideo: 0
                     viewsVideoRatio: 0

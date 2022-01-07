@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.dashboard.dto;
+package com.tmax.eTest.Dashboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

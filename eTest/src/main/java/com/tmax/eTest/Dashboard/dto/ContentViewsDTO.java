@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.dashboard.dto;
+package com.tmax.eTest.Dashboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContentViewsDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] viewsVideo;
     private int[] viewsArticle;
     private int[] viewsTextbook;

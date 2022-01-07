@@ -1,13 +1,14 @@
-package com.tmax.eTest.Admin.dashboard.service;
+package com.tmax.eTest.Dashboard.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tmax.eTest.Admin.dashboard.dto.*;
-import com.tmax.eTest.Admin.dashboard.repository.DiagnosisReportRepository;
-import com.tmax.eTest.Admin.dashboard.repository.MinitestReportRepository;
-import com.tmax.eTest.Admin.dashboard.repository.StatementRepository;
+import com.tmax.eTest.Dashboard.dto.*;
+import com.tmax.eTest.Dashboard.repository.DiagnosisReportRepository;
+import com.tmax.eTest.Dashboard.repository.MinitestReportRepository;
+import com.tmax.eTest.Dashboard.repository.StatementRepository;
 import com.tmax.eTest.Auth.repository.UserRepository;
+import com.tmax.eTest.Dashboard.util.CalendarUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
-public class DashboardService {
+public class DashboardService extends CalendarUtil{
     @Autowired
     @Qualifier("AU-UserRepository")
     private final UserRepository userRepository;
@@ -55,6 +57,7 @@ public class DashboardService {
 //    private int viewsWikiAtom;
 
     private String[] time;
+    private String[] secondaryTime;
     private int[] accessorCollect;
     private int[] memberTotal;
     private int[] memberRegistered;
@@ -121,18 +124,19 @@ public class DashboardService {
 
     public FilterRepoQueryDTO filterRepoQueryBuilder(FilterDTO filterDTO) {
         FilterRepoQueryDTO filterRepoQueryDTO = FilterRepoQueryDTO.builder()
-                .gender(filterDTO.getGender())
-                .investmentExperience(filterDTO.getInvestmentExperience())
+                .timeUnit(filterDTO.getTimeUnit())
+//                .gender(filterDTO.getGender())
+//                .investmentExperience(filterDTO.getInvestmentExperience())
                 .build();
         if (filterDTO.getDateFrom() != null & filterDTO.getDateTo() != null){
             filterRepoQueryDTO.setDateFrom(Timestamp.valueOf(filterDTO.getDateFrom()));
             filterRepoQueryDTO.setDateTo(Timestamp.valueOf(filterDTO.getDateTo().plusDays(1)));
         }
-        if (filterDTO.getAgeGroup() != null){
-            LocalDate currentDateTime = LocalDate.now();
-            filterRepoQueryDTO.setAgeGroupLowerBound(currentDateTime.minusYears(filterDTO.getAgeGroup() + 10));
-            filterRepoQueryDTO.setAgeGroupUpperBound(currentDateTime.minusYears(filterDTO.getAgeGroup()));
-        }
+//        if (filterDTO.getAgeGroup() != null){
+//            LocalDate currentDateTime = LocalDate.now();
+//            filterRepoQueryDTO.setAgeGroupLowerBound(currentDateTime.minusYears(filterDTO.getAgeGroup() + 10));
+//            filterRepoQueryDTO.setAgeGroupUpperBound(currentDateTime.minusYears(filterDTO.getAgeGroup()));
+//        }
         return filterRepoQueryDTO;
     }
 
@@ -153,8 +157,10 @@ public class DashboardService {
     }
 
     private void initialize(int arraySize) {
+        initializeAtom();
         hourLowerBound = 0;
         time = new String[arraySize];
+        secondaryTime = new String[arraySize];
         accessorCollect = new int[arraySize];
         memberTotal = new int[arraySize];
         memberRegistered = new int[arraySize];
@@ -208,8 +214,13 @@ public class DashboardService {
 //        viewsWikiAtom = 0;
     }
 
-    private void setTimeBound(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        if (dateFrom.equals(dateTo)) {
+    private int setTimeBound(String timeUnit, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        Calendar calDateFrom = Calendar.getInstance();
+        Calendar calDateTo = Calendar.getInstance();
+        calDateFrom.setTime(Timestamp.valueOf(dateFrom));
+        calDateTo.setTime(Timestamp.valueOf(dateTo));
+
+        if (timeUnit.equals("hour")) {
             cal = Calendar.getInstance();
             diagnosisDate = Timestamp.valueOf(dateFrom);
             cal.setTime(diagnosisDate);
@@ -221,7 +232,7 @@ public class DashboardService {
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
             timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        else {
+        else if (timeUnit.equals("day")) {
             cal = Calendar.getInstance();
             Timestamp diagnosisDate = Timestamp.valueOf(dateFrom);
             cal.setTime(diagnosisDate);
@@ -234,6 +245,102 @@ public class DashboardService {
             cal.set(Calendar.HOUR_OF_DAY, 47);
             timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
+        else if (timeUnit.equals("week")) {
+            cal = Calendar.getInstance();
+            diagnosisDate = Timestamp.valueOf(dateFrom);
+            cal.setTime(diagnosisDate);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.set(Calendar.MILLISECOND, -1);
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            switch (dateFrom.getDayOfWeek()){
+                case SUNDAY:
+                    cal.add(Calendar.DATE, 1);
+                    break;
+                case SATURDAY:
+                    cal.add(Calendar.DATE, 2);
+                    break;
+                case FRIDAY:
+                    cal.add(Calendar.DATE, 3);
+                    break;
+                case THURSDAY:
+                    cal.add(Calendar.DATE, 4);
+                    break;
+                case WEDNESDAY:
+                    cal.add(Calendar.DATE, 5);
+                    break;
+                case TUESDAY:
+                    cal.add(Calendar.DATE, 6);
+                    break;
+                case MONDAY:
+                    cal.add(Calendar.DATE, 7);
+                    break;
+            }
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+
+            calDateFrom.setFirstDayOfWeek(Calendar.MONDAY);
+            calDateTo.setFirstDayOfWeek(Calendar.MONDAY);
+
+            int weekCount = 1;
+
+//            logger.info("from : {}", calDateFrom.getTime());
+            String weekOfDateFrom = getCurrentWeekOfMonth(dateFrom.getYear(), dateFrom.getMonthValue(), dateFrom.getDayOfMonth());
+//            logger.info("to : {}", calDateTo.getTime());
+            String weekOfDateTo = getCurrentWeekOfMonth(dateTo.getYear(), dateTo.getMonthValue(), dateTo.getDayOfMonth());
+            long daysBetweenDateFromAndDateTo = TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis());
+
+            if (daysBetweenDateFromAndDateTo > 6 & !weekOfDateFrom.equals(weekOfDateTo)){
+                while (TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis()) > 6){
+                    logger.info(String.valueOf(TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis())));
+                    calDateFrom.add(Calendar.DATE, 7);
+                    weekCount++;
+                }
+//                logger.info("new to : {}", calDateTo.getTime());
+//                logger.info("new from : {}", calDateFrom.getTime());
+
+            }
+//            logger.info("new from : {}", calDateFrom.getTime());
+//            logger.info("new to : {}", calDateTo.getTime());
+//            logger.info("timeLowerBound : {}", timeLowerBound);
+//            logger.info("timeUpperBound : {}", timeUpperBound);
+//            logger.info("weekCount : {}", weekCount);
+            return weekCount + 1;
+        }
+        else if (timeUnit.equals("month")) {
+            cal = Calendar.getInstance();
+            diagnosisDate = Timestamp.valueOf(dateFrom);
+            cal.setTime(diagnosisDate);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.set(Calendar.MILLISECOND, -1);
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+
+//            logger.info("lb {}", timeLowerBound);
+//            logger.info("ub {}\n", timeUpperBound);
+
+            int monthCount = 1;
+
+            while (calDateFrom.get(Calendar.YEAR) != calDateTo.get(Calendar.YEAR)
+                    | calDateFrom.get(Calendar.MONTH) != calDateTo.get(Calendar.MONTH)) {
+//                logger.info("\n{}\n{}", calDateFrom.getTime(), calDateTo.getTime());
+                if (calDateFrom.get(Calendar.MONTH) == 11) { // DECEMBER
+                    calDateFrom.add(Calendar.YEAR, 1);
+                    calDateFrom.set(Calendar.MONTH, 0); // JANUARY
+                }
+                else
+                    calDateFrom.add(Calendar.MONTH, 1);
+                monthCount++;
+            }
+//            logger.info("monthCount : {}", monthCount);
+            return monthCount;
+        }
+        return 0;
     }
 
     private int getAccessorCollectBase(FilterDTO filterDTO) {
@@ -385,44 +492,118 @@ public class DashboardService {
         }
     }
 
-    private void calculateMemberInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        int index;
-        if (dateFrom.equals(dateTo)) {
+    private void calculateMemberInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
+        int index = 0;
+        Calendar c = Calendar.getInstance();
+        if (timeUnit.equals("hour")) {
             index = hourLowerBound;
             time[index] = index + 1 + ":00";
-        } else {
+        } else if (timeUnit.equals("day")) {
             index = timeIndex;
-            time[index] = (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+        } else if (timeUnit.equals("week")) {
+            index = timeIndex;
+            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+            c.setTime(timeLowerBound);
+            c.add(Calendar.DATE, 1);
+            secondaryTime[index] = getCurrentWeekOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+        } else if (timeUnit.equals("month")) {
+            index = timeIndex;
+            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+            c.setTime(timeLowerBound);
+            c.add(Calendar.DATE, 1);
+            secondaryTime[index] = (cal.get(Calendar.MONTH) + 1) + "월";
         }
+
         accessorCollectBase += accessorAtom;
         accessorCollect[index] = accessorCollectBase;
         memberRegistered[index] = memberRegisteredAtom;
         memberWithdrawn[index] = memberWithdrawnAtom;
 
-        if (dateFrom.equals(dateTo)) {
+        if (timeUnit.equals("hour")) {
             hourLowerBound++;
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
             timeLowerBound = new Timestamp(cal.getTimeInMillis());
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        else {
+        else if (timeUnit.equals("day")) {
             timeLowerBound = new Timestamp(cal.getTimeInMillis());
             cal.set(Calendar.HOUR_OF_DAY, 47);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        timeUpperBound = new Timestamp(cal.getTimeInMillis());
+        else if (timeUnit.equals("week")) {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.add(Calendar.DATE, 7);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
+
+//            logger.info("timeLowerBound : {}", timeLowerBound);
+//            logger.info("dateTo : {}", dateTo);
+
+            if (0 < upperBoundDays & upperBoundDays < 7) {
+                cal.setTime(dateTo);
+                cal.set(Calendar.HOUR_OF_DAY, 24);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                cal.set(Calendar.MILLISECOND, -1);
+                timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            }
+
+//            logger.info("timeUpperBound : {}", timeUpperBound);
+//            logger.info("days btwn : {}\n", upperBoundDays);
+        }
+        else if (timeUnit.equals("month")) {
+//            logger.info("lb {}", timeLowerBound);
+//            logger.info("ub {}\n", timeUpperBound);
+
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+
+            if (cal.get(Calendar.MONTH) == 11) { // DECEMBER
+                cal.add(Calendar.YEAR, 1);
+                cal.set(Calendar.MONTH, 0); // JANUARY
+            }
+            else
+                cal.add(Calendar.MONTH, 1);
+
+            timeUpperBound = (dateTo.getTime() > cal.getTimeInMillis()) ? new Timestamp(cal.getTimeInMillis()) : dateTo;
+
+//            logger.info("timeLowerBound : {}", timeLowerBound);
+//            logger.info("dateTo : {}", dateTo);
+//            logger.info("timeUpperBound : {}\n", timeUpperBound);
+
+        }
 
         statements = statements.subList(accessorAtom + memberRegisteredAtom + memberWithdrawnAtom, statements.size());
         initializeAtom();
     }
 
-    private void calculateDiagnosisInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        int index;
-        if (dateFrom.equals(dateTo)) {
+    private void calculateDiagnosisInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
+        int index = 0;
+        Calendar c = Calendar.getInstance();
+        if (timeUnit.equals("hour")) {
             index = hourLowerBound;
             time[index] = index + 1 + ":00";
-        }else{
+        } else if (timeUnit.equals("day")) {
             index = timeIndex;
-            time[index] = (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+        } else if (timeUnit.equals("week")) {
+            index = timeIndex;
+            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+            c.setTime(timeLowerBound);
+            c.add(Calendar.DATE, 1);
+            secondaryTime[index] = getCurrentWeekOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+        } else if (timeUnit.equals("month")) {
+            index = timeIndex;
+            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+            c.setTime(timeLowerBound);
+            c.add(Calendar.DATE, 1);
+            secondaryTime[index] = (cal.get(Calendar.MONTH) + 1) + "월";
         }
         diagnosisAndMinitest[index] = diagnosisMemberAtom + diagnosisNotMemberAtom + minitestAtom;
         diagnosisTotal[index] = diagnosisMemberAtom + diagnosisNotMemberAtom;
@@ -450,31 +631,76 @@ public class DashboardService {
         diagnosisCount += diagnosisMemberAtom + diagnosisNotMemberAtom;
         minitestCount += minitestAtom;
 
-        if (dateFrom.equals(dateTo)) {
+        if (timeUnit.equals("hour")) {
             hourLowerBound++;
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
             timeLowerBound = new Timestamp(cal.getTimeInMillis());
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        else {
+        else if (timeUnit.equals("day")) {
             timeLowerBound = new Timestamp(cal.getTimeInMillis());
             cal.set(Calendar.HOUR_OF_DAY, 47);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        timeUpperBound = new Timestamp(cal.getTimeInMillis());
+        else if (timeUnit.equals("week")) {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.add(Calendar.DATE, 7);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
+
+            if (0 < upperBoundDays & upperBoundDays < 7) {
+                cal.setTime(dateTo);
+                cal.set(Calendar.HOUR_OF_DAY, 24);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                cal.set(Calendar.MILLISECOND, -1);
+                timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            }
+        }
+        else if (timeUnit.equals("month")) {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+
+            if (cal.get(Calendar.MONTH) == 11) { // DECEMBER
+                cal.add(Calendar.YEAR, 1);
+                cal.set(Calendar.MONTH, 0); // JANUARY
+            }
+            else
+                cal.add(Calendar.MONTH, 1);
+
+            timeUpperBound = (dateTo.getTime() > cal.getTimeInMillis()) ? new Timestamp(cal.getTimeInMillis()) : dateTo;
+        }
+
 
         diagnosisReports = diagnosisReports.subList(diagnosisMemberAtom + diagnosisNotMemberAtom, diagnosisReports.size());
         minitestReports = minitestReports.subList(minitestAtom, minitestReports.size());
         initializeAtom();
     }
 
-    private void calculateContentViewsInfo(int timeIndex, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        int index;
-        if (dateFrom.equals(dateTo)) {
+    private void calculateContentViewsInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
+        int index = 0;
+        Calendar c = Calendar.getInstance();
+        if (timeUnit.equals("hour")) {
             index = hourLowerBound;
             time[index] = index + 1 + ":00";
-        } else {
+        } else if (timeUnit.equals("day")) {
             index = timeIndex;
-            time[index] = (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+        } else if (timeUnit.equals("week")) {
+            index = timeIndex;
+            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+            c.setTime(timeLowerBound);
+            c.add(Calendar.DATE, 1);
+            secondaryTime[index] = getCurrentWeekOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+        } else if (timeUnit.equals("month")) {
+            index = timeIndex;
+            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+            c.setTime(timeLowerBound);
+            c.add(Calendar.DATE, 1);
+            secondaryTime[index] = (cal.get(Calendar.MONTH) + 1) + "월";
         }
 //        viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom;
         viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom;
@@ -495,17 +721,46 @@ public class DashboardService {
 //        if (Double.isNaN(viewsWikiRatio[index]))
 //            viewsWikiRatio[index] = 0;
 
-        if (dateFrom.equals(dateTo)) {
+        if (timeUnit.equals("hour")) {
             hourLowerBound++;
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
             timeLowerBound = new Timestamp(cal.getTimeInMillis());
             cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        else {
+        else if (timeUnit.equals("day")) {
             timeLowerBound = new Timestamp(cal.getTimeInMillis());
             cal.set(Calendar.HOUR_OF_DAY, 47);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
         }
-        timeUpperBound = new Timestamp(cal.getTimeInMillis());
+        else if (timeUnit.equals("week")) {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            cal.add(Calendar.DATE, 7);
+            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
+
+            if (0 < upperBoundDays & upperBoundDays < 7) {
+                cal.setTime(dateTo);
+                cal.set(Calendar.HOUR_OF_DAY, 24);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                cal.set(Calendar.MILLISECOND, -1);
+                timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            }
+        }
+        else if (timeUnit.equals("month")) {
+            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+
+            if (cal.get(Calendar.MONTH) == 11) { // DECEMBER
+                cal.add(Calendar.YEAR, 1);
+                cal.set(Calendar.MONTH, 0); // JANUARY
+            }
+            else
+                cal.add(Calendar.MONTH, 1);
+
+            timeUpperBound = (dateTo.getTime() > cal.getTimeInMillis()) ? new Timestamp(cal.getTimeInMillis()) : dateTo;
+        }
 
 //        statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom, statements.size());
         statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom, statements.size());
@@ -575,7 +830,6 @@ public class DashboardService {
     public OverallStatusDTO getOverallStatus(FilterDTO filterDTO) {
         double serviceUsageDivisor = 0;
         initialize(0);
-        initializeAtom();
         diagnosisReports = getDiagnosis(filterDTO);
         minitestReports = getMinitest(filterDTO);
         serviceUsageDivisor += diagnosisReports.size() + minitestReports.size();
@@ -674,25 +928,50 @@ public class DashboardService {
 
     public MemberStatusDTO getMemberStatus(FilterDTO filterDTO) {
         statements = getStatements(filterDTO, "application", "member");
+        String timeUnit = filterDTO.getTimeUnit();
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
         accessorCollectBase = getAccessorCollectBase(filterDTO);
 
-        if (dateFrom.equals(dateTo)) {
-            initialize(23);
-            setTimeBound(dateFrom, dateTo);
-            while (hourLowerBound < 23){
+        int arraySize = setTimeBound(timeUnit, dateFrom, dateTo);
+        if (timeUnit.equals("hour")) {
+            int hoursOfDay;
+            LocalDateTime now = LocalDateTime.now();
+            if (now.getYear() == dateFrom.getYear()
+                    & now.getMonthValue() == dateFrom.getMonthValue()
+                    & now.getDayOfMonth() == dateFrom.getDayOfMonth())
+                hoursOfDay = now.getHour();
+            else
+                hoursOfDay = 23;
+            initialize(hoursOfDay);
+//            setTimeBound(timeUnit, dateFrom, dateTo);
+            while (hourLowerBound < hoursOfDay){
                 checkMember();
-                calculateMemberInfo(0, dateFrom, dateTo);
+                calculateMemberInfo(0, filterDTO.getTimeUnit(), null);
             }
         }
-        else {
+        else if (timeUnit.equals("day")) {
             int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
             initialize(daysBetweenTwoDates);
-            setTimeBound(dateFrom, dateTo);
             for (int timeIndex = 0; timeIndex < daysBetweenTwoDates; timeIndex++) {
                 checkMember();
-                calculateMemberInfo(timeIndex, dateFrom, dateTo);
+                calculateMemberInfo(timeIndex, filterDTO.getTimeUnit(), null);
+            }
+        }
+        else if (timeUnit.equals("week")) {
+            initialize(arraySize);
+            Timestamp timestampDateTo = Timestamp.valueOf(dateTo);
+            for (int timeIndex = 0; timeIndex < arraySize; timeIndex++) {
+                checkMember();
+                calculateMemberInfo(timeIndex, filterDTO.getTimeUnit(), timestampDateTo);
+            }
+        }
+        else if (timeUnit.equals("month")) {
+            initialize(arraySize);
+            Timestamp timestampDateTo = Timestamp.valueOf(dateTo);
+            for (int timeIndex = 0; timeIndex < arraySize; timeIndex++) {
+                checkMember();
+                calculateMemberInfo(timeIndex, filterDTO.getTimeUnit(), timestampDateTo);
             }
         }
         calculateMemberStatus();
@@ -700,10 +979,12 @@ public class DashboardService {
         return MemberStatusDTO.builder()
                 .accessor(CollectDTO.builder()
                         .time(time)
+                        .secondaryTime(secondaryTime)
                         .collect(accessorCollect)
                         .build())
                 .memberChange(MemberStatusMemberChangeDTO.builder()
                         .time(time)
+                        .secondaryTime(secondaryTime)
                         .memberTotal(memberTotal)
                         .memberRegistered(memberRegistered)
 //                        .memberWithdrawn(memberWithdrawn)
@@ -714,38 +995,62 @@ public class DashboardService {
     public DiagnosisStatusDTO getDiagnosisStatus(FilterDTO filterDTO) {
         diagnosisReports = getDiagnosis(filterDTO);
         minitestReports = getMinitest(filterDTO);
+        String timeUnit = filterDTO.getTimeUnit();
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
 //        diagnosisCollectBase = getDiagnosisCollectBase(filterDTO);
 
-        if (dateFrom.equals(dateTo)) {
-            initialize(23);
-            setTimeBound(dateFrom, dateTo);
-            while (hourLowerBound < 23){
+        int arraySize = setTimeBound(timeUnit, dateFrom, dateTo);
+        if (timeUnit.equals("hour")) {
+            int hoursOfDay;
+            LocalDateTime now = LocalDateTime.now();
+            if (now.getYear() == dateFrom.getYear()
+                    & now.getMonthValue() == dateFrom.getMonthValue()
+                    & now.getDayOfMonth() == dateFrom.getDayOfMonth())
+                hoursOfDay = now.getHour();
+            else
+                hoursOfDay = 23;
+            initialize(hoursOfDay);
+//            setTimeBound(timeUnit, dateFrom, dateTo);
+            while (hourLowerBound < hoursOfDay){
                 checkDiagnosisReport();
                 checkMinitestReports();
-                calculateDiagnosisInfo(0, dateFrom, dateTo);
+                calculateDiagnosisInfo(0, timeUnit, null);
             }
         }
-        else {
+        else if (timeUnit.equals("day")){
             int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
             initialize(daysBetweenTwoDates);
-            setTimeBound(dateFrom, dateTo);
             for (int timeIndex = 0; timeIndex < daysBetweenTwoDates; timeIndex++) {
                 checkDiagnosisReport();
                 checkMinitestReports();
-                calculateDiagnosisInfo(timeIndex, dateFrom, dateTo);
+                calculateDiagnosisInfo(timeIndex, timeUnit, null);
+            }
+        }
+        else if (timeUnit.equals("week")) {
+            initialize(arraySize);
+            Timestamp timestampDateTo = Timestamp.valueOf(dateTo);
+            for (int timeIndex = 0; timeIndex < arraySize; timeIndex++) {
+                checkDiagnosisReport();
+                checkMinitestReports();
+                calculateDiagnosisInfo(timeIndex, filterDTO.getTimeUnit(), timestampDateTo);
+            }
+        }
+        else if (timeUnit.equals("month")) {
+            initialize(arraySize);
+            Timestamp timestampDateTo = Timestamp.valueOf(dateTo);
+            for (int timeIndex = 0; timeIndex < arraySize; timeIndex++) {
+                checkDiagnosisReport();
+                checkMinitestReports();
+                calculateDiagnosisInfo(timeIndex, filterDTO.getTimeUnit(), timestampDateTo);
             }
         }
         calculateDiagnosisStatus();
 
         return DiagnosisStatusDTO.builder()
-//                .diagnosisCollect(CollectDTO.builder()
-//                        .time(time)
-//                        .collect(diagnosisCollect)
-//                        .build())
                 .diagnosisPerTime(DiagnosisPerTimeDTO.builder()
                         .time(time)
+                        .secondaryTime(secondaryTime)
                         .diagnosisMember(diagnosisMember)
                         .diagnosisNotMember(diagnosisNotMember)
                         .minitest(minitest)
@@ -772,30 +1077,57 @@ public class DashboardService {
 
     public ContentViewsStatusDTO getContentViewsStatus(FilterDTO filterDTO) {
         statements = getStatements(filterDTO, "content", "enter");
+        String timeUnit = filterDTO.getTimeUnit();
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
 
-        if (dateFrom.equals(dateTo)) {
-            initialize(23);
-            setTimeBound(dateFrom, dateTo);
-            while (hourLowerBound < 23){
+        int arraySize = setTimeBound(timeUnit, dateFrom, dateTo);
+        if (timeUnit.equals("hour")) {
+            int hoursOfDay;
+            LocalDateTime now = LocalDateTime.now();
+            if (now.getYear() == dateFrom.getYear()
+                    & now.getMonthValue() == dateFrom.getMonthValue()
+                    & now.getDayOfMonth() == dateFrom.getDayOfMonth())
+                hoursOfDay = now.getHour();
+            else
+                hoursOfDay = 23;
+            initialize(hoursOfDay);
+//            setTimeBound(timeUnit, dateFrom, dateTo);
+            while (hourLowerBound < hoursOfDay){
                 checkContentViews();
-                calculateContentViewsInfo(0, dateFrom, dateTo);
+                calculateContentViewsInfo(0, timeUnit, null);
             }
         }
-        else {
+        else if (timeUnit.equals("day")){
             int daysBetweenTwoDates = (int) Duration.between(dateFrom, dateTo).toDays() + 1;
             initialize(daysBetweenTwoDates);
-            setTimeBound(dateFrom, dateTo);
+            setTimeBound(timeUnit, dateFrom, dateTo);
             for (int timeIndex = 0; timeIndex < daysBetweenTwoDates; timeIndex++) {
                 checkContentViews();
-                calculateContentViewsInfo(timeIndex, dateFrom, dateTo);
+                calculateContentViewsInfo(timeIndex, timeUnit, null);
+            }
+        }
+        else if (timeUnit.equals("week")) {
+            initialize(arraySize);
+            Timestamp timestampDateTo = Timestamp.valueOf(dateTo);
+            for (int timeIndex = 0; timeIndex < arraySize; timeIndex++) {
+                checkContentViews();
+                calculateContentViewsInfo(timeIndex, timeUnit, timestampDateTo);
+            }
+        }
+        else if (timeUnit.equals("month")) {
+            initialize(arraySize);
+            Timestamp timestampDateTo = Timestamp.valueOf(dateTo);
+            for (int timeIndex = 0; timeIndex < arraySize; timeIndex++) {
+                checkContentViews();
+                calculateContentViewsInfo(timeIndex, timeUnit, timestampDateTo);
             }
         }
         calculateContentViewsStatus();
         return ContentViewsStatusDTO.builder()
                 .contentViews(ContentViewsDTO.builder()
                         .time(time)
+                        .secondaryTime(secondaryTime)
                         .viewsVideo(viewsVideo)
                         .viewsArticle(viewsArticle)
                         .viewsTextbook(viewsTextbook)

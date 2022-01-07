@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.dashboard.dto;
+package com.tmax.eTest.Dashboard.dto;
 
 import lombok.*;
 
@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class DiagnosisPerTimeDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] diagnosisMember;
     private int[] diagnosisNotMember;
     private int[] minitest;

@@ -1,4 +1,4 @@
-package com.tmax.eTest.Admin.dashboard.dto;
+package com.tmax.eTest.Dashboard.dto;
 
 import lombok.*;
 
@@ -8,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class CollectDTO {
     private String[] time;
+    private String[] secondaryTime;
     private int[] collect;
 }
