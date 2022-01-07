@@ -306,7 +306,7 @@ public class DashboardService extends CalendarUtil{
 //            logger.info("timeLowerBound : {}", timeLowerBound);
 //            logger.info("timeUpperBound : {}", timeUpperBound);
 //            logger.info("weekCount : {}", weekCount);
-            return weekCount;
+            return weekCount + 1;
         }
         else if (timeUnit.equals("month")) {
             cal = Calendar.getInstance();
@@ -944,7 +944,7 @@ public class DashboardService extends CalendarUtil{
             else
                 hoursOfDay = 23;
             initialize(hoursOfDay);
-            setTimeBound(timeUnit, dateFrom, dateTo);
+//            setTimeBound(timeUnit, dateFrom, dateTo);
             while (hourLowerBound < hoursOfDay){
                 checkMember();
                 calculateMemberInfo(0, filterDTO.getTimeUnit(), null);
@@ -1011,7 +1011,7 @@ public class DashboardService extends CalendarUtil{
             else
                 hoursOfDay = 23;
             initialize(hoursOfDay);
-            setTimeBound(timeUnit, dateFrom, dateTo);
+//            setTimeBound(timeUnit, dateFrom, dateTo);
             while (hourLowerBound < hoursOfDay){
                 checkDiagnosisReport();
                 checkMinitestReports();
@@ -1092,7 +1092,7 @@ public class DashboardService extends CalendarUtil{
             else
                 hoursOfDay = 23;
             initialize(hoursOfDay);
-            setTimeBound(timeUnit, dateFrom, dateTo);
+//            setTimeBound(timeUnit, dateFrom, dateTo);
             while (hourLowerBound < hoursOfDay){
                 checkContentViews();
                 calculateContentViewsInfo(0, timeUnit, null);
