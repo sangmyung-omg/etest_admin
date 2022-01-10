@@ -9,8 +9,6 @@ import com.tmax.eTest.Common.model.support.Notice;
 import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -26,8 +24,6 @@ import java.util.stream.Collectors;
 
 @Service("CustomerSupportInquiryService")
 public class InquiryService extends PushService {
-
-    protected final Log LOGGER = LogFactory.getLog(getClass());
 
     @Autowired
     InquiryRepository inquiryRepository;

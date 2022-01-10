@@ -5,8 +5,6 @@ import com.tmax.eTest.Auth.dto.PrincipalDetails;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryAnswerDTO;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryDTO;
 import com.tmax.eTest.Admin.CustomerSupport.service.InquiryService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,15 +18,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 @RestController("CustomerSupportInquiryController")
+@Slf4j
 @RequestMapping(value="submaster/customerSupport", produces = MediaType.APPLICATION_JSON_VALUE)
 public class InquiryController {
-    protected final Log LOGGER = LogFactory.getLog(getClass());
 
     @Value("${file.path}")
     private String path;
@@ -79,7 +79,7 @@ public class InquiryController {
             mimeType = tika.detect(filePath);
             header.add("Content-Type", mimeType);
         } catch (IOException e) {
-            LOGGER.debug("mime type Error");
+            log.debug("mime type Error");
         }
 
         Resource resource = new FileSystemResource(filePath);

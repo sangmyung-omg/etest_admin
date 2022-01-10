@@ -91,6 +91,7 @@ public class VersionService {
             newUkVersion.setUkDescription(ukInfo.getUkDescription());
             newUkVersion.setExternalLink(ukInfo.getExternalLink());
             newUkVersion.setEditDate(ukInfo.getEditDate());
+            newUkVersion.setPage(ukInfo.getPage());
             newUkVersion.setVersionId(newVersionId);
             // ukVersionRepo.save(newUkVersion);
             newVersionUkList.add(newUkVersion);
@@ -160,6 +161,7 @@ public class VersionService {
             newUkVersion.setUkDescription(ukInfo.getUkDescription());
             newUkVersion.setExternalLink(ukInfo.getExternalLink());
             newUkVersion.setEditDate(ukInfo.getEditDate());
+            newUkVersion.setPage(ukInfo.getPage());
             newUkVersion.setVersionId(newVersionId);
             newVersionUkList.add(newUkVersion);
 

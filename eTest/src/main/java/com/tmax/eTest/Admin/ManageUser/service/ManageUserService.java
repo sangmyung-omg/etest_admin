@@ -14,13 +14,13 @@ import com.tmax.eTest.Contents.service.ContentsService;
 import com.tmax.eTest.LRS.dto.GetStatementInfoDTO;
 import com.tmax.eTest.LRS.dto.StatementDTO;
 import com.tmax.eTest.LRS.util.LRSAPIManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -34,9 +34,8 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ManageUserService {
-
-    protected final Log LOGGER = LogFactory.getLog(getClass());
 
     @Autowired
     UserRepository userRepository;
@@ -79,7 +78,7 @@ public class ManageUserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Diagnosis Report Found With Provided UUID ");
         }
 
-        LOGGER.info(diagnosisReports);
+        log.info(diagnosisReports.toString());
         return diagnosisReports;
     }
 

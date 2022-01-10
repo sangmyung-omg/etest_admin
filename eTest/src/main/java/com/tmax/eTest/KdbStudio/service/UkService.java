@@ -49,6 +49,7 @@ public class UkService {
                                                                 .ukDescription(ukInfo.getUkDescription())
                                                                 .externalLink(ukInfo.getExternalLink())
                                                                 .updateDate(ukInfo.getEditDate())
+                                                                .page(ukInfo.getPage())
                                                                 .build();
             if (template.getUkId() % 100 == 0) 
                 log.info("Gathering info of DTO uk_id : " + Integer.toString(template.getUkId()));

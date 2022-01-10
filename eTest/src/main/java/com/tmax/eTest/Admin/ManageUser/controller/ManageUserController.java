@@ -4,8 +4,6 @@ import com.tmax.eTest.Admin.ManageUser.model.dto.UserInfoDTO;
 import com.tmax.eTest.Admin.ManageUser.model.dto.UserPopupDTO;
 import com.tmax.eTest.Admin.ManageUser.service.ManageUserService;
 import com.tmax.eTest.Common.model.report.DiagnosisReport;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "master/manageUser",produces = MediaType.APPLICATION_JSON_VALUE)
 public class ManageUserController {
-
-    protected final Log LOGGER = LogFactory.getLog(getClass());
 
     @Autowired
     ManageUserService manageUserService;

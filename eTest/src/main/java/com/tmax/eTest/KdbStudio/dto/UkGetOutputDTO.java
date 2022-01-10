@@ -15,6 +15,7 @@ public class UkGetOutputDTO {
     private String ukDescription;
     private String externalLink;
     private Timestamp updateDate;
+    private Integer page;
     private List<UkRelatedVideoDTO> relatedVideo;
     private List<UkRelatedArticleDTO> relatedArticle;
 }
