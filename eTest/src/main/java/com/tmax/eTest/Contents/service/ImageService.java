@@ -1,5 +1,11 @@
 package com.tmax.eTest.Contents.service;
 
+import com.tmax.eTest.Contents.exception.ContentsException;
+import com.tmax.eTest.Contents.exception.ErrorCode;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -9,21 +15,19 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageService {
 
   public String getThumbnail(String url) {
-    // try {
-    // Document doc = null;
 
-    // doc = Jsoup.connect(exportUrl).header("User-Agent" , "Mozilla/5.0").get();
+    String thumbnail = "";
+    Connection conn = Jsoup.connect(url);
+    // .header("User-Agent" , "Mozilla/5.0");
+    try {
+      Document document = conn.get();
+      thumbnail = document.select("meta[property=og:image]").attr("content");
+      log.info("Url = " + thumbnail);
+    } catch (Exception e) {
+      log.error("Open Graph Error");
+      throw new ContentsException(ErrorCode.OPENGRAPH_ERROR, "url doesn't contain og:image!");
+    }
 
-    // doc.select("meta[property=og:title]").attr("content"); // 제목
-    // doc.select("meta[property=og:description]").attr("content"); // 내용
-    // doc.select("meta[property=og:image]").attr("content"); // 이미지
-
-    // } catch (Exception e) {
-    // logger.error("Open Graph Error :" , e.getMessage());
-    // }
-    // }
-
-    return null;
+    return thumbnail;
   }
-
 }

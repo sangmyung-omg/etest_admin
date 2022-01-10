@@ -14,7 +14,8 @@ public enum ErrorCode implements ErrorCodeBase {
   USER_ERROR("0006", "User Should not be null.", HttpStatus.UNAUTHORIZED),
   FILE_ERROR("0007", "File has Error.", HttpStatus.BAD_REQUEST),
   CODE_ERROR("0008", "Code has Error.", HttpStatus.CONFLICT),
-  PUSH_ERROR("0009", "Contents Push has Error.", HttpStatus.CONFLICT);
+  PUSH_ERROR("0009", "Contents Push has Error.", HttpStatus.CONFLICT),
+  OPENGRAPH_ERROR("0010", "Open Graph has Error.", HttpStatus.CONFLICT);
 
   static final String ERROR_CODE_PREFIX = "ERR-REC-";
 

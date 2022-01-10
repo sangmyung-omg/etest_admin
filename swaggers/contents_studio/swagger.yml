@@ -13,6 +13,8 @@ tags:
   description: 이미지, 교재 파일 관리
 - name: Code
   description: 메타 코드
+- name : Image
+  description: 썸네일 이미지 관리
 paths:       
   /videos:
     get:
@@ -281,7 +283,29 @@ paths:
           content:
             json:
               schema:
-                $ref: '#/components/schemas/MetaCodeModel'
+                $ref: '#/components/schemas/MetaCodeModel'                
+  /image/thumbnail:
+    get:
+      tags:
+        - Image
+      summary : 썸네일 이미지 조회
+      description : 네이버 포스트 썸네일 이미지 가져오기
+      parameters:
+      - name: url
+        in: query
+        description: 네이버 포스트 링크
+        required: true
+        schema:
+          type: string
+          format: string
+      responses:
+        200:
+          description: OK
+          content:
+            json:
+              schema:
+                type: string
+                format: string
 components:
   schemas:
     VideoModel:
