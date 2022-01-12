@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CreateFaqDto {
+    private int draft;
+
     private String category;
 
     private String title;

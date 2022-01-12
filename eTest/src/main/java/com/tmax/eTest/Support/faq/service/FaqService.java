@@ -178,12 +178,10 @@ public class FaqService {
             logger.debug("faq is null");
             throw new IllegalArgumentException("faq is null");
         }
-        if (createFaqDto.getCategory() != null)
-            faq.setCategory(createFaqDto.getCategory());
-        if (createFaqDto.getTitle() != null)
-            faq.setTitle(createFaqDto.getTitle());
-        if (createFaqDto.getContent() != null)
-            faq.setContent(createFaqDto.getContent());
+        faq.setDraft(createFaqDto.getDraft());
+        faq.setCategory(createFaqDto.getCategory());
+        faq.setTitle(createFaqDto.getTitle());
+        faq.setContent(createFaqDto.getContent());
         if (createFaqDto.getImage() != null){
             String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
             String imageUrlString = faqImageFolderURL + imageName;

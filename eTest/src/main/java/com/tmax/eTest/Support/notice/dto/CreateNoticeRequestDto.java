@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CreateNoticeRequestDto {
+    private int draft;
+
     private String title;
 
     private String content;

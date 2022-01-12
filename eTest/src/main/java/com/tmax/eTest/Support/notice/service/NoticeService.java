@@ -170,10 +170,9 @@ public class NoticeService extends PushService {
         Notice notice = getNotice(id);
         if (notice == null)
             throw new IllegalArgumentException("notice is null");
-        if (createNoticeRequestDto.getTitle() != null)
-            notice.setTitle(createNoticeRequestDto.getTitle());
-        if (createNoticeRequestDto.getContent() != null)
-            notice.setContent(createNoticeRequestDto.getContent());
+        notice.setDraft(createNoticeRequestDto.getDraft());
+        notice.setTitle(createNoticeRequestDto.getTitle());
+        notice.setContent(createNoticeRequestDto.getContent());
         if (createNoticeRequestDto.getImage() != null){
             String imageName = UUID.randomUUID() + "_" + createNoticeRequestDto.getImage().getOriginalFilename();
             String imageUrlString = noticeImageFolderURL + imageName;
