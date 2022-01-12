@@ -500,7 +500,7 @@ public class DashboardService extends CalendarUtil{
             time[index] = index + 1 + ":00";
         } else if (timeUnit.equals("day")) {
             index = timeIndex;
-            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
         } else if (timeUnit.equals("week")) {
             index = timeIndex;
             time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
@@ -589,7 +589,7 @@ public class DashboardService extends CalendarUtil{
             time[index] = index + 1 + ":00";
         } else if (timeUnit.equals("day")) {
             index = timeIndex;
-            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
         } else if (timeUnit.equals("week")) {
             index = timeIndex;
             time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
@@ -686,7 +686,7 @@ public class DashboardService extends CalendarUtil{
             time[index] = index + 1 + ":00";
         } else if (timeUnit.equals("day")) {
             index = timeIndex;
-            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
         } else if (timeUnit.equals("week")) {
             index = timeIndex;
             time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
