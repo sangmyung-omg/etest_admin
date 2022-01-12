@@ -101,10 +101,12 @@ public class DashboardService extends CalendarUtil{
     private List<String> minitestCategoryName;
     private List<Double> minitestCategoryAverage;
 
+    private int index;
     private Timestamp timeLowerBound;
     private Timestamp timeUpperBound;
     private Timestamp diagnosisDate;
-    private Calendar cal;
+    private Calendar timeBoundCal;
+    private Calendar collectDtoCal;
 
     private List<DiagnosisInfoDTO> diagnosisInfo;
     private List<ContentViewsInfoDTO> contentViewsInfo;
@@ -221,114 +223,97 @@ public class DashboardService extends CalendarUtil{
         calDateTo.setTime(Timestamp.valueOf(dateTo));
 
         if (timeUnit.equals("hour")) {
-            cal = Calendar.getInstance();
+            timeBoundCal = Calendar.getInstance();
             diagnosisDate = Timestamp.valueOf(dateFrom);
-            cal.setTime(diagnosisDate);
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            timeBoundCal.setTime(diagnosisDate);
+            timeBoundCal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
+            timeBoundCal.set(Calendar.MINUTE, 0);
+            timeBoundCal.set(Calendar.SECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, 0);
+            timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+            timeBoundCal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+            timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
         }
         else if (timeUnit.equals("day")) {
-            cal = Calendar.getInstance();
+            timeBoundCal = Calendar.getInstance();
             Timestamp diagnosisDate = Timestamp.valueOf(dateFrom);
-            cal.setTime(diagnosisDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            cal.set(Calendar.MILLISECOND, -1);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, 47);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            timeBoundCal.setTime(diagnosisDate);
+            timeBoundCal.set(Calendar.HOUR_OF_DAY, 0);
+            timeBoundCal.set(Calendar.MINUTE, 0);
+            timeBoundCal.set(Calendar.SECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, -1);
+            timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+            timeBoundCal.set(Calendar.HOUR_OF_DAY, 47);
+            timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
         }
         else if (timeUnit.equals("week")) {
-            cal = Calendar.getInstance();
+            timeBoundCal = Calendar.getInstance();
             diagnosisDate = Timestamp.valueOf(dateFrom);
-            cal.setTime(diagnosisDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            cal.set(Calendar.MILLISECOND, -1);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
+            timeBoundCal.setTime(diagnosisDate);
+            timeBoundCal.set(Calendar.HOUR_OF_DAY, 0);
+            timeBoundCal.set(Calendar.MINUTE, 0);
+            timeBoundCal.set(Calendar.SECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, -1);
+            timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
             switch (dateFrom.getDayOfWeek()){
                 case SUNDAY:
-                    cal.add(Calendar.DATE, 1);
+                    timeBoundCal.add(Calendar.DATE, 1);
                     break;
                 case SATURDAY:
-                    cal.add(Calendar.DATE, 2);
+                    timeBoundCal.add(Calendar.DATE, 2);
                     break;
                 case FRIDAY:
-                    cal.add(Calendar.DATE, 3);
+                    timeBoundCal.add(Calendar.DATE, 3);
                     break;
                 case THURSDAY:
-                    cal.add(Calendar.DATE, 4);
+                    timeBoundCal.add(Calendar.DATE, 4);
                     break;
                 case WEDNESDAY:
-                    cal.add(Calendar.DATE, 5);
+                    timeBoundCal.add(Calendar.DATE, 5);
                     break;
                 case TUESDAY:
-                    cal.add(Calendar.DATE, 6);
+                    timeBoundCal.add(Calendar.DATE, 6);
                     break;
                 case MONDAY:
-                    cal.add(Calendar.DATE, 7);
+                    timeBoundCal.add(Calendar.DATE, 7);
                     break;
             }
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
+            timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
 
             calDateFrom.setFirstDayOfWeek(Calendar.MONDAY);
             calDateTo.setFirstDayOfWeek(Calendar.MONDAY);
 
-            int weekCount = 1;
-
-//            logger.info("from : {}", calDateFrom.getTime());
             String weekOfDateFrom = getCurrentWeekOfMonth(dateFrom.getYear(), dateFrom.getMonthValue(), dateFrom.getDayOfMonth());
-//            logger.info("to : {}", calDateTo.getTime());
             String weekOfDateTo = getCurrentWeekOfMonth(dateTo.getYear(), dateTo.getMonthValue(), dateTo.getDayOfMonth());
             long daysBetweenDateFromAndDateTo = TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis());
 
+            int weekCount = 1;
             if (daysBetweenDateFromAndDateTo > 6 & !weekOfDateFrom.equals(weekOfDateTo)){
                 while (TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis()) > 6){
-                    logger.info(String.valueOf(TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis())));
                     calDateFrom.add(Calendar.DATE, 7);
                     weekCount++;
                 }
-//                logger.info("new to : {}", calDateTo.getTime());
-//                logger.info("new from : {}", calDateFrom.getTime());
-
             }
-//            logger.info("new from : {}", calDateFrom.getTime());
-//            logger.info("new to : {}", calDateTo.getTime());
-//            logger.info("timeLowerBound : {}", timeLowerBound);
-//            logger.info("timeUpperBound : {}", timeUpperBound);
-//            logger.info("weekCount : {}", weekCount);
             return weekCount + 1;
         }
         else if (timeUnit.equals("month")) {
-            cal = Calendar.getInstance();
+            timeBoundCal = Calendar.getInstance();
             diagnosisDate = Timestamp.valueOf(dateFrom);
-            cal.setTime(diagnosisDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            cal.set(Calendar.MILLISECOND, -1);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-
-//            logger.info("lb {}", timeLowerBound);
-//            logger.info("ub {}\n", timeUpperBound);
+            timeBoundCal.setTime(diagnosisDate);
+            timeBoundCal.set(Calendar.HOUR_OF_DAY, 0);
+            timeBoundCal.set(Calendar.MINUTE, 0);
+            timeBoundCal.set(Calendar.SECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, 0);
+            timeBoundCal.set(Calendar.MILLISECOND, -1);
+            timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+            timeBoundCal.set(Calendar.DAY_OF_MONTH, timeBoundCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
 
             int monthCount = 1;
-
             while (calDateFrom.get(Calendar.YEAR) != calDateTo.get(Calendar.YEAR)
                     | calDateFrom.get(Calendar.MONTH) != calDateTo.get(Calendar.MONTH)) {
-//                logger.info("\n{}\n{}", calDateFrom.getTime(), calDateTo.getTime());
                 if (calDateFrom.get(Calendar.MONTH) == 11) { // DECEMBER
                     calDateFrom.add(Calendar.YEAR, 1);
                     calDateFrom.set(Calendar.MONTH, 0); // JANUARY
@@ -337,7 +322,6 @@ public class DashboardService extends CalendarUtil{
                     calDateFrom.add(Calendar.MONTH, 1);
                 monthCount++;
             }
-//            logger.info("monthCount : {}", monthCount);
             return monthCount;
         }
         return 0;
@@ -492,119 +476,97 @@ public class DashboardService extends CalendarUtil{
         }
     }
 
-    private void calculateMemberInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
-        int index = 0;
-        Calendar c = Calendar.getInstance();
-        if (timeUnit.equals("hour")) {
-            index = hourLowerBound;
-            time[index] = index + 1 + ":00";
-        } else if (timeUnit.equals("day")) {
-            index = timeIndex;
-            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-        } else if (timeUnit.equals("week")) {
-            index = timeIndex;
-            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
-                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
-            c.setTime(timeLowerBound);
-            c.add(Calendar.DATE, 1);
-            secondaryTime[index] = getCurrentWeekOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
-        } else if (timeUnit.equals("month")) {
-            index = timeIndex;
-            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
-                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
-            c.setTime(timeLowerBound);
-            c.add(Calendar.DATE, 1);
-            secondaryTime[index] = (cal.get(Calendar.MONTH) + 1) + "월";
+    private void timeBoundFormatter(int timeIndex, String timeUnit) {
+        collectDtoCal = Calendar.getInstance();
+        switch (timeUnit) {
+            case "hour":
+                index = hourLowerBound;
+                time[index] = index + 1 + ":00";
+                break;
+            case "day":
+                index = timeIndex;
+                time[index] = String.format("%d.%02d.%02d", timeBoundCal.get(Calendar.YEAR), timeBoundCal.get(Calendar.MONTH) + 1, timeBoundCal.get(Calendar.DAY_OF_MONTH));
+                break;
+            case "week":
+                index = timeIndex;
+                time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                        + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+                collectDtoCal.setTime(timeLowerBound);
+                collectDtoCal.add(Calendar.DATE, 1);
+                secondaryTime[index] = getCurrentWeekOfMonth(collectDtoCal.get(Calendar.YEAR), collectDtoCal.get(Calendar.MONTH) + 1, collectDtoCal.get(Calendar.DAY_OF_MONTH));
+                break;
+            case "month":
+                index = timeIndex;
+                time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
+                        + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
+                collectDtoCal.setTime(timeLowerBound);
+                collectDtoCal.add(Calendar.DATE, 1);
+                secondaryTime[index] = (timeBoundCal.get(Calendar.MONTH) + 1) + "월";
+                break;
         }
+    }
+
+    private void nextTimeBoundSetter(String timeUnit, Timestamp dateTo) {
+        switch (timeUnit) {
+            case "hour":
+                hourLowerBound++;
+                timeBoundCal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
+                timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                timeBoundCal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
+                timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                break;
+            case "day":
+                timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                timeBoundCal.set(Calendar.HOUR_OF_DAY, 47);
+                timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                break;
+            case "week":
+                timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                timeBoundCal.add(Calendar.DATE, 7);
+                timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
+
+                if (0 < upperBoundDays & upperBoundDays < 7) {
+                    timeBoundCal.setTime(dateTo);
+                    timeBoundCal.set(Calendar.HOUR_OF_DAY, 24);
+                    timeBoundCal.set(Calendar.MINUTE, 0);
+                    timeBoundCal.set(Calendar.SECOND, 0);
+                    timeBoundCal.set(Calendar.MILLISECOND, 0);
+                    timeBoundCal.set(Calendar.MILLISECOND, -1);
+                    timeUpperBound = new Timestamp(timeBoundCal.getTimeInMillis());
+                }
+                break;
+            case "month":
+                timeLowerBound = new Timestamp(timeBoundCal.getTimeInMillis());
+
+                if (timeBoundCal.get(Calendar.MONTH) == 11) { // DECEMBER
+                    timeBoundCal.add(Calendar.YEAR, 1);
+                    timeBoundCal.set(Calendar.MONTH, 0); // JANUARY
+                } else
+                    timeBoundCal.add(Calendar.MONTH, 1);
+
+                timeUpperBound = (dateTo.getTime() > timeBoundCal.getTimeInMillis()) ? new Timestamp(timeBoundCal.getTimeInMillis()) : dateTo;
+                break;
+        }
+    }
+
+    private void calculateMemberInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
+        timeBoundFormatter(timeIndex, timeUnit);
 
         accessorCollectBase += accessorAtom;
         accessorCollect[index] = accessorCollectBase;
         memberRegistered[index] = memberRegisteredAtom;
         memberWithdrawn[index] = memberWithdrawnAtom;
 
-        if (timeUnit.equals("hour")) {
-            hourLowerBound++;
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-        }
-        else if (timeUnit.equals("day")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, 47);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-        }
-        else if (timeUnit.equals("week")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.add(Calendar.DATE, 7);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-            long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
-
-//            logger.info("timeLowerBound : {}", timeLowerBound);
-//            logger.info("dateTo : {}", dateTo);
-
-            if (0 < upperBoundDays & upperBoundDays < 7) {
-                cal.setTime(dateTo);
-                cal.set(Calendar.HOUR_OF_DAY, 24);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.MILLISECOND, -1);
-                timeUpperBound = new Timestamp(cal.getTimeInMillis());
-            }
-
-//            logger.info("timeUpperBound : {}", timeUpperBound);
-//            logger.info("days btwn : {}\n", upperBoundDays);
-        }
-        else if (timeUnit.equals("month")) {
-//            logger.info("lb {}", timeLowerBound);
-//            logger.info("ub {}\n", timeUpperBound);
-
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-
-            if (cal.get(Calendar.MONTH) == 11) { // DECEMBER
-                cal.add(Calendar.YEAR, 1);
-                cal.set(Calendar.MONTH, 0); // JANUARY
-            }
-            else
-                cal.add(Calendar.MONTH, 1);
-
-            timeUpperBound = (dateTo.getTime() > cal.getTimeInMillis()) ? new Timestamp(cal.getTimeInMillis()) : dateTo;
-
-//            logger.info("timeLowerBound : {}", timeLowerBound);
-//            logger.info("dateTo : {}", dateTo);
-//            logger.info("timeUpperBound : {}\n", timeUpperBound);
-
-        }
+        nextTimeBoundSetter(timeUnit, dateTo);
 
         statements = statements.subList(accessorAtom + memberRegisteredAtom + memberWithdrawnAtom, statements.size());
         initializeAtom();
     }
 
     private void calculateDiagnosisInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
-        int index = 0;
-        Calendar c = Calendar.getInstance();
-        if (timeUnit.equals("hour")) {
-            index = hourLowerBound;
-            time[index] = index + 1 + ":00";
-        } else if (timeUnit.equals("day")) {
-            index = timeIndex;
-            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-        } else if (timeUnit.equals("week")) {
-            index = timeIndex;
-            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
-                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
-            c.setTime(timeLowerBound);
-            c.add(Calendar.DATE, 1);
-            secondaryTime[index] = getCurrentWeekOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
-        } else if (timeUnit.equals("month")) {
-            index = timeIndex;
-            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
-                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
-            c.setTime(timeLowerBound);
-            c.add(Calendar.DATE, 1);
-            secondaryTime[index] = (cal.get(Calendar.MONTH) + 1) + "월";
-        }
+        timeBoundFormatter(timeIndex, timeUnit);
+
         diagnosisAndMinitest[index] = diagnosisMemberAtom + diagnosisNotMemberAtom + minitestAtom;
         diagnosisTotal[index] = diagnosisMemberAtom + diagnosisNotMemberAtom;
         diagnosisTotalRatio[index] = (double) (diagnosisMemberAtom + diagnosisNotMemberAtom)
@@ -631,47 +593,7 @@ public class DashboardService extends CalendarUtil{
         diagnosisCount += diagnosisMemberAtom + diagnosisNotMemberAtom;
         minitestCount += minitestAtom;
 
-        if (timeUnit.equals("hour")) {
-            hourLowerBound++;
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-        }
-        else if (timeUnit.equals("day")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, 47);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-        }
-        else if (timeUnit.equals("week")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.add(Calendar.DATE, 7);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-            long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
-
-            if (0 < upperBoundDays & upperBoundDays < 7) {
-                cal.setTime(dateTo);
-                cal.set(Calendar.HOUR_OF_DAY, 24);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.MILLISECOND, -1);
-                timeUpperBound = new Timestamp(cal.getTimeInMillis());
-            }
-        }
-        else if (timeUnit.equals("month")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-
-            if (cal.get(Calendar.MONTH) == 11) { // DECEMBER
-                cal.add(Calendar.YEAR, 1);
-                cal.set(Calendar.MONTH, 0); // JANUARY
-            }
-            else
-                cal.add(Calendar.MONTH, 1);
-
-            timeUpperBound = (dateTo.getTime() > cal.getTimeInMillis()) ? new Timestamp(cal.getTimeInMillis()) : dateTo;
-        }
-
+        nextTimeBoundSetter(timeUnit, dateTo);
 
         diagnosisReports = diagnosisReports.subList(diagnosisMemberAtom + diagnosisNotMemberAtom, diagnosisReports.size());
         minitestReports = minitestReports.subList(minitestAtom, minitestReports.size());
@@ -679,29 +601,8 @@ public class DashboardService extends CalendarUtil{
     }
 
     private void calculateContentViewsInfo(int timeIndex, String timeUnit, Timestamp dateTo) {
-        int index = 0;
-        Calendar c = Calendar.getInstance();
-        if (timeUnit.equals("hour")) {
-            index = hourLowerBound;
-            time[index] = index + 1 + ":00";
-        } else if (timeUnit.equals("day")) {
-            index = timeIndex;
-            time[index] = String.format("%d.%02d.%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-        } else if (timeUnit.equals("week")) {
-            index = timeIndex;
-            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
-                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
-            c.setTime(timeLowerBound);
-            c.add(Calendar.DATE, 1);
-            secondaryTime[index] = getCurrentWeekOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
-        } else if (timeUnit.equals("month")) {
-            index = timeIndex;
-            time[index] = new SimpleDateFormat("yyyy.MM.dd").format(timeLowerBound.getTime() + 1)
-                    + " ~ " + new SimpleDateFormat("yyyy.MM.dd").format(timeUpperBound.getTime());
-            c.setTime(timeLowerBound);
-            c.add(Calendar.DATE, 1);
-            secondaryTime[index] = (cal.get(Calendar.MONTH) + 1) + "월";
-        }
+        timeBoundFormatter(timeIndex, timeUnit);
+
 //        viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom;
         viewsTotal[index] = viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom;
         viewsVideo[index] = viewsVideoAtom;
@@ -721,46 +622,7 @@ public class DashboardService extends CalendarUtil{
 //        if (Double.isNaN(viewsWikiRatio[index]))
 //            viewsWikiRatio[index] = 0;
 
-        if (timeUnit.equals("hour")) {
-            hourLowerBound++;
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound);
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, hourLowerBound + 1);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-        }
-        else if (timeUnit.equals("day")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.set(Calendar.HOUR_OF_DAY, 47);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-        }
-        else if (timeUnit.equals("week")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-            cal.add(Calendar.DATE, 7);
-            timeUpperBound = new Timestamp(cal.getTimeInMillis());
-            long upperBoundDays = TimeUnit.MILLISECONDS.toDays(timeUpperBound.getTime() - dateTo.getTime());
-
-            if (0 < upperBoundDays & upperBoundDays < 7) {
-                cal.setTime(dateTo);
-                cal.set(Calendar.HOUR_OF_DAY, 24);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.MILLISECOND, -1);
-                timeUpperBound = new Timestamp(cal.getTimeInMillis());
-            }
-        }
-        else if (timeUnit.equals("month")) {
-            timeLowerBound = new Timestamp(cal.getTimeInMillis());
-
-            if (cal.get(Calendar.MONTH) == 11) { // DECEMBER
-                cal.add(Calendar.YEAR, 1);
-                cal.set(Calendar.MONTH, 0); // JANUARY
-            }
-            else
-                cal.add(Calendar.MONTH, 1);
-
-            timeUpperBound = (dateTo.getTime() > cal.getTimeInMillis()) ? new Timestamp(cal.getTimeInMillis()) : dateTo;
-        }
+        nextTimeBoundSetter(timeUnit, dateTo);
 
 //        statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom + viewsWikiAtom, statements.size());
         statements = statements.subList(viewsVideoAtom + viewsArticleAtom + viewsTextbookAtom, statements.size());
