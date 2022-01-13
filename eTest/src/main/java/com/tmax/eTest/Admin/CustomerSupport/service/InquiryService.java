@@ -1,6 +1,7 @@
 package com.tmax.eTest.Admin.CustomerSupport.service;
 
 
+import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryAnswerDTO;
 import com.tmax.eTest.Common.model.support.Inquiry;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryDTO;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryFileDTO;
