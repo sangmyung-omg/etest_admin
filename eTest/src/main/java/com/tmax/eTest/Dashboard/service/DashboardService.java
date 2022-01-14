@@ -290,13 +290,39 @@ public class DashboardService extends CalendarUtil{
             long daysBetweenDateFromAndDateTo = TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis());
 
             int weekCount = 1;
-            if (daysBetweenDateFromAndDateTo > 6 & !weekOfDateFrom.equals(weekOfDateTo)){
+            if (daysBetweenDateFromAndDateTo <= 7 & !weekOfDateFrom.equals(weekOfDateTo))
+                weekCount++;
+            else if (daysBetweenDateFromAndDateTo > 7){
+                switch (calDateFrom.get(Calendar.DAY_OF_WEEK)) {
+                    case Calendar.SUNDAY:
+                        calDateFrom.add(Calendar.DATE, 1);
+                        break;
+                    case Calendar.SATURDAY:
+                        calDateFrom.add(Calendar.DATE, 2);
+                        break;
+                    case Calendar.FRIDAY:
+                        calDateFrom.add(Calendar.DATE, 3);
+                        break;
+                    case Calendar.THURSDAY:
+                        calDateFrom.add(Calendar.DATE, 4);
+                        break;
+                    case Calendar.WEDNESDAY:
+                        calDateFrom.add(Calendar.DATE, 5);
+                        break;
+                    case Calendar.TUESDAY:
+                        calDateFrom.add(Calendar.DATE, 6);
+                        break;
+                    case Calendar.MONDAY:
+                        calDateFrom.add(Calendar.DATE, 7);
+                        break;
+                }
+                weekCount++;
                 while (TimeUnit.MILLISECONDS.toDays(calDateTo.getTimeInMillis() - calDateFrom.getTimeInMillis()) > 6){
                     calDateFrom.add(Calendar.DATE, 7);
                     weekCount++;
                 }
             }
-            return weekCount + 1;
+            return weekCount;
         }
         else if (timeUnit.equals("month")) {
             timeBoundCal = Calendar.getInstance();
@@ -806,7 +832,6 @@ public class DashboardService extends CalendarUtil{
             else
                 hoursOfDay = 23;
             initialize(hoursOfDay);
-//            setTimeBound(timeUnit, dateFrom, dateTo);
             while (hourLowerBound < hoursOfDay){
                 checkMember();
                 calculateMemberInfo(0, filterDTO.getTimeUnit(), null);
@@ -873,7 +898,6 @@ public class DashboardService extends CalendarUtil{
             else
                 hoursOfDay = 23;
             initialize(hoursOfDay);
-//            setTimeBound(timeUnit, dateFrom, dateTo);
             while (hourLowerBound < hoursOfDay){
                 checkDiagnosisReport();
                 checkMinitestReports();
@@ -954,7 +978,6 @@ public class DashboardService extends CalendarUtil{
             else
                 hoursOfDay = 23;
             initialize(hoursOfDay);
-//            setTimeBound(timeUnit, dateFrom, dateTo);
             while (hourLowerBound < hoursOfDay){
                 checkContentViews();
                 calculateContentViewsInfo(0, timeUnit, null);
