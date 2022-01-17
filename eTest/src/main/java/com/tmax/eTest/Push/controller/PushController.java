@@ -1,7 +1,6 @@
 package com.tmax.eTest.Push.controller;
 
-import com.tmax.eTest.Push.dto.AdminPushRequestDTO;
-import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.dto.PushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,22 +16,22 @@ public class PushController {
     private final PushService pushService;
 
     @PostMapping("admin/token")
-    public Mono<String> adminPushRequestByToken(@RequestBody AdminPushRequestDTO adminPushRequestDTO) {
-        return pushService.adminPushRequestByToken(adminPushRequestDTO);
+    public Mono<String> adminPushRequestByToken(@RequestBody PushRequestDTO pushRequestDTO) {
+        return pushService.adminPushRequestByToken(pushRequestDTO);
     }
 
     @PostMapping("admin/user")
-    public Mono<String> adminPushRequestByUserUuid(@RequestBody AdminPushRequestDTO adminPushRequestDTO) {
-        return pushService.adminPushRequestByUserUuid(adminPushRequestDTO);
+    public Mono<String> adminPushRequestByUserUuid(@RequestBody PushRequestDTO pushRequestDTO) {
+        return pushService.adminPushRequestByUserUuid(pushRequestDTO);
     }
 
     @PostMapping("category")
-    public Mono<String> categoryPushRequest(@RequestBody CategoryPushRequestDTO categoryPushRequestDTO) {
-        return pushService.categoryPushRequest(categoryPushRequestDTO);
+    public Mono<String> categoryPushRequest(@RequestBody PushRequestDTO pushRequestDTO) {
+        return pushService.categoryPushRequest(pushRequestDTO);
     }
 
     @PostMapping("category/user")
-    public Mono<String> categoryPushRequestByUserUuid(@RequestBody CategoryPushRequestDTO categoryPushRequestDTO) {
-        return pushService.categoryPushRequestByUserUuid(categoryPushRequestDTO);
+    public Mono<String> categoryPushRequestByUserUuid(@RequestBody PushRequestDTO pushRequestDTO) {
+        return pushService.categoryPushRequestByUserUuid(pushRequestDTO);
     }
 }

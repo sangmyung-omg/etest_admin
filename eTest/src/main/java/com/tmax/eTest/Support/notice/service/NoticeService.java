@@ -2,7 +2,7 @@ package com.tmax.eTest.Support.notice.service;
 
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.Notice;
-import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.dto.PushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
 import com.tmax.eTest.Support.notice.dto.CreateNoticeRequestDto;
 import com.tmax.eTest.Support.notice.repository.NoticeRepository;
@@ -98,7 +98,7 @@ public class NoticeService extends PushService {
                     .build();
             noticeRepository.save(notice);
         }
-        categoryPushRequest(CategoryPushRequestDTO.builder()
+        categoryPushRequest(PushRequestDTO.builder()
                 .category("notice")
                 .title("공지사항")
                 .body(notice.getTitle())

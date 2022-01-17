@@ -6,8 +6,7 @@ import com.tmax.eTest.Common.model.support.Inquiry;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryDTO;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryFileDTO;
 import com.tmax.eTest.Admin.CustomerSupport.repository.InquiryRepository;
-import com.tmax.eTest.Common.model.support.Notice;
-import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.dto.PushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +103,7 @@ public class InquiryService extends PushService {
         inquiryRepository.save(inquiry);
         List<String> userUuidList = new ArrayList<>();
         userUuidList.add(inquiry.getUserMaster().getUserUuid());
-        categoryPushRequestByUserUuid(CategoryPushRequestDTO.builder()
+        categoryPushRequestByUserUuid(PushRequestDTO.builder()
                 .category("inquiry")
                 .title("1:1문의")
                 .userUuid(userUuidList)

@@ -1,7 +1,6 @@
 package com.tmax.eTest.Push.service;
 
-import com.tmax.eTest.Push.dto.AdminPushRequestDTO;
-import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.dto.PushRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,19 +31,19 @@ public class PushService {
     @Value("${push.api.category.user}")
     String pushCategoryUserAPI;
 
-    public Mono<String> adminPushRequestByToken(AdminPushRequestDTO data) {
+    public Mono<String> adminPushRequestByToken(PushRequestDTO data) {
         return WebClient.create().post().uri(baseUri + pushAdminTokenAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 
-    public Mono<String> adminPushRequestByUserUuid(AdminPushRequestDTO data) {
+    public Mono<String> adminPushRequestByUserUuid(PushRequestDTO data) {
         return WebClient.create().post().uri(baseUri + pushAdminUserAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 
-    public Mono<String> categoryPushRequest(CategoryPushRequestDTO data) {
+    public Mono<String> categoryPushRequest(PushRequestDTO data) {
         return WebClient.create().post().uri(baseUri + pushCategoryAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 
-    public Mono<String> categoryPushRequestByUserUuid(CategoryPushRequestDTO data) {
+    public Mono<String> categoryPushRequestByUserUuid(PushRequestDTO data) {
         return WebClient.create().post().uri(baseUri + pushCategoryUserAPI).bodyValue(data).retrieve().bodyToMono(String.class);
     }
 }

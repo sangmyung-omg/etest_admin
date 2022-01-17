@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 
 import com.tmax.eTest.Contents.repository.support.VideoRepositorySupport;
 import com.tmax.eTest.Contents.util.CommonUtils;
-import com.tmax.eTest.Push.dto.CategoryPushRequestDTO;
+import com.tmax.eTest.Push.dto.PushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
 
 import org.springframework.batch.core.Job;
@@ -94,7 +94,7 @@ public class ContentsPushJobConfiguration extends DefaultBatchConfigurer {
           String body = String.format("신규 콘텐츠 %d건이 업데이트 되었습니다.", update);
 
           pushService
-              .categoryPushRequest(CategoryPushRequestDTO.builder().category(category).title(title).body(body).build())
+              .categoryPushRequest(PushRequestDTO.builder().category(category).title(title).body(body).build())
               .block();
 
           log.info("Job Success!");
