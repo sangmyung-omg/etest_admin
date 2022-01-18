@@ -108,6 +108,7 @@ public class InquiryService extends PushService {
                 .title("1:1문의")
                 .userUuid(userUuidList)
                 .body("1:1 문의에 대한 답변을 확인해보세요.")
+                .url("/help?type=inquiry")
                 .build())
                 .block();
         return InquiryDTO.builder()
