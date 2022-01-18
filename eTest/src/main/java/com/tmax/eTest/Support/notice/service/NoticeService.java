@@ -102,6 +102,7 @@ public class NoticeService extends PushService {
                 .category("notice")
                 .title("공지사항")
                 .body(notice.getTitle())
+                .url("/help?type=notice")
                 .build())
                 .block();
         return new CMRespDto<>(200, "success", notice);
