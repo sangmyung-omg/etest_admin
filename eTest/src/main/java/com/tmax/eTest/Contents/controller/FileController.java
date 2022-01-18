@@ -89,6 +89,8 @@ public class FileController {
 	@PostMapping("/file")
 	public ResponseEntity<Object> upload(@Valid @RequestParam("type") String type,
 			@Valid @RequestParam("file") MultipartFile file) throws IOException {
+
+		log.info("File Upload");
 		if (file.isEmpty()) {
 			throw new ContentsException(ErrorCode.FILE_ERROR, "EMPTY");
 		}
@@ -100,8 +102,8 @@ public class FileController {
 		}
 		String ret = "";
 		if (type.equals(FileType.VIDEO.name())) {
-			uploadPath += VIDEO_PATH + file.getOriginalFilename();
 			ret = VIDEO_PATH + file.getOriginalFilename();
+			uploadPath += ret;
 		}
 		// else
 
@@ -116,6 +118,7 @@ public class FileController {
 				}
 			}
 		} catch (IOException e) {
+			log.info("Upload Error: " + e.getMessage());
 			throw new ContentsException(ErrorCode.FILE_ERROR);
 		}
 
