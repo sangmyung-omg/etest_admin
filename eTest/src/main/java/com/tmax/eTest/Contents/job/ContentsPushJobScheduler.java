@@ -26,7 +26,7 @@ public class ContentsPushJobScheduler {
   private JobLauncher jobLauncher;
 
   @Autowired
-  private ContentsPushJobConfiguration statJobConfiguration;
+  private ContentsPushJobConfiguration contentsPushJobConfiguration;
 
   @Scheduled(cron = "0 0 13 ? * FRI")
   public void runJob() {
@@ -36,7 +36,7 @@ public class ContentsPushJobScheduler {
     confMap.put("time", new JobParameter(System.currentTimeMillis()));
     JobParameters jobParameters = new JobParameters(confMap);
     try {
-      jobLauncher.run(statJobConfiguration.statJob(), jobParameters);
+      jobLauncher.run(contentsPushJobConfiguration.pushJob(), jobParameters);
     } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException | JobParametersInvalidException
         | org.springframework.batch.core.repository.JobRestartException e) {
       log.error(e.getMessage());

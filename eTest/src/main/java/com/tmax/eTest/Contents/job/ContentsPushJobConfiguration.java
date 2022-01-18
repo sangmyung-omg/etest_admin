@@ -73,13 +73,13 @@ public class ContentsPushJobConfiguration extends DefaultBatchConfigurer {
   private VideoRepositorySupport videoRepositorySupport;
 
   @Bean
-  public Job statJob() {
-    return jobBuilderFactory.get("statJob").incrementer(new RunIdIncrementer()).start(statStep()).build();
+  public Job pushJob() {
+    return jobBuilderFactory.get("pushJob").incrementer(new RunIdIncrementer()).start(pushStep()).build();
   }
 
   @Bean
-  public Step statStep() {
-    return stepBuilderFactory.get("statStep").transactionManager(jpaTransactionManager())
+  public Step pushStep() {
+    return stepBuilderFactory.get("pushStep").transactionManager(jpaTransactionManager())
         .tasklet((contribution, chunkContext) -> {
 
           LocalDate now = LocalDate.parse(chunkContext.getStepContext().getJobParameters().get("now").toString());
@@ -92,9 +92,10 @@ public class ContentsPushJobConfiguration extends DefaultBatchConfigurer {
           String category = "content";
           String title = "금융투자 콘텐츠몰";
           String body = String.format("신규 콘텐츠 %d건이 업데이트 되었습니다.", update);
+          String url = "/videocontents";
 
           pushService
-              .categoryPushRequest(PushRequestDTO.builder().category(category).title(title).body(body).build())
+              .categoryPushRequest(PushRequestDTO.builder().category(category).title(title).body(body).url(url).build())
               .block();
 
           log.info("Job Success!");
