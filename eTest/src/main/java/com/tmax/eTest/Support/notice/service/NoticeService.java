@@ -150,7 +150,6 @@ public class NoticeService extends PushService {
     }
 
     public Notice editNotice(Long id, CreateNoticeRequestDto createNoticeRequestDto) throws IOException {
-        String noticeImageFolderURL = rootPath + "notice/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = getNotice(id);
         if (notice == null)
@@ -158,21 +157,10 @@ public class NoticeService extends PushService {
         notice.setDraft(createNoticeRequestDto.getDraft());
         notice.setTitle(createNoticeRequestDto.getTitle());
         notice.setContent(createNoticeRequestDto.getContent());
+        logger.info("editNotice start");
         if (createNoticeRequestDto.getImage() != null){
-            String imageName = UUID.randomUUID() + "_" + createNoticeRequestDto.getImage().getOriginalFilename();
-            String imageUrlString = noticeImageFolderURL + imageName;
-            Path imageUrlPath = Paths.get(imageUrlString);
-            try {
-                Files.write(imageUrlPath, createNoticeRequestDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("notice image save error");
-            }
-            File f = new File(imageUrlString);
-            FileInputStream fis = new FileInputStream(f);
-            byte byteArray[] = new byte[(int) f.length()];
-            fis.read(byteArray);
-            String imageEncoding = Base64.encodeBase64String(byteArray);
-            notice.setImageUrl(imageUrlString);
+            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createNoticeRequestDto.getImage().getBytes());
+            String imageEncoding = new String(byteArray);
             notice.setImageEncoding(imageEncoding);
         }
         notice.setDateEdit(currentDateTime);
