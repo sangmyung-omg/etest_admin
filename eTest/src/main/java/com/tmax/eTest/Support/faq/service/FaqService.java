@@ -96,7 +96,6 @@ public class FaqService {
 
     @Transactional
     public CMRespDto<?> draftFaq(CreateFaqDto createFaqDto) throws IOException {
-        String faqImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
         if (createFaqDto.getImage() != null) {
@@ -141,7 +140,6 @@ public class FaqService {
     }
 
     public FAQ editFaq(Long id, CreateFaqDto createFaqDto) throws IOException {
-        String faqImageFolderURL = rootPath + "faq/";
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = getFaq(id);
         if (faq == null) {
@@ -153,20 +151,8 @@ public class FaqService {
         faq.setTitle(createFaqDto.getTitle());
         faq.setContent(createFaqDto.getContent());
         if (createFaqDto.getImage() != null){
-            String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
-            String imageUrlString = faqImageFolderURL + imageName;
-            Path imageUrlPath = Paths.get(imageUrlString);
-            try {
-                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("notice image save error");
-            }
-            File f = new File(imageUrlString);
-            FileInputStream fis = new FileInputStream(f);
-            byte byteArray[] = new byte[(int) f.length()];
-            fis.read(byteArray);
-            String imageEncoding = Base64.encodeBase64String(byteArray);
-            faq.setImageUrl(imageUrlString);
+            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createFaqDto.getImage().getBytes());
+            String imageEncoding = new String(byteArray);
             faq.setImageEncoding(imageEncoding);
         }
         if (currentDateTime == null)
