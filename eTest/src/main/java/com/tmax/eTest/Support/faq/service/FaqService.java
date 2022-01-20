@@ -60,24 +60,12 @@ public class FaqService {
 
     @Transactional
     public CMRespDto<?> createFaq(CreateFaqDto createFaqDto) throws IOException {
-        String faqImageFolderURL = rootPath + "faq/";
+
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
         if (createFaqDto.getImage() != null) {
-            String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
-            String imageUrlString = faqImageFolderURL + imageName;
-            Path imageUrlPath = Paths.get(imageUrlString);
-
-            try {
-                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("faq image save error");
-            }
-            File f = new File(imageUrlString);
-            FileInputStream fis = new FileInputStream(f);
-            byte byteArray[] = new byte[(int) f.length()];
-            fis.read(byteArray);
-            String imageEncoding = Base64.encodeBase64String(byteArray);
+            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createFaqDto.getImage().getBytes());
+            String imageEncoding = new String(byteArray);
             faq =
                     FAQ.builder()
                             .category(createFaqDto.getCategory())
@@ -87,7 +75,6 @@ public class FaqService {
                             .views((long) 0)
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
-                            .imageUrl(imageUrlString)
                             .imageEncoding(imageEncoding)
                             .build();
             faqRepository.save(faq);
@@ -113,19 +100,8 @@ public class FaqService {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
         if (createFaqDto.getImage() != null) {
-            String imageName = UUID.randomUUID() + "_" + createFaqDto.getImage().getOriginalFilename();
-            String imageUrlString = faqImageFolderURL + imageName;
-            Path imageUrlPath = Paths.get(imageUrlString);
-            try {
-                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("faq image save error");
-            }
-            File f = new File(imageUrlString);
-            FileInputStream fis = new FileInputStream(f);
-            byte byteArray[] = new byte[(int) f.length()];
-            fis.read(byteArray);
-            String imageEncoding = Base64.encodeBase64String(byteArray);
+            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createFaqDto.getImage().getBytes());
+            String imageEncoding = new String(byteArray);
             faq =
                     FAQ.builder()
                             .category(createFaqDto.getCategory())
@@ -135,14 +111,8 @@ public class FaqService {
                             .views((long) 0)
                             .dateAdd(currentDateTime)
                             .dateEdit(currentDateTime)
-                            .imageUrl(imageUrlString)
                             .imageEncoding(imageEncoding)
                             .build();
-            try {
-                Files.write(imageUrlPath, createFaqDto.getImage().getBytes());
-            } catch (Exception e) {
-                throw new IllegalArgumentException("faq image save error");
-            }
             faqRepository.save(faq);
         }
         if (createFaqDto.getImage() == null) {
