@@ -10,6 +10,8 @@ import com.tmax.eTest.Support.notice.repository.NoticeRepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +37,7 @@ import java.util.UUID;
 public class NoticeService extends PushService {
     private final NoticeRepository noticeRepository;
     private final NoticeRepositorySupport noticeRepositorySupport;
+    private Logger logger = LoggerFactory.getLogger(NoticeService.class);
 
     @Value("${file.path}")
     private String rootPath;
@@ -98,13 +102,19 @@ public class NoticeService extends PushService {
                     .build();
             noticeRepository.save(notice);
         }
-        categoryPushRequest(PushRequestDTO.builder()
-                .category("notice")
-                .title("공지사항")
-                .body(notice.getTitle())
-                .url("/help?type=notice")
-                .build())
-                .block();
+        try {
+            categoryPushRequest(PushRequestDTO.builder()
+                    .category("notice")
+                    .title("공지사항")
+                    .body(notice.getTitle())
+                    .url("/help?type=notice")
+                    .build())
+                    .block();
+        }
+        catch (Exception e) {
+            logger.error("Push request failed. Check server status and/or 'push-admin-config.properties'.");
+            return new CMRespDto<>(201, "push failed", notice);
+        }
         return new CMRespDto<>(200, "success", notice);
     }
 
