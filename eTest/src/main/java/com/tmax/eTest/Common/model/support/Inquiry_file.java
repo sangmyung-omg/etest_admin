@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -29,8 +28,8 @@ public class Inquiry_file {
     @Column(name = "INQUIRY_FILE_ID")
     private Long id;
 
-    @Column(name = "INQUIRY_FILE_URL")
-    private String url;
+    @Column(name = "INQUIRY_FILE_ENCODING")
+    private String imageEncoding;
 
     @Column(name = "INQUIRY_FILE_TYPE")
     private String type;
@@ -46,10 +45,10 @@ public class Inquiry_file {
     @JsonIgnoreProperties({"inquiry_file"})
     private Inquiry inquiry;
 
-    public Inquiry_file(@JsonProperty("url") String url,
+    public Inquiry_file(@JsonProperty("url") String imageEncoding,
                         @JsonProperty("type") String type,
                         @JsonProperty("inquiry") Inquiry inquiry) {
-    this.url = url;
+    this.imageEncoding = imageEncoding;
     this.type = type;
     this. inquiry = inquiry;
     }
