@@ -2,12 +2,14 @@ package com.tmax.eTest.Admin.CustomerSupport.service;
 
 
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryAnswerDTO;
-import com.tmax.eTest.Common.model.support.Inquiry;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryDTO;
 import com.tmax.eTest.Admin.CustomerSupport.model.dto.InquiryFileDTO;
 import com.tmax.eTest.Admin.CustomerSupport.repository.InquiryRepository;
+import com.tmax.eTest.Auth.dto.CMRespDto;
+import com.tmax.eTest.Common.model.support.Inquiry;
 import com.tmax.eTest.Push.dto.PushRequestDTO;
 import com.tmax.eTest.Push.service.PushService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,33 +23,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("CustomerSupportInquiryService")
+@Slf4j
 public class InquiryService extends PushService {
 
     @Autowired
     InquiryRepository inquiryRepository;
 
-    public List<InquiryDTO> getInquiryList(){
+    public List<InquiryDTO> getInquiryList() {
 
         //add sorting
-        List<Inquiry> inquiryList= inquiryRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
+        List<Inquiry> inquiryList = inquiryRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
 
         //TODO adminnickname fix
         return inquiryList.stream()
                 .map(i ->
-                    InquiryDTO.builder()
-                    .inquiryId(i.getId())
-                    .userNickname(i.getUserMaster() == null ? "삭제된유저입니다" : i.getUserMaster().getNickname())
-                    .type(i.getType())
-                    .title(i.getTitle())
-                    .lastUpdated(i.getCreateDate())
-                    .status(i.getStatus())
-                    .answerDate(i.getAnswer_time())
-                    .adminNickname(i.getAdminUuid())
-                    .build())
+                        InquiryDTO.builder()
+                                .inquiryId(i.getId())
+                                .userNickname(i.getUserMaster() == null ? "삭제된유저입니다" : i.getUserMaster().getNickname())
+                                .type(i.getType())
+                                .title(i.getTitle())
+                                .lastUpdated(i.getCreateDate())
+                                .status(i.getStatus())
+                                .answerDate(i.getAnswer_time())
+                                .adminNickname(i.getAdminUuid())
+                                .build())
                 .collect(Collectors.toList());
     }
 
-    public InquiryDTO getInquiryDetails(Long id){
+    public InquiryDTO getInquiryDetails(Long id) {
 
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Inquiry with Given Id"));
@@ -74,11 +77,11 @@ public class InquiryService extends PushService {
                 .build();
     }
 
-    public InquiryDTO answerInquiry(Long id, String admin_uuid, String admin_nickname, InquiryAnswerDTO inquiryAnswerDTO){
-        if (StringUtils.isEmpty(inquiryAnswerDTO.getAnswer())){
+    public InquiryDTO answerInquiry(Long id, String admin_uuid, String admin_nickname, InquiryAnswerDTO inquiryAnswerDTO) {
+        if (StringUtils.isEmpty(inquiryAnswerDTO.getAnswer())) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Answer cannot be null or emtpy");
         }
-        if (inquiryAnswerDTO.getDraft() == null){
+        if (inquiryAnswerDTO.getDraft() == null) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Draft cannot be null or emtpy");
         }
 
@@ -88,13 +91,11 @@ public class InquiryService extends PushService {
         inquiry.setAdminUuid(admin_uuid);
         inquiry.setAnswer(inquiryAnswerDTO.getAnswer());
 
-        if (inquiryAnswerDTO.getDraft() == 1){
+        if (inquiryAnswerDTO.getDraft() == 1) {
             inquiry.setStatus("임시저장");
-        }
-        else if (inquiryAnswerDTO.getDraft() == 0){
+        } else if (inquiryAnswerDTO.getDraft() == 0) {
             inquiry.setStatus("답변완료");
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Draft must be 0 or 1");
         }
 
@@ -103,14 +104,19 @@ public class InquiryService extends PushService {
         inquiryRepository.save(inquiry);
         List<String> userUuidList = new ArrayList<>();
         userUuidList.add(inquiry.getUserMaster().getUserUuid());
-        categoryPushRequestByUserUuid(PushRequestDTO.builder()
-                .category("inquiry")
-                .title("1:1문의")
-                .userUuid(userUuidList)
-                .body("1:1 문의에 대한 답변을 확인해보세요.")
-                .url("/help?type=inquiry")
-                .build())
-                .block();
+        try {
+            categoryPushRequestByUserUuid(PushRequestDTO.builder()
+                    .category("inquiry")
+                    .title("1:1문의")
+                    .userUuid(userUuidList)
+                    .body("1:1 문의에 대한 답변을 확인해보세요.")
+                    .url("/help?type=inquiry")
+                    .build())
+                    .block();
+        } catch (Exception e) {
+            log.error("Inquiry Push request failed. Check server status and/or 'push-admin-config.properties'.");
+        }
+
         return InquiryDTO.builder()
                 .inquiryId(inquiry.getId())
                 .type(inquiry.getType())

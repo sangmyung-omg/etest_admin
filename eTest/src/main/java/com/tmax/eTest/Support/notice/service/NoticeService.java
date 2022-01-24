@@ -8,7 +8,7 @@ import com.tmax.eTest.Support.notice.dto.CreateNoticeRequestDto;
 import com.tmax.eTest.Support.notice.repository.NoticeRepository;
 import com.tmax.eTest.Support.notice.repository.NoticeRepositorySupport;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
+//import org.apache.commons.codec.binary.Base64;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,11 +64,13 @@ public class NoticeService extends PushService {
 
     @Transactional
     public CMRespDto<?> createNotice(CreateNoticeRequestDto createNoticeRequestDto) throws Exception {
-        byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createNoticeRequestDto.getImage().getBytes());
-        String imageEncoding = new String(byteArray);
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = null;
         if (createNoticeRequestDto.getImage() != null) {
+            java.util.Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode(createNoticeRequestDto.getImage().getBytes());
+//            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createNoticeRequestDto.getImage().getBytes());
+            String imageEncoding = new String(encodedBytes);
             notice =
                     Notice.builder()
                             .title(createNoticeRequestDto.getTitle())

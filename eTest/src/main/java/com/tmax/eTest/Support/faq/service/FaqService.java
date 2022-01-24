@@ -7,7 +7,6 @@ import com.tmax.eTest.Admin.util.ColumnNullPropertiesHandler;
 import com.tmax.eTest.Auth.dto.CMRespDto;
 import com.tmax.eTest.Common.model.support.FAQ;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,8 +64,9 @@ public class FaqService {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
         if (createFaqDto.getImage() != null) {
-            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createFaqDto.getImage().getBytes());
-            String imageEncoding = new String(byteArray);
+            java.util.Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode(createFaqDto.getImage().getBytes());
+            String imageEncoding = new String(encodedBytes);
             faq =
                     FAQ.builder()
                             .category(createFaqDto.getCategory())
