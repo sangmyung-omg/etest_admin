@@ -100,8 +100,9 @@ public class FaqService {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         FAQ faq = null;
         if (createFaqDto.getImage() != null) {
-            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createFaqDto.getImage().getBytes());
-            String imageEncoding = new String(byteArray);
+            java.util.Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode(createFaqDto.getImage().getBytes());
+            String imageEncoding = new String(encodedBytes);
             faq =
                     FAQ.builder()
                             .category(createFaqDto.getCategory())
@@ -152,8 +153,9 @@ public class FaqService {
         faq.setTitle(createFaqDto.getTitle());
         faq.setContent(createFaqDto.getContent());
         if (createFaqDto.getImage() != null){
-            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createFaqDto.getImage().getBytes());
-            String imageEncoding = new String(byteArray);
+            java.util.Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode(createFaqDto.getImage().getBytes());
+            String imageEncoding = new String(encodedBytes);
             faq.setImageEncoding(imageEncoding);
         }
         if (currentDateTime == null)

@@ -69,7 +69,6 @@ public class NoticeService extends PushService {
         if (createNoticeRequestDto.getImage() != null) {
             java.util.Base64.Encoder encoder = Base64.getEncoder();
             byte[] encodedBytes = encoder.encode(createNoticeRequestDto.getImage().getBytes());
-//            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createNoticeRequestDto.getImage().getBytes());
             String imageEncoding = new String(encodedBytes);
             notice =
                     Notice.builder()
@@ -116,8 +115,9 @@ public class NoticeService extends PushService {
         Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
         Notice notice = null;
         if (createNoticeRequestDto.getImage() != null) {
-            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createNoticeRequestDto.getImage().getBytes());
-            String imageEncoding = new String(byteArray);
+            java.util.Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode(createNoticeRequestDto.getImage().getBytes());
+            String imageEncoding = new String(encodedBytes);
             notice =
                     Notice.builder()
                             .title(createNoticeRequestDto.getTitle())
@@ -164,8 +164,9 @@ public class NoticeService extends PushService {
         notice.setContent(createNoticeRequestDto.getContent());
         logger.info("editNotice start");
         if (createNoticeRequestDto.getImage() != null){
-            byte[] byteArray = org.apache.tomcat.util.codec.binary.Base64.encodeBase64(createNoticeRequestDto.getImage().getBytes());
-            String imageEncoding = new String(byteArray);
+            java.util.Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode(createNoticeRequestDto.getImage().getBytes());
+            String imageEncoding = new String(encodedBytes);
             notice.setImageEncoding(imageEncoding);
         }
         notice.setDateEdit(currentDateTime);
