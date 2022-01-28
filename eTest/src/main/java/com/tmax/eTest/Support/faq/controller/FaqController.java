@@ -73,7 +73,7 @@ public class FaqController {
      * 자주 묻는 질문 수정
      * @param id        수정할 자주 묻는 질문 id
      */
-    @PutMapping("faq")
+    @PostMapping("faq/edit")
     public ResponseEntity<FAQ> editFaq(@RequestParam Long id, @ModelAttribute CreateFaqDto createFaqDto) throws IOException {
         return ResponseEntity.ok(faqService.editFaq(id, createFaqDto));
     }

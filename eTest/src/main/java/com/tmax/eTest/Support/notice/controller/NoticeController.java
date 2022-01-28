@@ -71,7 +71,7 @@ public class NoticeController {
     /**
      * 공지사항 수정
      */
-    @PutMapping("notice")
+    @PostMapping("notice/edit")
     public ResponseEntity<Notice> editNotice(@RequestParam Long id, @ModelAttribute CreateNoticeRequestDto createNoticeRequestDto) throws IOException {
         return ResponseEntity.ok(noticeService.editNotice(id, createNoticeRequestDto));
     }
