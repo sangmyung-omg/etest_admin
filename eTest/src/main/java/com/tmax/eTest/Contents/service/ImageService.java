@@ -22,13 +22,23 @@ public class ImageService {
     try {
       URL inputURL = new URL(url);
       BufferedReader br = new BufferedReader(new InputStreamReader(inputURL.openStream()));
-      final String END_STR = "\">";
-      final String START_STR = "<meta property=\"og:image\" content=\"";
+      final String IMAGE_TAG = "og:image";
+      final String CONTENT_TAG = "content=\"";
+      // final String START_STR = "<meta property=\"og:image\" content=\"";
 
       String line = "";
       while ((line = br.readLine()) != null) {
-        if (line.contains(START_STR))
-          return line.trim().replace(START_STR, "").replace(END_STR, "");
+        if (line.contains(IMAGE_TAG)) {
+          StringBuilder sb = new StringBuilder();
+          Integer idx = line.indexOf(CONTENT_TAG) + CONTENT_TAG.length();
+          for (int i = idx; i < line.length(); i++) {
+            char t = line.charAt(i);
+            if (t != '\"')
+              sb.append(line.charAt(i));
+            else
+              return sb.toString();
+          }
+        }
       }
     } catch (IOException e) {
       log.info(e.getMessage());
