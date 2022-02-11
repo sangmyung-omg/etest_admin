@@ -89,14 +89,18 @@ public class ContentsPushJobConfiguration extends DefaultBatchConfigurer {
 
           Long update = videoRepositorySupport.findUpdateVideoSize(lastWeekDate, nowDate);
 
-          String category = "content";
-          String title = "금융투자 콘텐츠몰";
-          String body = String.format("신규 콘텐츠 %d건이 업데이트 되었습니다.", update);
-          String url = "/videocontents";
+          if (update > 0L) {
+            String category = "content";
+            String title = "금융투자 콘텐츠몰";
+            String body = String.format("신규 콘텐츠 %d건이 업데이트 되었습니다.", update);
+            String url = "/videocontents";
 
-          pushService
-              .categoryPushRequest(PushRequestDTO.builder().category(category).title(title).body(body).url(url).build())
-              .block();
+            pushService
+                .categoryPushRequest(
+                    PushRequestDTO.builder().category(category).title(title).body(body).url(url).build())
+                .block();
+            log.info("Contents Pushed!");
+          }
 
           log.info("Job Success!");
           return RepeatStatus.FINISHED;
