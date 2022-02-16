@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import io.netty.resolver.DefaultAddressResolverGroup;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -121,7 +122,8 @@ public class ImageService {
   }
 
   private void buildClient(String url) {
-    this.httpClient = HttpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+    this.httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE)
+        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
         .responseTimeout(Duration.ofMillis(5000))
         .doOnConnected(conn -> conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
             .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
