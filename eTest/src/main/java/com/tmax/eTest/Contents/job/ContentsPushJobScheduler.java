@@ -16,10 +16,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 
 @Slf4j
 @Component
 @EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "PT1M", defaultLockAtLeastFor = "PT1M")
 public class ContentsPushJobScheduler {
 
   @Autowired
@@ -28,7 +31,9 @@ public class ContentsPushJobScheduler {
   @Autowired
   private ContentsPushJobConfiguration contentsPushJobConfiguration;
 
-  @Scheduled(cron = "0 0 13 ? * FRI")
+  // @Scheduled(cron = "0 0 13 ? * FRI")
+  @Scheduled(cron = "0 0 13 ? * TUE")
+  @SchedulerLock(name = "ContentsPushJob")
   public void runJob() {
 
     Map<String, JobParameter> confMap = new HashMap<String, JobParameter>();
