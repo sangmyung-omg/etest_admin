@@ -16,6 +16,7 @@ public class ContentViewsInfoDTO {
     private double viewsArticleRatio;
     private int viewsTextbook;
     private double viewsTextbookRatio;
-//    private int viewsWiki;
+    private long accumulatedViews;
+    //    private int viewsWiki;
 //    private double viewsWikiRatio;
 }
