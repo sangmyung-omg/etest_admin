@@ -32,7 +32,7 @@ public class ContentsPushJobScheduler {
   private ContentsPushJobConfiguration contentsPushJobConfiguration;
 
   // @Scheduled(cron = "0 0 13 ? * FRI")
-  @Scheduled(cron = "0 0 13 ? * TUE")
+  @Scheduled(cron = "0 0 14 ? * TUE")
   @SchedulerLock(name = "ContentsPushJob")
   public void runJob() {
 
