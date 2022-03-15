@@ -269,9 +269,7 @@ public class VideoService {
   public List<Hashtag> getHashtags(List<String> hashtagNames) {
     if (commonUtils.objectNullcheck(hashtagNames) || hashtagNames.size() == 0)
       return new ArrayList<Hashtag>();
-    log.info("TTTT");
     List<Hashtag> hashtags = hashtagRepository.findByNameIn(hashtagNames);
-    log.info("TTTT");
     List<String> exists = hashtags.stream().map(e -> e.getName()).collect(Collectors.toList());
     List<Hashtag> addHashtags = hashtagNames.stream().filter(e -> !exists.contains(e))
         .map(e -> Hashtag.builder().name(e).build()).collect(Collectors.toList());
