@@ -35,7 +35,7 @@ public class UkController {
 
     @GetMapping(value = "/uk", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> getUkInfo(@RequestParam Integer versionId) {
-        log.info("> Getting UKs for version : " + versionId);
+        log.debug("> Getting UKs for version : " + versionId);
 
         List<UkGetOutputDTO> ukList = ukService.getUkInfo(versionId);
         return new ResponseEntity<>(ukList, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class UkController {
                                                 @RequestParam Integer page,
                                                 @RequestParam Integer size) {
 
-        log.info("> Getting UKs for version : " + versionId + ". part = " + part.toString() + ", page = " + Integer.toString(page) + ", size = " + Integer.toString(size));
+        log.debug("> Getting UKs for version : " + versionId + ". part = " + part.toString() + ", page = " + Integer.toString(page) + ", size = " + Integer.toString(size));
         Map<String, Object> result = ukService.getAllPagedUkInfoForVersion(versionId, page, size);
         
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -56,7 +56,7 @@ public class UkController {
     @PutMapping(value = "/uk", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> updateUkInfo(@RequestParam Integer ukId, @RequestParam Integer versionId,
                                                     @RequestBody UkUpdateDTO inputBody) {
-        log.info("> Update Uk Info. ukId : " + Integer.toString(ukId) + ", versionId : " + Integer.toString(versionId) + ", inputBody : " + inputBody);
+        log.debug("> Update Uk Info. ukId : " + Integer.toString(ukId) + ", versionId : " + Integer.toString(versionId) + ", inputBody : " + inputBody);
         Map<String, Object> map = new HashMap<String, Object>();
     
         String description = inputBody.getUkDescription();
@@ -81,7 +81,7 @@ public class UkController {
             map.put("message", message);
             return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (NotFoundException e) {
-            log.info("error : No data found for the version id = " + Long.toString(versionId) + " and uk id = " + Long.toString(ukId));
+            log.error("error : No data found for the version id = " + Long.toString(versionId) + " and uk id = " + Long.toString(ukId));
             map.put("error", "error : No data found for the version id = " + Long.toString(versionId) + " and uk id = " + Long.toString(ukId));
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }

@@ -52,7 +52,7 @@ public class UkService {
                                                                 .page(ukInfo.getPage())
                                                                 .build();
             if (template.getUkId() % 100 == 0) 
-                log.info("Gathering info of DTO uk_id : " + Integer.toString(template.getUkId()));
+                log.debug("Gathering info of DTO uk_id : " + Integer.toString(template.getUkId()));
             // video & article info
             for (VideoUkRel video : ukInfo.getUkMaster().getVideoUks()) {
                 if (video.getVideo().getType().equalsIgnoreCase("VIDEO")) {
@@ -83,7 +83,7 @@ public class UkService {
 
             ukList.add(template);
         }
-        log.info("Completed gathering uk infos : " + Integer.toString(allUkList.get(allUkList.size()-1).getUkId().intValue()));
+        log.debug("Completed gathering uk infos : " + Integer.toString(allUkList.get(allUkList.size()-1).getUkId().intValue()));
         
         return ukList;
     }
@@ -96,9 +96,9 @@ public class UkService {
         // 페이징 조건 설정
         Pageable pageAndSize = PageRequest.of(page, size, Sort.by("ukId").ascending());
 
-        log.info("Getting uk version infos......");
+        log.debug("Getting uk version infos......");
         Page<UkDescriptionVersion> pages = ukVersionRepo.findByVersionId(new Long(versionId), pageAndSize);
-        log.info(Long.toString(pages.getTotalElements()));
+        log.debug(Long.toString(pages.getTotalElements()));
         // 선정한 페이지에 속하는 UK 정보들 (: target infos)
         List<UkDescriptionVersion> ukQueryResult = pages.getContent();
         // 페이지 관련 추가 변수들 (: paging infos)
@@ -107,7 +107,7 @@ public class UkService {
         Integer page_size = pages.getSize();
         Long total_elements_num = pages.getTotalElements();
         
-        log.info("ukList : " + Integer.toString(ukQueryResult.size()));
+        log.debug("ukList : " + Integer.toString(ukQueryResult.size()));
 
         // 조회해온 특정 페이지의 UK들을 output 형식에 맞게 가공
         for (UkDescriptionVersion ukInfo : ukQueryResult) {
@@ -122,7 +122,7 @@ public class UkService {
                                                                 .externalLink(ukInfo.getExternalLink())
                                                                 .updateDate(ukInfo.getEditDate())
                                                                 .build();
-            log.info("DTO uk_id : " + Integer.toString(template.getUkId()));
+            log.debug("DTO uk_id : " + Integer.toString(template.getUkId()));
             // video & article info
             for (VideoUkRel video : ukInfo.getUkMaster().getVideoUks()) {
                 if (video.getVideo().getType().equalsIgnoreCase("VIDEO")) {
