@@ -162,7 +162,6 @@ public class NoticeService extends PushService {
         notice.setDraft(createNoticeRequestDto.getDraft());
         notice.setTitle(createNoticeRequestDto.getTitle());
         notice.setContent(createNoticeRequestDto.getContent());
-        logger.info("editNotice start");
         if (createNoticeRequestDto.getImage() != null){
             java.util.Base64.Encoder encoder = Base64.getEncoder();
             byte[] encodedBytes = encoder.encode(createNoticeRequestDto.getImage().getBytes());
