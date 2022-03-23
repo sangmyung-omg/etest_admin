@@ -27,13 +27,13 @@ public class CommentUtil {
     {
     	for(String ip : ipList)
     	{
-    		log.info("User Backend ip = "+ip);
+    		log.debug("User Backend ip = "+ip);
     		userBackendIP.add(ip);
     	}
     	
     	for(String port : portList)
     	{
-    		log.info("User Backend Port = "+port);
+    		log.debug("User Backend Port = "+port);
     		userBackendPort.add(port);
     	}
     	
@@ -56,9 +56,9 @@ public class CommentUtil {
 	    			port);
 			ResponseSpec response = WebClient.create().put().uri(userBackCommentRefreshURI).retrieve();
 			
-			log.info("put to " + userBackCommentRefreshURI);
+			log.debug("put to " + userBackCommentRefreshURI);
 			if(response != null)
-				log.info(response.bodyToMono(Boolean.class).block().toString());
+				log.debug(response.bodyToMono(Boolean.class).block().toString());
 		}
 	}
 	

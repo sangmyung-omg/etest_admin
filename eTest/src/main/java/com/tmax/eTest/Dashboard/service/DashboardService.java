@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 @Service
 public class DashboardService extends CalendarUtil{
@@ -58,6 +59,7 @@ public class DashboardService extends CalendarUtil{
 
     private String[] time;
     private String[] secondaryTime;
+    private int[] accumulatedViews;
     private int[] accessorCollect;
     private int[] memberTotal;
     private int[] memberRegistered;
@@ -710,6 +712,9 @@ public class DashboardService extends CalendarUtil{
                     .viewsArticleRatio(viewsArticleRatio[i])
                     .viewsTextbook(viewsTextbook[i])
                     .viewsTextbookRatio(viewsTextbookRatio[i])
+                    .accumulatedViews(IntStream.rangeClosed(0,i)
+                        .map(index -> viewsTotal[index])
+                        .reduce(0,Integer::sum))
 //                    .viewsWiki(viewsWiki[i])
 //                    .viewsWikiRatio(viewsWikiRatio[i])
                     .build());
@@ -963,6 +968,7 @@ public class DashboardService extends CalendarUtil{
 
     public ContentViewsStatusDTO getContentViewsStatus(FilterDTO filterDTO) {
         statements = getStatements(filterDTO, "content", "enter");
+
         String timeUnit = filterDTO.getTimeUnit();
         LocalDateTime dateFrom = filterDTO.getDateFrom();
         LocalDateTime dateTo = filterDTO.getDateTo();
@@ -1016,6 +1022,7 @@ public class DashboardService extends CalendarUtil{
                         .viewsVideo(viewsVideo)
                         .viewsArticle(viewsArticle)
                         .viewsTextbook(viewsTextbook)
+
 //                        .viewsWiki(viewsWiki)
                         .build())
                 .contentViewsInfo(contentViewsInfo)

@@ -44,6 +44,7 @@ public class ContentsPushJobConfiguration extends DefaultBatchConfigurer {
     factory.setDataSource(dataSource);
     factory.setDatabaseType("ORACLE");
     factory.setTransactionManager(jpaTransactionManager());
+    factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
     factory.afterPropertiesSet();
     return factory.getObject();
   }

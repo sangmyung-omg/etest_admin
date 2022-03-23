@@ -70,13 +70,13 @@ public class CommentService {
 				
 			}
 			
-			log.info(modelList.toString());
+			log.debug(modelList.toString());
 			
 			return commentRepo.saveAll(modelList).size();
 		}
 		else
 		{
-			log.info("save comment list size is 0! please check");
+			log.error("save comment list size is 0! please check");
 			
 			return 0;
 		}
@@ -147,7 +147,7 @@ public class CommentService {
 	{
 		if(versionName.equals(DEFAULT_VERSION))
 		{
-			log.info("You can't delete 'default_version' in comment");
+			log.error("You can't delete 'default_version' in comment");
 			return false;
 		}
 		else

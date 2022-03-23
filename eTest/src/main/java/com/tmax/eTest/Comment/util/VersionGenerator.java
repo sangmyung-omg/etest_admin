@@ -62,10 +62,10 @@ public class VersionGenerator {
     			}
     			catch(NumberFormatException e)
     			{
-    				log.info("VersionGenerator error in parseInt "+versionSplit[1]);
+    				log.debug("VersionGenerator error in parseInt "+versionSplit[1]);
     			}
     		}
     	}
-    	log.info("Now New comment version name will be Ver 1."+versionIdx);
+    	log.debug("Now New comment version name will be Ver 1."+versionIdx);
     }
 }
