@@ -30,9 +30,6 @@ public class Notice {
     @Column(name = "views")
     private Long views;
 
-    @Column(name = "image_url")
-    private String imageUrl;
-
     @Column(name = "image_encoding")
     private String imageEncoding;
 
