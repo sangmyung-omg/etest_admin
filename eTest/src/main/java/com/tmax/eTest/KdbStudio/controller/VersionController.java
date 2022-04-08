@@ -1,5 +1,7 @@
 package com.tmax.eTest.KdbStudio.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,9 @@ import com.tmax.eTest.KdbStudio.dto.VersionGetOutputDTO;
 import com.tmax.eTest.KdbStudio.dto.VersionUpdateInputDTO;
 import com.tmax.eTest.KdbStudio.service.VersionService;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,6 +45,12 @@ public class VersionController {
 
         if (versionList == null) 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        // ordering
+        CompareVersionNum comp = new CompareVersionNum();
+        Collections.sort(versionList, comp);
+
+        // log.info(versionList.get(versionList.size()-1).getVersionNum());
 
         map.put("message", "Successfully returned version informations.");
         map.put("versionList", versionList);
@@ -155,5 +165,31 @@ public class VersionController {
             map.put("error", "error : No data found for the version id " + Long.toString(versionId));
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }
+    }
+
+    private class CompareVersionNum implements Comparator<VersionGetOutputDTO> {
+        @Override
+        public int compare(VersionGetOutputDTO first, VersionGetOutputDTO second) {
+            String first_num = first.getVersionNum().trim();
+            String sec_num = second.getVersionNum().trim();
+            first_num = first_num.split(" ")[first_num.split(" ").length-1];
+            sec_num = sec_num.split(" ")[sec_num.split(" ").length-1];
+
+            try {
+                float first_float = Float.parseFloat(first_num);
+                float sec_float = Float.parseFloat(sec_num);
+                
+                if (first_float > sec_float) {
+                    return 1;
+                } else if (first_float < sec_float) {
+                    return -1;
+                } else return 0;
+            } catch (TypeMismatchException e) {
+                return 500;
+            } catch (ParseException e) {
+                return 501;
+            }
+        }
+        
     }
 }
