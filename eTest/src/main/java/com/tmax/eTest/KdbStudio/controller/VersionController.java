@@ -47,8 +47,10 @@ public class VersionController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         // ordering
-        CompareVersionNum comp = new CompareVersionNum();
-        Collections.sort(versionList, comp);
+        CompareVersionMinorNum comp1 = new CompareVersionMinorNum();
+        CompareVersionMajorNum comp2 = new CompareVersionMajorNum();
+        Collections.sort(versionList, comp1);
+        Collections.sort(versionList, comp2);
 
         // log.info(versionList.get(versionList.size()-1).getVersionNum());
 
@@ -167,13 +169,43 @@ public class VersionController {
         }
     }
 
-    private class CompareVersionNum implements Comparator<VersionGetOutputDTO> {
+    private class CompareVersionMinorNum implements Comparator<VersionGetOutputDTO> {
         @Override
         public int compare(VersionGetOutputDTO first, VersionGetOutputDTO second) {
             String first_num = first.getVersionNum().trim();
             String sec_num = second.getVersionNum().trim();
             first_num = first_num.split(" ")[first_num.split(" ").length-1];
             sec_num = sec_num.split(" ")[sec_num.split(" ").length-1];
+            first_num = first_num.split("\\.")[first_num.split("\\.").length-1];
+            sec_num = sec_num.split("\\.")[sec_num.split("\\.").length-1];
+
+            try {
+                float first_float = Float.parseFloat(first_num);
+                float sec_float = Float.parseFloat(sec_num);
+                
+                if (first_float > sec_float) {
+                    return 1;
+                } else if (first_float < sec_float) {
+                    return -1;
+                } else return 0;
+            } catch (TypeMismatchException e) {
+                return 500;
+            } catch (ParseException e) {
+                return 501;
+            }
+        }
+        
+    }
+
+    private class CompareVersionMajorNum implements Comparator<VersionGetOutputDTO> {
+        @Override
+        public int compare(VersionGetOutputDTO first, VersionGetOutputDTO second) {
+            String first_num = first.getVersionNum().trim();
+            String sec_num = second.getVersionNum().trim();
+            first_num = first_num.split(" ")[first_num.split(" ").length-1];
+            sec_num = sec_num.split(" ")[sec_num.split(" ").length-1];
+            first_num = first_num.split("\\.")[0];
+            sec_num = sec_num.split("\\.")[0];
 
             try {
                 float first_float = Float.parseFloat(first_num);
